@@ -29,6 +29,7 @@
 		$file->store();
 	}
 	$is_insert = false;
+	$is_preview = false;
 	if ($_POST['insert']) {
 		$file_id = $_POST['file_id'];
 		$file = $api->getFile($file_id);
@@ -74,9 +75,18 @@
 		$file->op('stretch/off');
 		
 		$is_insert = true;
+		
+		if ($_REQUEST['_preview']) {
+			$is_insert = false;
+			$is_preview = true;
+		}
 	}
 	
 ?>
+<?php if ($is_insert): ?>
+<?php echo $file->getImgTag($file->data['original_filename']); ?>
+<?php die();?>
+<?php endif;?>
 <?php if ($is_insert): ?>
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -97,12 +107,16 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 
 	
 	<table class="slidetoggle describe startclosed" style="display: table;">
-		<thead class="media-item-info" id="media-head-34">
+		<thead class="media-item-info">
 		<tr valign="top">
-			<td class="A1B1" id="thumbnail-head-34">
-				<p><?php echo $file->getImgTag($file->data['original_filename'], array('width' => 128)); ?></p>
+			<td class="A1B1" colspan="2">
+				<div id="uploadcare_preview" style="width: 600px; overflow-x: scroll;">
+					<?php echo $file->getImgTag($file->data['original_filename']); ?>
+				</div>
 			</td>
-			<td>
+		</tr>
+		<tr>
+			<td colspan="2">
 				<p><strong>File name:</strong> <?php echo $file->data['original_filename']; ?></p>
 				<p><strong>File type:</strong> <?php echo $file->data['mime_type']; ?></p>
 				<p><strong>Upload date:</strong> <?php echo $file->data['upload_date']; ?></p>
@@ -114,31 +128,31 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 			<tr>
 				<td colspan="2"><input type="checkbox" name="crop"/>&nbsp;<strong>Crop</strong></td>
 			</tr>
-			<tr><th class="label"><label>Width:</label></td><td><input type="text" name="crop_width"/></td></tr>
-			<tr><th class="label"><label>Height:</label></td><td><input type="text" name="crop_height"/></td></tr>
-			<tr><th class="label"><label>Center:</label></td><td><input type="checkbox" name="crop_center"/></td></tr>
-			<tr><th class="label"><label>Fill color:</label></td><td><input type="text" name="crop_fill_color"/></td></tr>
+			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="crop_width"/></td></tr>
+			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="crop_height"/></td></tr>
+			<tr><th class="label"><label>Center:</label></th><td><input type="checkbox" name="crop_center"/></td></tr>
+			<tr><th class="label"><label>Fill color:</label></th><td><input type="text" name="crop_fill_color"/></td></tr>
 
 			<tr>
 				<td colspan="2"><input type="checkbox" name="resize"/>&nbsp;<strong>Resize</strong></td>
 			</tr>
-			<tr><th class="label"><label>Width:</label></td><td><input type="text" name="resize_width"/></td></tr>
-			<tr><th class="label"><label>Height:</label></td><td><input type="text" name="resize_height"/></td></tr>	
+			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="resize_width"/></td></tr>
+			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="resize_height"/></td></tr>	
 			
 			<tr>
 				<td colspan="2"><input type="checkbox" name="scale_crop" checked="checked" />&nbsp;<strong>Scale crop</strong></td>
 			</tr>
-			<tr><th class="label"><label>Width:</label></td><td><input type="text" name="scale_crop_width" value="<?php echo $scale_crop_default_width;?>" /></td></tr>
-			<tr><th class="label"><label>Height:</label></td><td><input type="text" name="scale_crop_height" value="<?php echo $scale_crop_default_height; ?>" /></td></tr>
-			<tr><th class="label"><label>Center:</label></td><td><input type="checkbox" name="scale_crop_center"/></td></tr>
+			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="scale_crop_width" value="<?php echo $scale_crop_default_width;?>" /></td></tr>
+			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="scale_crop_height" value="<?php echo $scale_crop_default_height; ?>" /></td></tr>
+			<tr><th class="label"><label>Center:</label></th><td><input type="checkbox" name="scale_crop_center"/></td></tr>
 			
 			<tr>
 				<td colspan="2"><strong>Effects</strong></td>
 			</tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_flip" />&nbsp;<label>Flip</label></td></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_grayscale" />&nbsp;<label>Grayscale</label></td></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_invert" />&nbsp;<label>Invert</label></td></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_mirror" />&nbsp;<label>Mirror</label></td></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_flip" />&nbsp;<label>Flip</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_grayscale" />&nbsp;<label>Grayscale</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_invert" />&nbsp;<label>Invert</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_mirror" />&nbsp;<label>Mirror</label></th></tr>
 			
 		</tbody>
 		</table>	
@@ -146,6 +160,23 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 </form>
 </div>
 </div>
+<script type="text/javascript">
+jQuery(function() {
+	jQuery('#<?php echo $type; ?>-form input').change(function() {
+		var form = jQuery('#<?php echo $type; ?>-form');
+		var data = form.serialize();
+		data += '&_preview=true';
+		$.post(
+				$(form).action(),
+				data,
+				function (html) {
+					$('#uploadcare_preview').html(html);
+				}
+		);
+		return false;
+	});
+});
+</script>
 <?php else: ?>
 <?php echo $api->widget->getScriptTag(); ?>
 <form enctype="multipart/form-data" method="post" action="<?php echo esc_attr($form_action_url); ?>" class="<?php echo $form_class; ?>" id="<?php echo $type; ?>-form">
