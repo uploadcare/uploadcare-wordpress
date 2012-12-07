@@ -162,7 +162,8 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 </div>
 <script type="text/javascript">
 jQuery(function() {
-	jQuery('#<?php echo $type; ?>-form input').change(function() {
+	jQuery('#<?php echo $type; ?>-form :input').change(function() {
+		alert(1);
 		var form = jQuery('#<?php echo $type; ?>-form');
 		var data = form.serialize();
 		data += '&_preview=true';
