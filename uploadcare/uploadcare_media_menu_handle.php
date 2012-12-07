@@ -21,7 +21,7 @@
 	$file = null;
 	$scale_crop_default_width = 800;
 	$scale_crop_default_height = 634;
-	if ($_POST['save']) {
+	if ($_POST['save'] or $_POST['_preview']) {
 		$file_id = $_POST['file_id'];
 		$file = $api->getFile($file_id);
 		$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
