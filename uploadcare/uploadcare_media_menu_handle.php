@@ -21,7 +21,7 @@
 	$file = null;
 	$scale_crop_default_width = 800;
 	$scale_crop_default_height = 634;
-	if ($_POST['save'] or $_POST['_preview']) {
+	if ($_POST['save']) {
 		$file_id = $_POST['file_id'];
 		$file = $api->getFile($file_id);
 		$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
@@ -30,7 +30,7 @@
 	}
 	$is_insert = false;
 	$is_preview = false;
-	if ($_POST['insert']) {
+	if ($_POST['insert'] or $_POST['_preview']) {
 		$file_id = $_POST['file_id'];
 		$file = $api->getFile($file_id);
 		$original = clone $file;
@@ -80,10 +80,10 @@
 		
 		$is_insert = true;
 		
-		if ($_REQUEST['_preview']) {
+		if ($_POST['_preview']) {
 			$is_insert = false;
 			$is_preview = true;
-		}
+		}		
 	}
 	
 ?>
@@ -114,6 +114,7 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 		<thead class="media-item-info">
 		<tr valign="top">
 			<td class="A1B1" colspan="2">
+				<p><strong>Preview:</strong></p>
 				<div id="uploadcare_preview" style="width: 600px; overflow-x: scroll;">
 					<?php echo $file->getImgTag($file->data['original_filename']); ?>
 				</div>
