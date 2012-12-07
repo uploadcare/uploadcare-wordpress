@@ -54,7 +54,11 @@
 			$scale_crop_height = $_POST['scale_crop_height'];
 			$scale_crop_center = isset($_POST['scale_crop_center']) ? true : false;
 			$file = $file->scaleCrop($scale_crop_width, $scale_crop_height, $scale_crop_center);
-		}		
+		} else {
+			$scale_crop_width = $scale_crop_default_width;
+			$scale_crop_height = $scale_crop_default_height;
+			$scale_crop_center = false;
+		}
 		
 		if (isset($_POST['effect_flip'])) {
 			$file = $file->effect('flip');
@@ -83,7 +87,7 @@
 	}
 	
 ?>
-<?php if ($is_insert): ?>
+<?php if ($is_preview): ?>
 <?php echo $file->getImgTag($file->data['original_filename']); ?>
 <?php die();?>
 <?php endif;?>
