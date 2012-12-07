@@ -167,7 +167,7 @@ jQuery(function() {
 		var data = form.serialize();
 		data += '&_preview=true';
 		jQuery.post(
-				form.action(),
+				form.attr('action'),
 				data,
 				function (html) {
 					jQuery('#uploadcare_preview').html(html);
