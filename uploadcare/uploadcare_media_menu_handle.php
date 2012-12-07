@@ -167,10 +167,10 @@ jQuery(function() {
 		var data = form.serialize();
 		data += '&_preview=true';
 		jQuery.post(
-				$(form).action(),
+				form.action(),
 				data,
 				function (html) {
-					$('#uploadcare_preview').html(html);
+					jQuery('#uploadcare_preview').html(html);
 				}
 		);
 		return false;
