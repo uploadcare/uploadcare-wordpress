@@ -112,14 +112,6 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 	
 	<table class="slidetoggle describe startclosed" style="display: table;">
 		<thead class="media-item-info">
-		<tr valign="top">
-			<td class="A1B1" colspan="2">
-				<p><strong>Preview:</strong></p>
-				<div id="uploadcare_preview" style="width: 600px; overflow-x: scroll;">
-					<?php echo $file->getImgTag($file->data['original_filename']); ?>
-				</div>
-			</td>
-		</tr>
 		<tr>
 			<td colspan="2">
 				<p><strong>File name:</strong> <?php echo $file->data['original_filename']; ?></p>
@@ -149,7 +141,7 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 			</tr>
 			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="scale_crop_width" value="<?php echo $scale_crop_default_width;?>" /></td></tr>
 			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="scale_crop_height" value="<?php echo $scale_crop_default_height; ?>" /></td></tr>
-			<tr><th class="label"><label>Center:</label></th><td><input type="checkbox" name="scale_crop_center"/></td></tr>
+			<tr><th class="label"><label>Center:</label></th><td><input type="checkbox" name="scale_crop_center" checked="checked"/></td></tr>
 			
 			<tr>
 				<td colspan="2"><strong>Effects</strong></td>
@@ -158,6 +150,15 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_grayscale" />&nbsp;<label>Grayscale</label></th></tr>
 			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_invert" />&nbsp;<label>Invert</label></th></tr>
 			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_mirror" />&nbsp;<label>Mirror</label></th></tr>
+			
+			<tr valign="top">
+				<td class="A1B1" colspan="2">
+					<p><strong>Preview:</strong></p>
+					<div id="uploadcare_preview" style="width: 600px; overflow-x: scroll;">
+						<?php echo $file->getImgTag($file->data['original_filename']); ?>
+					</div>
+				</td>
+			</tr>			
 			
 		</tbody>
 		</table>	
