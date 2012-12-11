@@ -28,6 +28,13 @@
 		$file->op('stretch/off');
 		$file->store();
 	}
+	if ($_GET['file_id']) {
+		$file_id = $_GET['file_id'];
+		$file = $api->getFile($file_id);
+		$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
+		$file->op('stretch/off');
+		$file->store();		
+	}
 	$is_insert = false;
 	$is_preview = false;
 	if ($_POST['insert'] or $_POST['_preview']) {
@@ -152,7 +159,7 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_grayscale" id="effect_grayscale" />&nbsp;<label for="effect_grayscale">Grayscale</label></th></tr>
 			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_invert" id="effect_invert" />&nbsp;<label for="effect_invert">Invert</label></th></tr>
 			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_mirror" id="effect_mirror" />&nbsp;<label for="effect_mirror">Mirror</label></th></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="stretch_off" id="stretch_off" />&nbsp;<label for="stretch">Stretch Off?</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="stretch_off" id="stretch_off" checked="checked" />&nbsp;<label for="stretch">Stretch Off?</label></th></tr>
 			
 			
 			<tr valign="top">
