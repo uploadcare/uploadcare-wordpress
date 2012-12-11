@@ -76,7 +76,9 @@
 			$file = $file->effect('mirror');
 		}		
 		
-		$file->op('stretch/off');
+		if (isset($_POST['stretch_off'])) {
+			$file->op('stretch/off');
+		}
 		
 		$is_insert = true;
 		
@@ -123,33 +125,35 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 		<tbody>
 		
 			<tr>
-				<td colspan="2"><input type="checkbox" name="crop"/>&nbsp;<strong>Crop</strong></td>
+				<td colspan="2"><input type="checkbox" name="crop" id="crop" />&nbsp;<strong><label for="crop">Crop</label></strong></td>
 			</tr>
-			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="crop_width"/></td></tr>
-			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="crop_height"/></td></tr>
-			<tr><th class="label"><label>Center:</label></th><td><input type="checkbox" name="crop_center"/></td></tr>
-			<tr><th class="label"><label>Fill color:</label></th><td><input type="text" name="crop_fill_color"/></td></tr>
+			<tr><th class="label"><label for="crop_width">Width:</label></th><td><input type="text" name="crop_width" id="crop_width" /></td></tr>
+			<tr><th class="label"><label for="crop_height">Height:</label></th><td><input type="text" name="crop_height" id="crop_height" /></td></tr>
+			<tr><th class="label"><label for="crop_center">Center:</label></th><td><input type="checkbox" name="crop_center" id="crop_center" /></td></tr>
+			<tr><th class="label"><label for="crop_fill_color">Fill color:</label></th><td><input type="text" name="crop_fill_color" id="crop_fill_color" /></td></tr>
 
 			<tr>
-				<td colspan="2"><input type="checkbox" name="resize"/>&nbsp;<strong>Resize</strong></td>
+				<td colspan="2"><input type="checkbox" name="resize" id="resize" />&nbsp;<strong><label for="resize">Resize</label></strong></td>
 			</tr>
-			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="resize_width"/></td></tr>
-			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="resize_height"/></td></tr>	
+			<tr><th class="label"><label for="resize_width">Width:</label></th><td><input type="text" name="resize_width" id="resize_width" /></td></tr>
+			<tr><th class="label"><label for="resize_height">Height:</label></th><td><input type="text" name="resize_height" id="resize_height" /></td></tr>	
 			
 			<tr>
-				<td colspan="2"><input type="checkbox" name="scale_crop" checked="checked" />&nbsp;<strong>Scale crop</strong></td>
+				<td colspan="2"><input type="checkbox" name="scale_crop" checked="checked" id="scale_crop" />&nbsp;<strong><label for="scale_crop">Scale crop</label></strong></td>
 			</tr>
-			<tr><th class="label"><label>Width:</label></th><td><input type="text" name="scale_crop_width" value="<?php echo $scale_crop_default_width;?>" /></td></tr>
-			<tr><th class="label"><label>Height:</label></th><td><input type="text" name="scale_crop_height" value="<?php echo $scale_crop_default_height; ?>" /></td></tr>
-			<tr><th class="label"><label>Center:</label></th><td><input type="checkbox" name="scale_crop_center" checked="checked"/></td></tr>
+			<tr><th class="label"><label for="scale_crop_width">Width:</label></th><td><input type="text" name="scale_crop_width" id="scale_crop_width" value="<?php echo $scale_crop_default_width;?>" /></td></tr>
+			<tr><th class="label"><label for="scale_crop_height">Height:</label></th><td><input type="text" name="scale_crop_height" id="scale_crop_height" value="<?php echo $scale_crop_default_height; ?>" /></td></tr>
+			<tr><th class="label"><label for="scale_crop_center">Center:</label></th><td><input type="checkbox" name="scale_crop_center" id="scale_crop_center" checked="checked"/></td></tr>
 			
 			<tr>
 				<td colspan="2"><strong>Effects</strong></td>
 			</tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_flip" />&nbsp;<label>Flip</label></th></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_grayscale" />&nbsp;<label>Grayscale</label></th></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_invert" />&nbsp;<label>Invert</label></th></tr>
-			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_mirror" />&nbsp;<label>Mirror</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_flip" id="effect_flip" />&nbsp;<label for="effect_flip">Flip</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_grayscale" id="effect_grayscale" />&nbsp;<label for="effect_grayscale">Grayscale</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_invert" id="effect_invert" />&nbsp;<label for="effect_invert">Invert</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="effect_mirror" id="effect_mirror" />&nbsp;<label for="effect_mirror">Mirror</label></th></tr>
+			<tr><th class="label" colspan="2"><input type="checkbox" name="stretch_off" id="stretch_off" />&nbsp;<label for="stretch">Stretch Off?</label></th></tr>
+			
 			
 			<tr valign="top">
 				<td class="A1B1" colspan="2">
