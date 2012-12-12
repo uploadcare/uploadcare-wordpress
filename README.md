@@ -47,6 +47,6 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 [1]: https://uploadcare.com/
 [2]: https://uploadcare.com/documentation/reference/basic/cdn.html
-[3]: https://github.com/uploadcare/uploadcare-wordpress/#releases
+[3]: https://github.com/uploadcare/uploadcare-wordpress#releases
 [4]: https://github.com/uploadcare/uploadcare-php
 [5]: http://wordpress.org/
