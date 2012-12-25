@@ -25,4 +25,10 @@ if($_POST['uploadcare_hidden'] == 'Y') {
         <?php submit_button(); ?>  
         </p>  
     </form>  
+    <div>
+    <ul>
+    	<li>File at demo account (demopublickey) are deleted sometimes.</li>
+    	<li>You can get your own account here: <a href="https://uploadcare.com/accounts/create/">https://uploadcare.com/accounts/create/</a></li>
+    </ul>
+    </div>
 </div>

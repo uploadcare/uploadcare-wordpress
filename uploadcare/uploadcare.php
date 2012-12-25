@@ -14,6 +14,21 @@ if ( is_admin() )
 
 require_once 'uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
 
+function uploadcare_install() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . "uploadcare";
+	$sql = "CREATE TABLE $table_name (
+	id mediumint(9) NOT NULL AUTO_INCREMENT,
+	file_id varchar(200) DEFAULT '' NOT NULL,
+	UNIQUE KEY id (id)
+	);";
+	
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	dbDelta($sql);		
+}
+
+register_activation_hook(__FILE__,'uploadcare_install');
+
 function uploadcare_media_menu($tabs) {
 	$newtab = array(
 			'uploadcare' => __('Uploadcare', 'uploadcare'),
@@ -29,6 +44,7 @@ add_filter('media_upload_default_tab', 'uploadcare_media_menu_default_tab');
 
 ////
 function uploadcare_media_process() {
+	global $wpdb;
 	require_once 'uploadcare_media_menu_handle.php';
 }
 function uploadcare_media_menu_handle() {
@@ -39,6 +55,7 @@ add_action('media_upload_uploadcare', 'uploadcare_media_menu_handle');
 
 /////
 function uploadcare_media_files() {
+	global $wpdb;
 	require_once 'uploadcare_media_files_menu_handle.php';
 }
 function uploadcare_media_files_menu_handle() {

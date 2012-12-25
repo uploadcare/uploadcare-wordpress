@@ -27,6 +27,7 @@
 		$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
 		$file->op('stretch/off');
 		$file->store();
+		$result = $wpdb->insert($wpdb->prefix.'uploadcare', array('id' => 'NULL', 'file_id' => $file_id));
 	}
 	if ($_GET['file_id']) {
 		$file_id = $_GET['file_id'];
@@ -47,13 +48,17 @@
 			$crop_height = $_POST['crop_height'];
 			$crop_center = isset($_POST['crop_center']) ? true : false;
 			$crop_fill_color = $_POST['crop_fill_color'];
-			$file = $file->crop($crop_width, $crop_height, $crop_center, $crop_fill_color);
+			if ($crop_width && $crop_height) {
+				$file = $file->crop($crop_width, $crop_height, $crop_center, $crop_fill_color);
+			}
 		}
 		
 		if (isset($_POST['resize'])) {
 			$resize_width = $_POST['resize_width'];
 			$resize_height = $_POST['resize_height'];
-			$file = $file->resize($resize_width, $resize_height);
+			if ($resize_width || $resize_height) {
+				$file = $file->resize($resize_width, $resize_height);
+			}
 		}		
 		
 		if (isset($_POST['scale_crop'])) {
@@ -92,7 +97,7 @@
 		if ($_POST['_preview']) {
 			$is_insert = false;
 			$is_preview = true;
-		}		
+		}	
 	}
 	
 ?>
@@ -124,21 +129,10 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 		<tr>
 			<td colspan="2">
 				<p><strong>File name:</strong> <?php echo $file->data['original_filename']; ?></p>
-				<p><strong>File type:</strong> <?php echo $file->data['mime_type']; ?></p>
-				<p><strong>Upload date:</strong> <?php echo $file->data['upload_date']; ?></p>
 			</td>
 		</tr>
 		</thead>
 		<tbody>
-		
-			<tr>
-				<td colspan="2"><input type="checkbox" name="crop" id="crop" />&nbsp;<strong><label for="crop">Crop</label></strong></td>
-			</tr>
-			<tr><th class="label"><label for="crop_width">Width:</label></th><td><input type="text" name="crop_width" id="crop_width" /></td></tr>
-			<tr><th class="label"><label for="crop_height">Height:</label></th><td><input type="text" name="crop_height" id="crop_height" /></td></tr>
-			<tr><th class="label"><label for="crop_center">Center:</label></th><td><input type="checkbox" name="crop_center" id="crop_center" /></td></tr>
-			<tr><th class="label"><label for="crop_fill_color">Fill color:</label></th><td><input type="text" name="crop_fill_color" id="crop_fill_color" /></td></tr>
-
 			<tr>
 				<td colspan="2"><input type="checkbox" name="resize" id="resize" />&nbsp;<strong><label for="resize">Resize</label></strong></td>
 			</tr>
@@ -181,6 +175,37 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 jQuery(function() {
 	jQuery('#<?php echo $type; ?>-form :input').change(function() {
 		var form = jQuery('#<?php echo $type; ?>-form');
+
+		/*error check*/
+		if (jQuery('#resize').attr('checked')) {
+			if (!jQuery('#resize_width').val()) {
+				jQuery('#resize_width').css('border', '1px solid red');
+			} else {
+				jQuery('#resize_width').css('border', 'none');
+			}
+			if (!jQuery('#resize_height').val()) {
+				jQuery('#resize_height').css('border', '1px solid red');
+			} else {
+				jQuery('#resize_height').css('border', 'none');
+			}
+			if (jQuery('#resize_height').val() || jQuery('#resize_width').val()) {
+				jQuery('#resize_width').css('border', 'none');
+				jQuery('#resize_height').css('border', 'none');
+			}
+		}
+		if (jQuery('#scale_crop').attr('checked')) {
+			if (!jQuery('#scale_crop_width').val()) {
+				jQuery('#scale_crop_width').css('border', '1px solid red');
+			} else {
+				jQuery('#scale_crop_width').css('border', 'none');
+			}
+			if (!jQuery('#scale_crop_height').val()) {
+				jQuery('#scale_crop_height').css('border', '1px solid red');
+			} else {
+				jQuery('#scale_crop_height').css('border', 'none');
+			}
+		}
+		
 		var data = form.serialize();
 		data += '&_preview=true';
 		jQuery.post(
@@ -192,6 +217,28 @@ jQuery(function() {
 		);
 		return false;
 	});
+
+	jQuery('#resize').click(function() {
+		if (jQuery('#resize').attr('checked')) {
+			jQuery('#scale_crop').removeAttr('checked');
+			jQuery('#scale_crop_width').val('');
+			jQuery('#scale_crop_height').val('');
+			jQuery('#scale_crop_center').removeAttr('checked');
+			jQuery('#scale_crop_width').css('border', '');
+			jQuery('#scale_crop_height').css('border', '');			
+		}
+	});
+
+	jQuery('#scale_crop').click(function() {
+		if (jQuery('#scale_crop').attr('checked')) {
+			jQuery('#resize').removeAttr('checked', '');
+			jQuery('#resize_width').val('');
+			jQuery('#resize_height').val('');
+			jQuery('#resize_width').css('border', '');
+			jQuery('#resize_height').css('border', '');
+		}
+	});
+	
 });
 </script>
 <?php else: ?>
@@ -201,13 +248,16 @@ jQuery(function() {
 <?php wp_nonce_field('media-form'); ?>
 	<h3 class="media-title">Use Uploadcare widget to upload file.</h3>
 	<?php echo $api->widget->getInputTag('file_id'); ?>
-	<p class="savebutton ml-submit">
+	<p class="savebutton ml-submit" id="_uc_store" style="display: none;">
 	<?php submit_button( __( 'Store File' ), 'button', 'save', false ); ?>
 	</p>	
 </form>
 
 <script type="text/javascript">
 jQuery(function() {
+  jQuery('#<?php echo $type; ?>-form').change(function() {
+  	jQuery('#_uc_store').show();
+  });
 	jQuery('#<?php echo $type; ?>-form').submit(function() {
 		var form = jQuery(this);
 		var file_id = form.find('input[name=file_id]').val();
