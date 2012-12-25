@@ -35,6 +35,15 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 ## Releases
 
+**1.0.0** ([Download](https://ucarecdn.com/13433d46-96ac-497c-a2f3-f2634fb27fcd/uploadcare-wordpress_1.0.0.zip))
+* Uploadcare widget updated to 0.5.0. Added facebook and instagr.am.
+* "Store" button is hidden until file is selected.
+* Uploaded files are saved in database.
+* Uploadcare file list uses only saved files, not all the files from Uploadcare account.
+* "Crop" operations is deleted.
+* "Resize" and "Scale Crop" cannot be used at the same time.
+* Minor fixes.
+
 **0.2.0** ([Download](https://ucarecdn.com/a95456f7-c407-4079-9b4e-64e7b1d8a4b3/uploadcare-wordpress-0.2.0.zip))
 * New tab: Uploadcare Files - select previously uploaded files.
 * "Uploadcare" admin menu: view and delet previously uploaded files.
