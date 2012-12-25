@@ -66,6 +66,7 @@ add_action('media_upload_uploadcare_files', 'uploadcare_media_files_menu_handle'
 
 
 function uploadcare_files() {
+	global $wpdb;
 	if (!current_user_can('upload_files'))  {
 		wp_die( __('You do not have sufficient permissions to access this page.') );
 	}

@@ -46,7 +46,8 @@
 	$pagination_info = array();
 	$count = $wpdb->get_row('SELECT COUNT(id) as count from uploadcare');
 	$pagination_info['pages'] = floor($count / 20);
-	$files = $wpdb->get_results("SELECT file_id FROM uploadcare LIMIT ".(($page-1)*20).",20");
+	$sql = "SELECT file_id FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
+	$files = $wpdb->get_results($sql);
 ?>
 <?php echo media_upload_header(); ?>
 	<?php if ($pagination_info['pages'] > 1): ?>
@@ -64,7 +65,7 @@
 		<div class="tablenav top">
 			<div>
 				<?php foreach ($files as $_file): ?>
-					<?php $file = $api->getFile($_file['file_id']); ?>
+					<?php $file = $api->getFile($_file->file_id); ?>
 					<div style="float: left; width: 100px; height: 100px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
 						<a href="<?php echo admin_url("media-upload.php?type=uploadcare&tab=uploadcare&file_id=".$file->getFileId());?>"><img src="<?php echo $file->scaleCrop(100, 100, true); ?>" /></a>
 					</div>

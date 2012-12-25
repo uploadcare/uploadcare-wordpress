@@ -24,8 +24,9 @@ function change_param($uri, $param, $value) {
 	$query[$param] = $value;
 	return $path.'?'.http_build_query($query);
 }
-change_param($uri, '111', '111');
+//change_param($uri, '111', '111');
 
+/*
 try {
 	$files = $api->getFileList($page);
 } catch (Exception $e) {
@@ -33,6 +34,12 @@ try {
 	$files = $api->getFileList($page);
 }
 $pagination_info = $api->getFilePaginationInfo();
+*/
+$pagination_info = array();
+$count = $wpdb->get_row('SELECT COUNT(id) as count from uploadcare');
+$pagination_info['pages'] = floor($count / 20);
+$sql = "SELECT file_id FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
+$files = $wpdb->get_results($sql);
 ?>
 <div class="wrap">
 	<div class="icon32">
@@ -55,7 +62,8 @@ $pagination_info = $api->getFilePaginationInfo();
 	
 		<div class="tablenav top">
 			<div>
-				<?php foreach ($files as $file): ?>
+				<?php foreach ($files as $_file): ?>
+					<?php $file = $api->getFile($_file->file_id); ?>
 					<div style="float: left; width: 200px; height: 250px; margin-left: 10px; text-align: center;">
 						<a href="<?php echo $file; ?>" target="_blank"><img src="<?php echo $file->scaleCrop(200, 200, true); ?>" /></a><br />
 						<a href="<?php echo change_param(change_param($uri, 'delete', 'true'), 'file_id', $file->getFileId());?>" onclick="document.location.href=document.location.href+'&delete=true&file_id=<?php echo $file->getFileId(); ?>'" style="color: red;">Delete</a> | <a href="<?php echo $file; ?>" target="_blank">View</a>
