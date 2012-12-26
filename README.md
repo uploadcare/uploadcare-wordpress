@@ -35,6 +35,10 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 ## Releases
 
+**1.0.1** ([Download](https://ucarecdn.com/56f764a1-ce29-4417-8fae-480d97d024e5/uploadcare-wordpress_1.0.1.zip))
+* Scale crop and Resize are radio buttons now, not checkboxes.
+* Fixed script, showing "Store" button.
+
 **1.0.0** ([Download](https://ucarecdn.com/13433d46-96ac-497c-a2f3-f2634fb27fcd/uploadcare-wordpress_1.0.0.zip))
 * Uploadcare widget updated to 0.5.0. Added facebook and instagr.am.
 * "Store" button is hidden until file is selected.

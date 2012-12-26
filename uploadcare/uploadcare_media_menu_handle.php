@@ -264,20 +264,6 @@ jQuery(function() {
 		}
   }
   setTimeout('checkValueChange()', 250);
-  /*
-  jQuery('#<?php echo $type; ?>-form').change(function() {
-  	jQuery('#_uc_store').show();
-  });
-  */
-  /*
-	jQuery('#<?php echo $type; ?>-form').submit(function() {
-		var form = jQuery(this);
-		var file_id = form.find('input[name=file_id]').val();
-		if (!file_id) {
-			return false; 
-		}
-	});
-	*/
 });
 </script>
 <?php endif; ?>
