@@ -43,7 +43,7 @@
 		$file = $api->getFile($file_id);
 		$original = clone $file;
 		
-		if (isset($_POST['crop'])) {
+		if ($_POST['op_type'] == 'crop') {
 			$crop_width = $_POST['crop_width'];
 			$crop_height = $_POST['crop_height'];
 			$crop_center = isset($_POST['crop_center']) ? true : false;
@@ -53,7 +53,7 @@
 			}
 		}
 		
-		if (isset($_POST['resize'])) {
+		if ($_POST['op_type'] == 'resize') {
 			$resize_width = $_POST['resize_width'];
 			$resize_height = $_POST['resize_height'];
 			if ($resize_width || $resize_height) {
@@ -61,7 +61,7 @@
 			}
 		}		
 		
-		if (isset($_POST['scale_crop'])) {
+		if ($_POST['op_type'] == 'scale_crop') {
 			$scale_crop_width = $_POST['scale_crop_width'];
 			$scale_crop_height = $_POST['scale_crop_height'];
 			$scale_crop_center = isset($_POST['scale_crop_center']) ? true : false;
@@ -134,13 +134,13 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 		</thead>
 		<tbody>
 			<tr>
-				<td colspan="2"><input type="checkbox" name="resize" id="resize" />&nbsp;<strong><label for="resize">Resize</label></strong></td>
+				<td colspan="2"><input type="radio" name="op_type" id="resize" value="resize" />&nbsp;<strong><label for="resize">Resize</label></strong></td>
 			</tr>
 			<tr><th class="label"><label for="resize_width">Width:</label></th><td><input type="text" name="resize_width" id="resize_width" /></td></tr>
 			<tr><th class="label"><label for="resize_height">Height:</label></th><td><input type="text" name="resize_height" id="resize_height" /></td></tr>	
 			
 			<tr>
-				<td colspan="2"><input type="checkbox" name="scale_crop" checked="checked" id="scale_crop" />&nbsp;<strong><label for="scale_crop">Scale crop</label></strong></td>
+				<td colspan="2"><input type="radio" name="op_type" checked="checked" id="scale_crop" value="scale_crop" />&nbsp;<strong><label for="scale_crop">Scale crop</label></strong></td>
 			</tr>
 			<tr><th class="label"><label for="scale_crop_width">Width:</label></th><td><input type="text" name="scale_crop_width" id="scale_crop_width" value="<?php echo $scale_crop_default_width;?>" /></td></tr>
 			<tr><th class="label"><label for="scale_crop_height">Height:</label></th><td><input type="text" name="scale_crop_height" id="scale_crop_height" value="<?php echo $scale_crop_default_height; ?>" /></td></tr>
@@ -255,9 +255,21 @@ jQuery(function() {
 
 <script type="text/javascript">
 jQuery(function() {
+  checkValueChange = function() {
+		var file_id = jQuery('#<?php echo $type; ?>-form input[name=file_id]').val();
+		if (!file_id) {
+			setTimeout('checkValueChange()', 250); 
+		} else {
+		  jQuery('#_uc_store').show();
+		}
+  }
+  setTimeout('checkValueChange()', 250);
+  /*
   jQuery('#<?php echo $type; ?>-form').change(function() {
   	jQuery('#_uc_store').show();
   });
+  */
+  /*
 	jQuery('#<?php echo $type; ?>-form').submit(function() {
 		var form = jQuery(this);
 		var file_id = form.find('input[name=file_id]').val();
@@ -265,6 +277,7 @@ jQuery(function() {
 			return false; 
 		}
 	});
+	*/
 });
 </script>
 <?php endif; ?>
