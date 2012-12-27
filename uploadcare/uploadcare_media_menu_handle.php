@@ -258,12 +258,13 @@ jQuery(function() {
   checkValueChange = function() {
 		var file_id = jQuery('#<?php echo $type; ?>-form input[name=file_id]').val();
 		if (!file_id) {
-			setTimeout('checkValueChange()', 250); 
+			jQuery('#_uc_store').hide();
 		} else {
 		  jQuery('#_uc_store').show();
 		}
+		setTimeout('checkValueChange()', 100);
   }
-  setTimeout('checkValueChange()', 250);
+  setTimeout('checkValueChange()', 100);
 });
 </script>
 <?php endif; ?>
