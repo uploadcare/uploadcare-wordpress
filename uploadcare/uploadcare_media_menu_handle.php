@@ -220,10 +220,10 @@ jQuery(function() {
 
 	jQuery('#resize').click(function() {
 		if (jQuery('#resize').attr('checked')) {
-			jQuery('#scale_crop').removeAttr('checked');
-			jQuery('#scale_crop_width').val('');
-			jQuery('#scale_crop_height').val('');
-			jQuery('#scale_crop_center').removeAttr('checked');
+			//jQuery('#scale_crop').removeAttr('checked');
+			//jQuery('#scale_crop_width').val('');
+			//jQuery('#scale_crop_height').val('');
+			//jQuery('#scale_crop_center').removeAttr('checked');
 			jQuery('#scale_crop_width').css('border', '');
 			jQuery('#scale_crop_height').css('border', '');			
 		}
@@ -231,9 +231,9 @@ jQuery(function() {
 
 	jQuery('#scale_crop').click(function() {
 		if (jQuery('#scale_crop').attr('checked')) {
-			jQuery('#resize').removeAttr('checked', '');
-			jQuery('#resize_width').val('');
-			jQuery('#resize_height').val('');
+			//jQuery('#resize').removeAttr('checked', '');
+			//jQuery('#resize_width').val('');
+			//jQuery('#resize_height').val('');
 			jQuery('#resize_width').css('border', '');
 			jQuery('#resize_height').css('border', '');
 		}
