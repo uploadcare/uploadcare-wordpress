@@ -109,7 +109,11 @@
 <script type="text/javascript">
 /* <![CDATA[ */
 var win = window.dialogArguments || opener || parent || top;
+<?php if (!$file->data['is_image']): ?>
+win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><?php echo $_GET['title'] ? $_GET['title'] : $file->data['original_filename']; ?></a>');
+<?php else: ?>
 win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><img src=\"<?php echo $file->getUrl($file->data['original_filename']); ?>\" alt=\"\" /></a>');
+<?php endif;?>
 /* ]]> */
 </script>
 <?php die();?>
@@ -122,7 +126,6 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 <form enctype="multipart/form-data" method="post" action="<?php echo esc_attr($form_action_url); ?>" class="<?php echo $form_class; ?>" id="<?php echo $type; ?>-form">
 	<input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
 	<input type="hidden" name="file_id" id="file_id" value="<?php echo $file_id; ?>" />
-
 	
 	<table class="slidetoggle describe startclosed" style="display: table;">
 		<thead class="media-item-info">
@@ -132,6 +135,14 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 			</td>
 		</tr>
 		</thead>
+		<?php if (!$file->data['is_image']):?>
+		<tbody>
+			<tr>
+				<td class="label"><label for="title">Title:</label></td>
+				<td><input type="text" name="title" id="title" /></td>
+			</tr>
+		</tbody>
+		<?php else: ?>
 		<tbody>
 			<tr>
 				<td colspan="2"><input type="radio" name="op_type" id="resize" value="resize" />&nbsp;<strong><label for="resize">Resize</label></strong></td>
@@ -166,6 +177,7 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 			</tr>			
 			
 		</tbody>
+		<?php endif; ?>
 		</table>	
 	<?php submit_button( __( 'Insert into post' ), 'button', 'insert', false ); ?>
 </form>
