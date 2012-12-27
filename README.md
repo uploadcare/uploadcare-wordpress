@@ -36,6 +36,11 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 ## Releases
 
+**1.0.2** ([Download](https://ucarecdn.com/fa548bf1-45f9-4e09-b942-bde7b5e5616e/uploadcare-wordpress_1.0.2.zip))
+* Operation values no longer nulled when operations type is changed.
+* Insert files, not only images.
+* Opration values no longer nulled when operations type is changed.
+
 **1.0.1** ([Download](https://ucarecdn.com/56f764a1-ce29-4417-8fae-480d97d024e5/uploadcare-wordpress_1.0.1.zip))
 * Scale crop and Resize are radio buttons now, not checkboxes.
 * Fixed script, showing "Store" button.
