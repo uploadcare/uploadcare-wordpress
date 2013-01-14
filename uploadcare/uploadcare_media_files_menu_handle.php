@@ -1,4 +1,7 @@
 <?php
+	global $wp_version;
+	list($wp_ver_main, $wp_ver_major, $wp_ver_minor) = explode('.', $wp_version);
+
 	$public_key = get_option('uploadcare_public');
 	$secret_key = get_option('uploadcare_secret');
 	$api = new Uploadcare_Api($public_key, $secret_key);
@@ -51,7 +54,9 @@
 	$sql = "SELECT file_id, is_file FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
 	$files = $wpdb->get_results($sql);
 ?>
+<?php if ($wp_ver_main == 3 and $wp_ver_major < 5 ): ?>
 <?php echo media_upload_header(); ?>
+<?php endif; ?>
 	<?php if ($pagination_info['pages'] > 1): ?>
 	<div>
 	Pages:

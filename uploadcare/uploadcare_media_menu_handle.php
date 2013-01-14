@@ -1,4 +1,7 @@
 <?php
+	global $wp_version;
+	list($wp_ver_main, $wp_ver_major, $wp_ver_minor) = explode('.', $wp_version);
+
 	$public_key = get_option('uploadcare_public');
 	$secret_key = get_option('uploadcare_secret');
 	$api = new Uploadcare_Api($public_key, $secret_key);
@@ -118,8 +121,9 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 </script>
 <?php die();?>
 <?php endif;?>
-
+<?php if ($wp_ver_main == 3 and $wp_ver_major < 5 ): ?>
 <?php echo media_upload_header(); ?>
+<?php endif; ?>
 <?php if ($file): ?>
 <div id="media-items">
 <div class="media-item">
