@@ -36,6 +36,12 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 ## Releases
 
+**1.0.3** ([Download](https://ucarecdn.com/b32c8669-a38a-48b9-8636-0aa442bba6a7/uploadcare-wordpress_1.0.3.zip))
+* More operations form validation
+* Fixed files deletion.
+* "Files" are shown as an Uploadcare logo.
+* Header is not displayed for Wordpress 3.5, updated for new "Add Media"
+
 **1.0.2** ([Download](https://ucarecdn.com/fa548bf1-45f9-4e09-b942-bde7b5e5616e/uploadcare-wordpress_1.0.2.zip))
 * Operation values no longer nulled when operations type is changed.
 * Insert files, not only images.
