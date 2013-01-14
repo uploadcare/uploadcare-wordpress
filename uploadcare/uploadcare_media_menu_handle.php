@@ -27,7 +27,7 @@
 		$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
 		$file->op('stretch/off');
 		$file->store();
-		$result = $wpdb->insert($wpdb->prefix.'uploadcare', array('id' => 'NULL', 'file_id' => $file_id));
+		$result = $wpdb->insert($wpdb->prefix.'uploadcare', array('id' => 'NULL', 'file_id' => $file_id, 'is_file' => $file->data['is_image'] ? 0 : 1));
 	}
 	if ($_GET['file_id']) {
 		$file_id = $_GET['file_id'];
@@ -187,55 +187,67 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 jQuery(function() {
 	jQuery('#<?php echo $type; ?>-form :input').change(function() {
 		var form = jQuery('#<?php echo $type; ?>-form');
+		var show_preview = true;
 
 		/*error check*/
 		if (jQuery('#resize').attr('checked')) {
-			if (!jQuery('#resize_width').val()) {
+			var _r_w = parseInt(jQuery('#resize_width').val());
+			var _r_h = parseInt(jQuery('#resize_height').val());
+			if (isNaN(_r_w)) _r_w = 0;
+			if (isNaN(_r_h)) _r_h = 0;		
+			if (_r_w <= 0) {
 				jQuery('#resize_width').css('border', '1px solid red');
+				show_preview = false;
 			} else {
 				jQuery('#resize_width').css('border', 'none');
 			}
-			if (!jQuery('#resize_height').val()) {
+			if (_r_h <= 0) {
 				jQuery('#resize_height').css('border', '1px solid red');
+				show_preview = false;
 			} else {
 				jQuery('#resize_height').css('border', 'none');
 			}
-			if (jQuery('#resize_height').val() || jQuery('#resize_width').val()) {
+			if (_r_w > 0 || _r_h > 0) {
 				jQuery('#resize_width').css('border', 'none');
 				jQuery('#resize_height').css('border', 'none');
+				show_preview = true;
 			}
 		}
 		if (jQuery('#scale_crop').attr('checked')) {
-			if (!jQuery('#scale_crop_width').val()) {
+			var _c_w = parseInt(jQuery('#scale_crop_width').val());
+			var _c_h = parseInt(jQuery('#scale_crop_height').val());
+			if (isNaN(_c_w)) _c_w = 0;
+			if (isNaN(_c_h)) _c_h = 0;					
+			if (_c_w <= 0) {
 				jQuery('#scale_crop_width').css('border', '1px solid red');
+				show_preview = false;
 			} else {
 				jQuery('#scale_crop_width').css('border', 'none');
-			}
-			if (!jQuery('#scale_crop_height').val()) {
+			}	
+			if (_c_h <= 0) {
 				jQuery('#scale_crop_height').css('border', '1px solid red');
+				show_preview = false;
 			} else {
 				jQuery('#scale_crop_height').css('border', 'none');
 			}
 		}
-		
-		var data = form.serialize();
-		data += '&_preview=true';
-		jQuery.post(
-				form.attr('action'),
-				data,
-				function (html) {
-					jQuery('#uploadcare_preview').html(html);
-				}
-		);
+
+		if (show_preview) {
+			var data = form.serialize();
+			data += '&_preview=true';
+			jQuery.post(
+					form.attr('action'),
+					data,
+					function (html) {
+						jQuery('#uploadcare_preview').html(html);
+					}
+			);
+		}
 		return false;
 	});
 
 	jQuery('#resize').click(function() {
 		if (jQuery('#resize').attr('checked')) {
-			//jQuery('#scale_crop').removeAttr('checked');
-			//jQuery('#scale_crop_width').val('');
-			//jQuery('#scale_crop_height').val('');
-			//jQuery('#scale_crop_center').removeAttr('checked');
 			jQuery('#scale_crop_width').css('border', '');
 			jQuery('#scale_crop_height').css('border', '');			
 		}
@@ -243,9 +255,6 @@ jQuery(function() {
 
 	jQuery('#scale_crop').click(function() {
 		if (jQuery('#scale_crop').attr('checked')) {
-			//jQuery('#resize').removeAttr('checked', '');
-			//jQuery('#resize_width').val('');
-			//jQuery('#resize_height').val('');
 			jQuery('#resize_width').css('border', '');
 			jQuery('#resize_height').css('border', '');
 		}

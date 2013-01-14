@@ -21,6 +21,8 @@
 		$file_id = $_GET['file_id'];
 		$file = $api->getFile($file_id);
 		$file->delete();
+		$query = $wpdb->prepare("DELETE FROM ".$wpdb->prefix."uploadcare where file_id = %s", $file_id);
+		$wpdb->query($query);
 	}
 	
 	$uri = str_replace( '%7E', '~', $_SERVER['REQUEST_URI']);
@@ -46,7 +48,7 @@
 	$pagination_info = array();
 	$count = $wpdb->get_row('SELECT COUNT(id) as count from uploadcare');
 	$pagination_info['pages'] = floor($count / 20);
-	$sql = "SELECT file_id FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
+	$sql = "SELECT file_id, is_file FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
 	$files = $wpdb->get_results($sql);
 ?>
 <?php echo media_upload_header(); ?>
@@ -67,7 +69,11 @@
 				<?php foreach ($files as $_file): ?>
 					<?php $file = $api->getFile($_file->file_id); ?>
 					<div style="float: left; width: 100px; height: 100px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
-						<a href="<?php echo admin_url("media-upload.php?type=uploadcare&tab=uploadcare&file_id=".$file->getFileId());?>"><img src="<?php echo $file->scaleCrop(100, 100, true); ?>" /></a>
+						<?php if ($_file->is_file): ?>
+						<a href="<?php echo admin_url("media-upload.php?type=uploadcare&tab=uploadcare&file_id=".$file->getFileId());?>"><div style="width: 100px; height: 100px;line-height: 100px;"><img src="https://ucarecdn.com/assets/images/logo.png" /></div><br /></a>
+						<?php else: ?>
+						<a href="<?php echo admin_url("media-upload.php?type=uploadcare&tab=uploadcare&file_id=".$file->getFileId());?>"><img src="<?php echo $file->scaleCrop(100, 100, true); ?>" /></a><br />
+						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>
 			</div>

@@ -12,6 +12,8 @@ if (isset($_GET['delete'])) {
 	$file_id = $_GET['file_id'];
 	$file = $api->getFile($file_id);
 	$file->delete();
+	$query = $wpdb->prepare("DELETE FROM ".$wpdb->prefix."uploadcare where file_id = %s", $file_id);
+	$wpdb->query($query);
 }
 
 $uri = str_replace( '%7E', '~', $_SERVER['REQUEST_URI']);
@@ -38,7 +40,7 @@ $pagination_info = $api->getFilePaginationInfo();
 $pagination_info = array();
 $count = $wpdb->get_row('SELECT COUNT(id) as count from uploadcare');
 $pagination_info['pages'] = floor($count / 20);
-$sql = "SELECT file_id FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
+$sql = "SELECT file_id, is_file FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
 $files = $wpdb->get_results($sql);
 ?>
 <div class="wrap">
@@ -65,7 +67,11 @@ $files = $wpdb->get_results($sql);
 				<?php foreach ($files as $_file): ?>
 					<?php $file = $api->getFile($_file->file_id); ?>
 					<div style="float: left; width: 200px; height: 250px; margin-left: 10px; text-align: center;">
+						<?php if ($_file->is_file): ?>
+						<a href="<?php echo $file; ?>" target="_blank"><div style="width: 200px; height: 200px;line-height: 200px;"><img src="https://ucarecdn.com/assets/images/logo.png" /></div><br /></a>
+						<?php else: ?>
 						<a href="<?php echo $file; ?>" target="_blank"><img src="<?php echo $file->scaleCrop(200, 200, true); ?>" /></a><br />
+						<?php endif; ?>
 						<a href="<?php echo change_param(change_param($uri, 'delete', 'true'), 'file_id', $file->getFileId());?>" onclick="document.location.href=document.location.href+'&delete=true&file_id=<?php echo $file->getFileId(); ?>'" style="color: red;">Delete</a> | <a href="<?php echo $file; ?>" target="_blank">View</a>
 					</div>
 				<?php endforeach; ?>

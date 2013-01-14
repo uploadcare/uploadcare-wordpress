@@ -3,7 +3,7 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-php-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 1.0.0
+Version: dev
 Author: Uploadcare
 Author URI: http://uploadcare.com/
 License: GPL2
@@ -20,6 +20,7 @@ function uploadcare_install() {
 	$sql = "CREATE TABLE $table_name (
 	id mediumint(9) NOT NULL AUTO_INCREMENT,
 	file_id varchar(200) DEFAULT '' NOT NULL,
+	is_file tinyint(1) DEFAULT 0 NOT NULL,
 	UNIQUE KEY id (id)
 	);";
 	
