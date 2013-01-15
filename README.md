@@ -37,6 +37,7 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 ## Releases
 
 **1.0.4** ([Download](https://ucarecdn.com/3cb08670-5b70-4a21-8ab9-ed5a072822a7/uploadcare-wordpress_1.0.4.zip))
+* Bugfix
 
 **1.0.3** ([Download](https://ucarecdn.com/b32c8669-a38a-48b9-8636-0aa442bba6a7/uploadcare-wordpress_1.0.3.zip))
 * More operations form validation
