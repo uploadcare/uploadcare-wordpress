@@ -57,8 +57,10 @@
 		}
 		
 		if ($_POST['op_type'] == 'resize') {
-			$resize_width = $_POST['resize_width'];
-			$resize_height = $_POST['resize_height'];
+			$resize_width = (int)$_POST['resize_width'];
+			$resize_height = (int)$_POST['resize_height'];
+			if (!$resize_width) $resize_width = null;
+			if (!$resize_height) $resize_height = null;
 			if ($resize_width || $resize_height) {
 				$file = $file->resize($resize_width, $resize_height);
 			}
