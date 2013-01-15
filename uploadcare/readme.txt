@@ -53,6 +53,9 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 == Changelog ==
 
+= 1.0.4 =
+* Bugfix 
+
 = 1.0.3 = 
 * More operations form validation
 * Fixed files deletion.
