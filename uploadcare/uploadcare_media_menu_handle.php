@@ -115,7 +115,7 @@
 /* <![CDATA[ */
 var win = window.dialogArguments || opener || parent || top;
 <?php if (!$file->data['is_image']): ?>
-win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><?php echo $_GET['title'] ? $_GET['title'] : $file->data['original_filename']; ?></a>');
+win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><?php echo $_REQUEST['title'] ? $_REQUEST['title'] : $file->data['original_filename']; ?></a>');
 <?php else: ?>
 win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><img src=\"<?php echo $file->getUrl($file->data['original_filename']); ?>\" alt=\"\" /></a>');
 <?php endif;?>
