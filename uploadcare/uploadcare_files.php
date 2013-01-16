@@ -68,11 +68,11 @@ $files = $wpdb->get_results($sql);
 					<?php $file = $api->getFile($_file->file_id); ?>
 					<div style="float: left; width: 200px; height: 250px; margin-left: 10px; text-align: center;">
 						<?php if ($_file->is_file): ?>
-						<a href="<?php echo $file; ?>" target="_blank"><div style="width: 200px; height: 200px;line-height: 200px;"><img src="https://ucarecdn.com/assets/images/logo.png" /></div><br /></a>
+						<a href="<?php echo $file; ?>" target="_blank"><div style="width: 200px; height: 200px;line-height: 200px;"><img src="https://ucarecdn.com/assets/images/logo.png" /></div></a>
 						<?php else: ?>
 						<a href="<?php echo $file; ?>" target="_blank"><img src="<?php echo $file->scaleCrop(200, 200, true); ?>" /></a><br />
 						<?php endif; ?>
-						<a href="<?php echo change_param(change_param($uri, 'delete', 'true'), 'file_id', $file->getFileId());?>" onclick="document.location.href=document.location.href+'&delete=true&file_id=<?php echo $file->getFileId(); ?>'" style="color: red;">Delete</a> | <a href="<?php echo $file; ?>" target="_blank">View</a>
+						<a href="<?php echo change_param(change_param($uri, 'delete', 'true'), 'file_id', $file->getFileId());?>" onclick="document.location.href=document.location.href+'&delete=true&file_id=<?php echo $file->getFileId(); ?>'" style="color: red;">Delete</a> | <a href="<?php echo $file; ?>" target="_blank"><?php if ($_file->is_file): ?>Download<?php else: ?>View<?php endif; ?></a>
 					</div>
 				<?php endforeach; ?>
 			</div>

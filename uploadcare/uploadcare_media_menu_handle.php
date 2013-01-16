@@ -189,6 +189,13 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 </form>
 </div>
 </div>
+<style type="text/css">
+<!--
+.uc_alert {
+	border: 1px solid red! important;
+}
+-->
+</style>
 <script type="text/javascript">
 jQuery(function() {
 	jQuery('#<?php echo $type; ?>-form :input').change(function() {
@@ -202,20 +209,20 @@ jQuery(function() {
 			if (isNaN(_r_w)) _r_w = 0;
 			if (isNaN(_r_h)) _r_h = 0;		
 			if (_r_w <= 0) {
-				jQuery('#resize_width').css('border', '1px solid red');
+				jQuery('#resize_width').addClass('uc_alert');
 				show_preview = false;
 			} else {
-				jQuery('#resize_width').css('border', 'none');
+				jQuery('#resize_width').removeClass('uc_alert');
 			}
 			if (_r_h <= 0) {
-				jQuery('#resize_height').css('border', '1px solid red');
+				jQuery('#resize_height').addClass('uc_alert');
 				show_preview = false;
 			} else {
-				jQuery('#resize_height').css('border', 'none');
+				jQuery('#resize_height').removeClass('uc_alert');
 			}
 			if (_r_w > 0 || _r_h > 0) {
-				jQuery('#resize_width').css('border', 'none');
-				jQuery('#resize_height').css('border', 'none');
+				jQuery('#resize_width').removeClass('uc_alert');
+				jQuery('#resize_height').removeClass('uc_alert');
 				show_preview = true;
 			}
 		}
@@ -225,16 +232,16 @@ jQuery(function() {
 			if (isNaN(_c_w)) _c_w = 0;
 			if (isNaN(_c_h)) _c_h = 0;					
 			if (_c_w <= 0) {
-				jQuery('#scale_crop_width').css('border', '1px solid red');
+				jQuery('#scale_crop_width').addClass('uc_alert');
 				show_preview = false;
 			} else {
-				jQuery('#scale_crop_width').css('border', 'none');
+				jQuery('#scale_crop_width').removeClass('uc_alert');
 			}	
 			if (_c_h <= 0) {
-				jQuery('#scale_crop_height').css('border', '1px solid red');
+				jQuery('#scale_crop_height').addClass('uc_alert');
 				show_preview = false;
 			} else {
-				jQuery('#scale_crop_height').css('border', 'none');
+				jQuery('#scale_crop_height').removeClass('uc_alert');
 			}
 		}
 
@@ -248,21 +255,24 @@ jQuery(function() {
 						jQuery('#uploadcare_preview').html(html);
 					}
 			);
+			jQuery('#insert').removeAttr('disabled');
+		} else {
+		  jQuery('#insert').attr('disabled', 'disabled');
 		}
 		return false;
 	});
 
 	jQuery('#resize').click(function() {
 		if (jQuery('#resize').attr('checked')) {
-			jQuery('#scale_crop_width').css('border', '');
-			jQuery('#scale_crop_height').css('border', '');			
+			jQuery('#scale_crop_width').removeClass('uc_alert');
+			jQuery('#scale_crop_height').removeClass('uc_alert');			
 		}
 	});
 
 	jQuery('#scale_crop').click(function() {
 		if (jQuery('#scale_crop').attr('checked')) {
-			jQuery('#resize_width').css('border', '');
-			jQuery('#resize_height').css('border', '');
+			jQuery('#resize_width').removeClass('uc_alert');
+			jQuery('#resize_height').removeClass('uc_alert');
 		}
 	});
 	
