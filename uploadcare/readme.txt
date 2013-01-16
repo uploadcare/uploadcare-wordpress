@@ -3,7 +3,7 @@ Contributors: grayhound1
 Tags: media upload, file handling
 Requires at least: 3.3+
 Tested up to: 3.4
-Stable tag: 1.0.3
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ When the file is stored a new page with file operations will be available.
 Apply operations and press "Insert Into Post". The image will be inserted in your post.
 
 == Changelog ==
+
+= 1.0.5 = 
+* Bugfix
 
 = 1.0.4 =
 * Bugfix 
