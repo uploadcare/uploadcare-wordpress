@@ -36,6 +36,9 @@ Apply operations and press "Insert Into Post". The image will be inserted in you
 
 ## Releases
 
+**1.0.6** ([Download](https://ucarecdn.com/bc139c13-f832-49c0-9d24-b68172b3fec8/uploadcare-wordpress_1.0.6.zip))
+* New widget version 0.6.3
+
 **1.0.5** ([Download](https://ucarecdn.com/cdd3a8d9-28d1-44f7-85ec-b54f0e4cf30b/uploadcare-wordpress_1.0.5.zip))
 * Bugfix
 
