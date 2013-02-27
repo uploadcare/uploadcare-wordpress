@@ -11,7 +11,8 @@ if (isset($_GET['page_num'])) {
 if (isset($_GET['delete'])) {
 	$file_id = $_GET['file_id'];
 	$file = $api->getFile($file_id);
-	$file->delete();
+	var_dump($file->delete());
+	die();
 	$query = $wpdb->prepare("DELETE FROM ".$wpdb->prefix."uploadcare where file_id = %s", $file_id);
 	$wpdb->query($query);
 }
