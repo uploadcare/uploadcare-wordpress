@@ -42,8 +42,19 @@
 	$is_insert = false;
 	$is_preview = false;
 	if ($_POST['insert'] or $_POST['_preview']) {
-		$file_id = $_POST['file_id'];
+		$file_url = $_POST['file_id'];
+		$path = parse_url($file_url, PHP_URL_PATH);
+		$path_exp = explode('/', $path);
+		$file_id = $path_exp[1];
 		$file = $api->getFile($file_id);
+		$file->store();
+		$is_insert = true;
+		$original = clone $file;
+		
+		/**
+		 * Deprecated due widget crop.
+		 **/
+		/*
 		$original = clone $file;
 		
 		if ($_POST['op_type'] == 'crop') {
@@ -103,6 +114,7 @@
 			$is_insert = false;
 			$is_preview = true;
 		}	
+		*/
 	}
 	
 ?>
@@ -117,7 +129,7 @@ var win = window.dialogArguments || opener || parent || top;
 <?php if (!$file->data['is_image']): ?>
 win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><?php echo $_REQUEST['title'] ? $_REQUEST['title'] : $file->data['original_filename']; ?></a>');
 <?php else: ?>
-win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><img src=\"<?php echo $file->getUrl($file->data['original_filename']); ?>\" alt=\"\" /></a>');
+win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original_filename']); ?>\"><img src=\"<?php echo $file_url; ?>\" alt=\"\" /></a>');
 <?php endif;?>
 /* ]]> */
 </script>
@@ -284,9 +296,9 @@ jQuery(function() {
 <input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
 <?php wp_nonce_field('media-form'); ?>
 	<h3 class="media-title">Use Uploadcare widget to upload file.</h3>
-	<?php echo $api->widget->getInputTag('file_id'); ?>
+	<?php echo $api->widget->getInputTag('file_id', array('data-crop' => '')); ?>
 	<p class="savebutton ml-submit" id="_uc_store" style="display: none;">
-	<?php submit_button( __( 'Store File' ), 'button', 'save', false ); ?>
+	<?php submit_button( __( 'Store And Insert' ), 'button', 'insert', false ); ?>
 	</p>	
 </form>
 
