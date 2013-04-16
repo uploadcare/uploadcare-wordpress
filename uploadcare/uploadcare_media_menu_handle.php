@@ -35,8 +35,8 @@
 	if ($_GET['file_id']) {
 		$file_id = $_GET['file_id'];
 		$file = $api->getFile($file_id);
-		$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
-		$file->op('stretch/off');
+		//$file->scaleCrop($scale_crop_default_width, $scale_crop_default_height);
+		//$file->op('stretch/off');
 		$file->store();		
 	}
 	$is_insert = false;
@@ -50,6 +50,7 @@
 		$file->store();
 		$is_insert = true;
 		$original = clone $file;
+		$result = $wpdb->insert($wpdb->prefix.'uploadcare', array('id' => 'NULL', 'file_id' => $file_id, 'is_file' => $file->data['is_image'] ? 0 : 1));
 		
 		/**
 		 * Deprecated due widget crop.
@@ -138,7 +139,7 @@ win.send_to_editor('<a href=\"<?php echo $original->getUrl($file->data['original
 <?php if ($wp_ver_main == 3 and $wp_ver_major < 5 ): ?>
 <?php echo media_upload_header(); ?>
 <?php endif; ?>
-<?php if ($file): ?>
+<?php if (false): ?>
 <div id="media-items">
 <div class="media-item">
 <form enctype="multipart/form-data" method="post" action="<?php echo esc_attr($form_action_url); ?>" class="<?php echo $form_class; ?>" id="<?php echo $type; ?>-form">
@@ -296,7 +297,11 @@ jQuery(function() {
 <input type="hidden" name="post_id" id="post_id" value="<?php echo (int) $post_id; ?>" />
 <?php wp_nonce_field('media-form'); ?>
 	<h3 class="media-title">Use Uploadcare widget to upload file.</h3>
+	<?php if ($file): ?>
+	<?php echo $api->widget->getInputTag('file_id', array('data-crop' => '', 'value' => $file->getFileId())); ?>	
+	<?php else: ?>
 	<?php echo $api->widget->getInputTag('file_id', array('data-crop' => '')); ?>
+	<?php endif; ?>
 	<p class="savebutton ml-submit" id="_uc_store" style="display: none;">
 	<?php submit_button( __( 'Store And Insert' ), 'button', 'insert', false ); ?>
 	</p>	

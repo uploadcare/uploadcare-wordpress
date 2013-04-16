@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: grayhound1
 Tags: media upload, file handling
-Requires at least: 3.3+
-Tested up to: 3.4
-Stable tag: 1.0.5
+Requires at least: 3.5+
+Tested up to: 3.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
