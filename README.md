@@ -26,15 +26,17 @@ Start adding new post.
 
 Press "Upload/Insert" to insert some media. You will see, that new tab "Uploadcare" is available.
 
-Upload a file using widget and press "Store File". 
+Upload a file using widget.
 
-When the file is stored a new page with file operations will be available.
+Crop the file. Only cropped area will be inserted.
 
-Apply operations and press "Insert Into Post". The image will be inserted in your post.
-
-[More information on file operations can be found here][2]
+Press "Store and Insert". The image will be inserted in your post. 
 
 ## Releases
+
+**1.0.6**
+* Widget update.
+* Manual crop.
 
 **1.0.5** ([Download](https://ucarecdn.com/cdd3a8d9-28d1-44f7-85ec-b54f0e4cf30b/uploadcare-wordpress_1.0.5.zip))
 * Bugfix

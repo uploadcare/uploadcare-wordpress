@@ -45,11 +45,11 @@ Start adding new post.
 
 Press "Upload/Insert" to insert some media. You will see, that new tab "Uploadcare" is available.
 
-Upload a file using widget and press "Store File". 
+Upload a file using widget.
 
-When the file is stored a new page with file operations will be available.
+Crop the file. Only cropped area will be inserted.
 
-Apply operations and press "Insert Into Post". The image will be inserted in your post.
+Press "Store and Insert". The image will be inserted in your post. 
 
 == Changelog ==
 
