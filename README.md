@@ -34,6 +34,9 @@ Press "Store and Insert". The image will be inserted in your post.
 
 ## Releases
 
+**2.0** 
+* New plugin with new widget (0.7) and manual crop.
+
 **1.0.6**
 * Widget update.
 * Manual crop.
