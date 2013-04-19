@@ -41,7 +41,12 @@ function uploadcare_add_media($context) {
           		file_id: _file_id
           	};
           	jQuery.post(ajaxurl, data, function(response) {
-              window.send_to_editor('<img src=\"'+url+'\" />', 'unfiltered_html');
+              console.log(fileInfo);
+              if (fileInfo.isImage) {
+                window.send_to_editor('<a href=\"https://ucarecdn.com/'+fileInfo.uuid+'/\"><img src=\"'+url+'\" /></a>');
+              } else {
+                window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
+              }
           	});
           });      
         });
