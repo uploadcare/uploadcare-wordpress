@@ -12,7 +12,9 @@ Uploadcare provides media uploading, processing and CDN for your blog.
 == Description ==
 
 Uploadcare provides media uploading, processing and CDN for your blog.
+
 You can upload even very large images and crop and resize them.
+
 And the best thing of all: with Uploadcare you can select files directly from Facebook, Instagram and Flickr, not only from your computer.
 
 Check [Uploadcare.com](https://uploadcare.com/) for more information.
