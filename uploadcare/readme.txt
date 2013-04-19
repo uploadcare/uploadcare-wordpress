@@ -7,29 +7,32 @@ Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin adds a way to work with uploadcare.com service and to insert images to your post using it.
+Uploadcare provides media uploading, processing and CDN for your blog.
 
 == Description ==
 
-This plugin adds a new tab "Uploadcare" to your "Upload/Insert" at post edit/creating.
+Uploadcare provides media uploading, processing and CDN for your blog.
 
-Plugin implements a way to upload images and files using uploadcare.com service.
+You can upload even very large images and crop and resize them.
 
-It also gives a way to use CDN operations after file is uploaded.
+And the best thing of all: with Uploadcare you can select files directly from Facebook, Instagram and Flickr, not only from your computer.
 
-You can find more information about [Uploadcare](http://uploadcare.com/).
+Check [Uploadcare.com](https://uploadcare.com/) for more information.
 
 == Installation ==
 
-Create your personal account at [Uploadcare](http://uploadcare.com/)
+1. Download the latest release. The zip file contains the Wordpress plugin itself and all its dependencies.
 
-Download the latest release. The zip file contains the Wordpress plugin itself and all dependencies.
+2. Unzip file to your wp-content/plugins folder.
 
-Uzip file to your wp-content/plugins folder.
+3. Activate plugin at "Plugins" page inside your Wordpress admin.
 
-Activate plugin at "Plugins" page inside your Wordpress admin.
+4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
+To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
 
-Go to "Settings" -> "Uploadcare settings" and provide public and secret key for your account.
+5. Create new post and feel yourself proud!
+
+Send us your feedback, feedback@uploadcare.com
 
 == Screenshots ==
 
@@ -41,15 +44,15 @@ Go to "Settings" -> "Uploadcare settings" and provide public and secret key for 
 
 == Usage ==
 
-Start adding new post.
+1. Begin adding a new post.
 
-Press "Upload/Insert" to insert some media. You will see, that new tab "Uploadcare" is available.
+2. Press "Add Media" to insert media with the Uploadcare widget.
 
-Upload a file using widget and press "Store File". 
+3. Upload a file using the widget.
 
-When the file is stored a new page with file operations will be available.
+4. Crop the file if you wish. Only the cropped area will be inserted.
 
-Apply operations and press "Insert Into Post". The image will be inserted in your post.
+5. Press "Store and Insert". The image will be inserted into your post. 
 
 == Changelog ==
 
