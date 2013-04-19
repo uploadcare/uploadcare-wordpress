@@ -34,7 +34,7 @@
 	$pagination_info = array();
 	$count = $wpdb->get_row('SELECT COUNT(id) as count from uploadcare ORDER BY `id` DESC');
 	$pagination_info['pages'] = floor($count / 20);
-	$sql = "SELECT file_id, is_file FROM ".$wpdb->prefix."uploadcare LIMIT ".(($page-1)*20).",20";
+	$sql = "SELECT file_id, is_file, filename FROM ".$wpdb->prefix."uploadcare ORDER BY `id` DESC LIMIT ".(($page-1)*20).",20";
 	$files = $wpdb->get_results($sql);
 ?>
 <script type="text/javascript">
@@ -59,9 +59,9 @@
 			<div>
 				<?php foreach ($files as $_file): ?>
 					<?php $file = $api->getFile($_file->file_id); ?>
-					<div style="float: left; width: 100px; height: 100px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
+					<div style="float: left; width: 110px; height: 110px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
 						<?php if ($_file->is_file): ?>
-						<a href="javascript: win.ucEditFile('<?php echo $_file->file_id?>');"><div style="width: 100px; height: 100px;line-height: 100px;"><img src="https://ucarecdn.com/assets/images/logo.png" /></div><br /></a>
+						<a href="javascript: win.ucEditFile('<?php echo $_file->file_id?>');"><div style="width: 110px; height: 100px;line-height: 100px;"><img src="https://ucarecdn.com/assets/images/logo.png" /></div><br /><?php echo $_file->filename;?></a>
 						<?php else: ?>
 						<a href="javascript: win.ucEditFile('<?php echo $_file->file_id?>');"><img src="<?php echo $file->scaleCrop(100, 100, true); ?>" /></a><br />
 						<?php endif; ?>

@@ -33,28 +33,26 @@ function ucEditFile(file_id) {
   var file = uploadcare.fileFrom('uploaded', file_id);
   var dialog = uploadcare.openDialog(file).done(ucFileDone);
 }  
-jQuery(document).ready(function($) {
-  function uploadcareMediaButton() {
-    var dialog = uploadcare.openDialog().done(ucFileDone);
-  };
-  function ucFileDone(file) {
-    file.done(function(fileInfo) {
-      _file_id = fileInfo.uuid;
-      url = fileInfo.cdnUrl;
-      var data = {
-        'action': 'uploadcare_handle',
-        'file_id': _file_id
-      };
-      jQuery.post(ajaxurl, data, function(response) {
-        if (fileInfo.isImage) {
-          window.send_to_editor('<a href=\"https://ucarecdn.com/'+fileInfo.uuid+'/\"><img src=\"'+url+'\" /></a>');
-        } else {
-          window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
-        }  
-      });
-    });  
-  };        
-});     
+function uploadcareMediaButton() {
+  var dialog = uploadcare.openDialog().done(ucFileDone);
+};  
+function ucFileDone(file) {
+  file.done(function(fileInfo) {
+    _file_id = fileInfo.uuid;
+    url = fileInfo.cdnUrl;
+    var data = {
+      'action': 'uploadcare_handle',
+      'file_id': _file_id
+    };
+    jQuery.post(ajaxurl, data, function(response) {
+      if (fileInfo.isImage) {
+        window.send_to_editor('<a href=\"https://ucarecdn.com/'+fileInfo.uuid+'/\"><img src=\"'+url+'\" /></a>');
+      } else {
+        window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
+      }  
+    });
+  });  
+};             
  </script>
  ";
  $context .= $script;
@@ -70,7 +68,7 @@ function uploadcare_handle() {
   $file_id = $_POST['file_id'];
   $file = $api->getFile($file_id);
   $file->store();
-  $result = $wpdb->insert($wpdb->prefix.'uploadcare', array('id' => 'NULL', 'file_id' => $file_id, 'is_file' => $file->data['is_image'] ? 0 : 1));
+  $result = $wpdb->insert($wpdb->prefix.'uploadcare', array('id' => 'NULL', 'file_id' => $file_id, 'filename' => $file->data['original_filename'], 'is_file' => $file->data['is_image'] ? 0 : 1));
   die();
 }
 
@@ -91,6 +89,7 @@ function uploadcare_install() {
   id mediumint(9) NOT NULL AUTO_INCREMENT,
   file_id varchar(200) DEFAULT '' NOT NULL,
   is_file tinyint(1) DEFAULT 0 NOT NULL,
+  filename varchar(200) DEFAULT '' NOT NULL,
   UNIQUE KEY id (id)
   );";
 
