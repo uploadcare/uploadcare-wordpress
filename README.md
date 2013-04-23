@@ -12,32 +12,39 @@ It's based on a [uploadcare-php][4] library.
 
 ## Install 
 
-[Download the latest release][3]. The zip file contains the Wordpress plugin itself and all dependencies.
+1. [Download the latest release][3]. The zip file contains the Wordpress plugin itself and all its dependencies.
 
-Uzip file to your wp-content/plugins folder.
+2. Unzip file to your wp-content/plugins folder.
 
-Activate plugin at "Plugins" page inside your Wordpress admin.
+3. Activate plugin at "Plugins" page inside your Wordpress admin.
 
-Go to "Settings" -> "Uploadcare settings" and provide public and secret key for your account.
+4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
+To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
+
+5. Create new post and feel yourself proud!
+
+Send us your feedback, feedback@uploadcare.com
 
 ## Usage
 
-Start adding new post.
+1. Begin adding a new post.
 
-Press "Upload/Insert" to insert some media. You will see, that new tab "Uploadcare" is available.
+2. Press "Add Media" to insert media with the Uploadcare widget.
 
-Upload a file using widget and press "Store File". 
+3. Upload a file using the widget.
 
-When the file is stored a new page with file operations will be available.
+4. Crop the file if you wish. Only the cropped area will be inserted.
 
-Apply operations and press "Insert Into Post". The image will be inserted in your post.
-
-[More information on file operations can be found here][2]
+5. Press "Store and Insert". The image will be inserted into your post. 
 
 ## Releases
 
-**1.0.6** ([Download](https://ucarecdn.com/bc139c13-f832-49c0-9d24-b68172b3fec8/uploadcare-wordpress_1.0.6.zip))
-* New widget version 0.6.3
+**2.0** 
+* New plugin with new widget (0.7) and manual crop.
+
+**1.0.6**
+* Widget update.
+* Manual crop.
 
 **1.0.5** ([Download](https://ucarecdn.com/cdd3a8d9-28d1-44f7-85ec-b54f0e4cf30b/uploadcare-wordpress_1.0.5.zip))
 * Bugfix
