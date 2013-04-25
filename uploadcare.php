@@ -21,8 +21,8 @@ function uploadcare_add_media($context) {
 
   $img = plugins_url('uploadcare/logo.png');
   $css_hook = '<style tyle="text/css">#wp-content-media-buttons>a:first-child { display: none }</style>';
-  $context = '<a class="button" style="padding-left: .4em;" href="javascript: uploadcareMediaButton(); "><span class="wp-media-buttons-icon" style="vertical-align: text-bottom; background: url(\''.$img.'\') no-repeat top left"></span>Add Media</a>';
-  $context .= '<a href="#" class="button insert-media add_media" data-editor="content" title="Wordpress Media Library"><span class="wp-media-buttons-icon"></span>Wordpress Media Library</a>';
+  $context = '<div style="float: left"><a class="button" style="padding-left: .4em;" href="javascript: uploadcareMediaButton(); "><span class="wp-media-buttons-icon" style="height: 20px; padding-right: 2px; vertical-align: text-bottom; background: url(\''.$img.'\') no-repeat 0px 3px;"></span>Add Media</a></div>';
+  $context .= '<div style="float: left"><a href="#" class="button insert-media add_media" data-editor="content" title="Wordpress Media Library"><span class="wp-media-buttons-icon"></span>Wordpress Media Library</a></div>';
   $context .= $css_hook;
   $script .= "
 <script type=\"text/javascript\">UPLOADCARE_CROP = true;</script>
