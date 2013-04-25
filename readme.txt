@@ -1,38 +1,64 @@
 === Plugin Name ===
 Contributors: grayhound1
-Tags: media upload, file handling
+Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
 Requires at least: 3.5+
 Tested up to: 3.5
 Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Uploadcare provides media uploading, processing and CDN for your blog.
+Uploadcare: Add media from anywhere.
 
 == Description ==
 
 Uploadcare provides media uploading, processing and CDN for your blog.
+You can upload even very large images and crop them.
 
-You can upload even very large images and crop and resize them.
+### Feautures ###
+* Upload images of any resolution
+* Crop images
+* Upload documents and archives
+* Choose images from Facebook, Instagram or Flickr
+* Choose files from Dropbox or Google Drive
+* Deliver your media through CDN, it's up to 5x times faster
 
-And the best thing of all: with Uploadcare you can select files directly from Facebook, Instagram and Flickr, not only from your computer.
+### Languages ###
+* English
+* Latvian
+* Polish
+* Portuguese
+* Russian
+* Spanish
 
-Check [Uploadcare.com](https://uploadcare.com/) for more information.
+### More information ###
+Check [Uploadcare.com](https://uploadcare.com/) to learn more.
+Send us your feedback, <feedback@uploadcare.com>
 
 == Installation ==
 
-1. Download the latest release. The zip file contains the Wordpress plugin itself and all its dependencies.
+### Fastest way ###
 
-2. Unzip file to your wp-content/plugins folder.
+1. In plugin manager, click "Add New"
+1. Search for "uploadcare"
+1. Click "install"
+1. Activate the plugin once it is installed
+1. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
 
-3. Activate plugin at "Plugins" page inside your Wordpress admin.
-
-4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
 To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
 
-5. Create new post and feel yourself proud!
+### Manual ###
 
-Send us your feedback, feedback@uploadcare.com
+1. Download the latest release. The zip file contains the Wordpress plugin itself and all its dependencies
+1. Unzip file to your wp-content/plugins folder
+1. Activate the plugin once it is installed
+1. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
+
+To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
+
+### Requirements ###
+* Wordpress 3.5+
+* PHP 5.2+
+* php-curl
 
 == Screenshots ==
 
@@ -41,14 +67,10 @@ Send us your feedback, feedback@uploadcare.com
 == Usage ==
 
 1. Begin adding a new post.
-
-2. Press "Add Media" to insert media with the Uploadcare widget.
-
-3. Upload a file using the widget.
-
-4. Crop the file if you wish. Only the cropped area will be inserted.
-
-5. Press "Store and Insert". The image will be inserted into your post. 
+1. Press "Add Media" to insert media with the Uploadcare widget.
+1. Upload an image using the widget.
+1. Crop the image if you wish. Only the cropped area will be inserted.
+1. Press "Done". The image will be inserted into your post.
 
 == Changelog ==
 
