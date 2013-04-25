@@ -1,13 +1,13 @@
-=== Plugin Name ===
+=== Uploadcare: Add media from anywhere ===
 Contributors: grayhound1
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
 Requires at least: 3.5+
 Tested up to: 3.5
-Stable tag: 2.0
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Uploadcare: Add media from anywhere.
+Uploadcare provides media uploading, processing and CDN for your blog. You can upload even very large images and crop them.
 
 == Description ==
 
@@ -49,9 +49,9 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 ### Manual ###
 
 1. Download the latest release. The zip file contains the Wordpress plugin itself and all its dependencies
-1. Unzip file to your wp-content/plugins folder
-1. Activate the plugin once it is installed
-1. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
+2. Unzip file to your wp-content/plugins folder
+3. Activate the plugin once it is installed
+4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
 
 To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
 
@@ -62,15 +62,18 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 
 == Screenshots ==
 
-1. Uploadcare Widget.
+1. "Add Media" button.
+2. Uploading widget: Choose images from Facebook.
+3. Uploading widget: Choose images from Google Drive.
+4. Uploading widget: Crop image.
 
 == Usage ==
 
 1. Begin adding a new post.
-1. Press "Add Media" to insert media with the Uploadcare widget.
-1. Upload an image using the widget.
-1. Crop the image if you wish. Only the cropped area will be inserted.
-1. Press "Done". The image will be inserted into your post.
+2. Press "Add Media" to insert media with the Uploadcare widget.
+3. Upload an image using the widget.
+4. Crop the image if you wish. Only the cropped area will be inserted.
+5. Press "Done". The image will be inserted into your post.
 
 == Changelog ==
 
