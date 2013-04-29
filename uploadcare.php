@@ -26,7 +26,7 @@ function uploadcare_add_media($context) {
   $context .= $css_hook;
   $script .= "
 <script type=\"text/javascript\">UPLOADCARE_CROP = true;</script>
-".$api->widget->getScriptTag('0.8.1')."
+".$api->widget->getScriptTag('0.8.1.2')."
 <script type=\"text/javascript\">
 function ucEditFile(file_id) {
   try{tb_remove();}catch(e){};

@@ -11,10 +11,7 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 
 == Description ==
 
-Uploadcare provides media uploading, processing and CDN for your blog.
-You can upload even very large images and crop them.
-
-### Feautures ###
+### Features ###
 * Upload images of any resolution
 * Crop images
 * Upload documents and archives
@@ -64,7 +61,7 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 
 1. "Add Media" button.
 2. Uploading widget: Choose images from Facebook.
-3. Uploading widget: Choose images from Google Drive.
+3. Uploading widget: Choose files from Google Drive.
 4. Uploading widget: Crop image.
 
 == Usage ==
