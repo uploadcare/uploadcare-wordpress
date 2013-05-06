@@ -74,6 +74,9 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 
 == Changelog ==
 
+= 2.0.5 =
+* New setting "Insert image with url to the original image".
+
 = 2.0 =
 * New widget version, plugin refactored and ready to go.
 
