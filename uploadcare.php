@@ -17,6 +17,7 @@ require_once 'uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
 function uploadcare_add_media($context) {
   $public_key = get_option('uploadcare_public');
   $secret_key = get_option('uploadcare_secret');
+  $original = get_option('uploadcare_original');
   $api = new Uploadcare_Api($public_key, $secret_key);
 
   $img = plugins_url('uploadcare/logo.png');
@@ -44,13 +45,21 @@ function ucFileDone(file) {
       'action': 'uploadcare_handle',
       'file_id': _file_id
     };
-    jQuery.post(ajaxurl, data, function(response) {
-      if (fileInfo.isImage) {
-        window.send_to_editor('<a href=\"https://ucarecdn.com/'+fileInfo.uuid+'/\"><img src=\"'+url+'\" /></a>');
-      } else {
-        window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
-      }  
-    });
+    jQuery.post(ajaxurl, data, function(response) {";
+  if ($original) {
+    $script .= "if (fileInfo.isImage) {
+      window.send_to_editor('<a href=\"https://ucarecdn.com/'+fileInfo.uuid+'/\"><img src=\"'+url+'\" /></a>');
+    } else {
+      window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
+    }";
+  } else {
+    $script .= "if (fileInfo.isImage) {
+      window.send_to_editor('<img src=\"'+url+'\" />');
+    } else {
+      window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
+    }";    
+  } 
+  $script .="  });
   });  
 };             
  </script>

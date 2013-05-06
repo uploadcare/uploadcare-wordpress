@@ -5,6 +5,8 @@ if($_POST['uploadcare_hidden'] == 'Y') {
 	update_option('uploadcare_public', $uploadcare_public);
 	$uploadcare_secret = $_POST['uploadcare_secret'];
 	update_option('uploadcare_secret', $uploadcare_secret);
+	$uploadcare_original = $_POST['uploadcare_original'];
+	update_option('uploadcare_original', $uploadcare_original);
 	$saved = true;
 } else {
 	$uploadcare_public = get_option('uploadcare_public');
@@ -21,6 +23,7 @@ if($_POST['uploadcare_hidden'] == 'Y') {
         <input type="hidden" name="uploadcare_hidden" value="Y">  
         <p><?php _e("Public key: " ); ?><input type="text" name="uploadcare_public" value="<?php echo $uploadcare_public; ?>" size="20"><?php _e(" ex: demopublickey" ); ?></p>  
         <p><?php _e("Secret key: " ); ?><input type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20"><?php _e(" ex: demoprivatekey" ); ?></p>  
+        <p><input type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?> />&nbsp;<?php _e("Insert image with url to the original image" ); ?></p>  
         <p class="submit">  
         <?php submit_button(); ?>  
         </p>  
