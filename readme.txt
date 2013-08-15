@@ -3,7 +3,7 @@ Contributors: grayhound1
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
 Requires at least: 3.5+
 Tested up to: 3.5
-Stable tag: 2.0.2
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,9 +73,20 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 5. Press "Done". The image will be inserted into your post.
 
 == Changelog ==
-
 = 2.0.5 =
 * New setting "Insert image with url to the original image".
+
+= 2.0.4 =
+* Uploadcare widget updated to version 0.8.1.2
+
+= 2.0.3 = 
+* Bugfixes
+
+= 2.0.2 =
+* Bugfixes
+
+= 2.0.1 =
+* Bugfixes
 
 = 2.0 =
 * New widget version, plugin refactored and ready to go.
