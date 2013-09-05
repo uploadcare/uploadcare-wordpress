@@ -91,6 +91,6 @@ Send us your feedback, feedback@uploadcare.com
 
 [1]: https://uploadcare.com/
 [2]: https://uploadcare.com/documentation/reference/basic/cdn.html
-[3]: https://github.com/uploadcare/uploadcare-wordpress#releases
+[3]: https://github.com/uploadcare/uploadcare-wordpress/releases
 [4]: https://github.com/uploadcare/uploadcare-php
 [5]: http://wordpress.org/
