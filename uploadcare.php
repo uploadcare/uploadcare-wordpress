@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: Uploadcare
-Plugin URI: http://github.com/uploadcare/uploadcare-php-wordpress
+Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
 Version: dev
 Author: Uploadcare
@@ -27,7 +27,7 @@ function uploadcare_add_media($context) {
   $context .= $css_hook;
   $script .= "
 <script type=\"text/javascript\">UPLOADCARE_CROP = true;</script>
-".$api->widget->getScriptTag('0.8.1.2')."
+".$api->widget->getScriptTag()."
 <script type=\"text/javascript\">
 function ucEditFile(file_id) {
   try{tb_remove();}catch(e){};
