@@ -1,6 +1,6 @@
 <?php
 /*
- Plugin Name: Uploadcare
+Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
 Version: dev
@@ -14,6 +14,26 @@ if ( is_admin() )
 
 require_once 'uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
 
+function add_uploadcare_js_to_admin($hook) {
+  if('post.php' != $hook && 'post-new.php' != $hook) {
+    return;
+  }
+  // FIXME
+  wp_enqueue_script('my_custom_script',
+                    plugins_url('uploadcare-wp.js', '/var/www/wordpress/wp-content/plugins/uploadcare/__'));
+}
+add_action( 'admin_enqueue_scripts', 'add_uploadcare_js_to_admin' );
+
+function uploadcare_gallery_func($attrs, $content, $tag) {
+  $out  = "<div class=\"fotorama\">";
+  foreach(explode("\n", strip_tags($content)) as $url) {
+    $out .= '<img src="' . $url . '" />';
+  }
+  $out .= "</div>";
+  return $out;
+}
+add_shortcode('uc_gallery', 'uploadcare_gallery_func');
+
 function uploadcare_add_media($context) {
   $public_key = get_option('uploadcare_public');
   $secret_key = get_option('uploadcare_secret');
@@ -26,46 +46,17 @@ function uploadcare_add_media($context) {
   $context .= '<div style="float: left"><a href="#" class="button insert-media add_media" data-editor="content" title="Wordpress Media Library"><span class="wp-media-buttons-icon"></span>Wordpress Media Library</a></div>';
   $context .= $css_hook;
   $script .= "
-<script type=\"text/javascript\">UPLOADCARE_CROP = true;</script>
-".$api->widget->getScriptTag()."
 <script type=\"text/javascript\">
-function ucEditFile(file_id) {
-  try{tb_remove();}catch(e){};
-  var file = uploadcare.fileFrom('uploaded', file_id);
-  var dialog = uploadcare.openDialog(file).done(ucFileDone);
-}  
-function uploadcareMediaButton() {
-  var dialog = uploadcare.openDialog().done(ucFileDone);
-};  
-function ucFileDone(file) {
-  file.done(function(fileInfo) {
-    _file_id = fileInfo.uuid;
-    url = fileInfo.cdnUrl;
-    var data = {
-      'action': 'uploadcare_handle',
-      'file_id': _file_id
-    };
-    jQuery.post(ajaxurl, data, function(response) {";
+UPLOADCARE_CROP = true;
+UPLOADCARE_CDN_BASE = 'http://c7.ucarecdn.com';
+UPLOADCARE_MULTIPLE = true;\n";
   if ($original) {
-    $script .= "if (fileInfo.isImage) {
-      window.send_to_editor('<a href=\"https://ucarecdn.com/'+fileInfo.uuid+'/\"><img src=\"'+url+'\" /></a>');
-    } else {
-      window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
-    }";
+    $script .= "UPLOADCARE_WP_ORIGINAL = true;\n";
   } else {
-    $script .= "if (fileInfo.isImage) {
-      window.send_to_editor('<img src=\"'+url+'\" />');
-    } else {
-      window.send_to_editor('<a href=\"'+url+'\">'+fileInfo.name+'</a>');
-    }";    
-  } 
-  $script .="  });
-  });  
-};             
- </script>
- ";
- $context .= $script;
-
+    $script .= "UPLOADCARE_WP_ORIGINAL = false;\n";
+  }
+  $script .= "</script>" . $api->widget->getScriptTag();
+  $context .= $script;
   return $context;
 }
 
