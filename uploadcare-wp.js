@@ -41,16 +41,13 @@ function ucFileDone(data) {
           ucAddImg(fileInfo);
         });
       }
-      jQuery('#content').prop('disabled', false);
-    }).fail(function() {
+    }).always(function() {
       jQuery('#content').prop('disabled', false);
     });
   } else {
-    file = data;
-    file.done(function(fileInfo) {
-      ucAddImg(fileInfo);
-      jQuery('#content').prop('disabled', false);
-    }).fail(function() {
+    var file = data;
+    file.done(ucAddImg)
+        .always(function() {
       jQuery('#content').prop('disabled', false);
     });
   }
