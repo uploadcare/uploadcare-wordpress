@@ -5,7 +5,7 @@ Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
 Version: 2.999.dev
 Author: Uploadcare
-Author URI: http://uploadcare.com/
+Author URI: https://uploadcare.com/
 License: GPL2
 */
 
