@@ -38,8 +38,8 @@ function uploadcare_add_media($context) {
   $public_key = get_option('uploadcare_public');
   $secret_key = get_option('uploadcare_secret');
   $original = get_option('uploadcare_original');
-  $cdn_base = get_option('uploadcare_cdn_base');
   $multiupload = get_option('uploadcare_multiupload');
+  $finetuning = get_option('uploadcare_finetuning');
   $api = new Uploadcare_Api($public_key, $secret_key);
 
   $img = plugins_url('logo.png', __FILE__);
@@ -50,9 +50,6 @@ function uploadcare_add_media($context) {
   $script .= "
 <script type=\"text/javascript\">
 UPLOADCARE_CROP = true;\n";
-  if ($cdn_base) {
-    $script .= "UPLOADCARE_CDN_BASE = '$cdn_base';\n";
-  }
   if ($original) {
     $script .= "UPLOADCARE_WP_ORIGINAL = true;\n";
   } else {
@@ -62,6 +59,9 @@ UPLOADCARE_CROP = true;\n";
     $script .= "UPLOADCARE_MULTIPLE = true;\n";
   } else {
     $script .= "UPLOADCARE_MULTIPLE = false;\n";
+  }
+  if($finetuning) {
+    $script .= stripcslashes($finetuning);
   }
   $script .= "</script>" . $api->widget->getScriptTag();
   $context .= $script;

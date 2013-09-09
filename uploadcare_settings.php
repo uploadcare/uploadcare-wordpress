@@ -7,16 +7,16 @@ if($_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_secret', $uploadcare_secret);
     $uploadcare_original = $_POST['uploadcare_original'];
     update_option('uploadcare_original', $uploadcare_original);
-    $uploadcare_cdn_base = $_POST['uploadcare_cdn_base'];
-    update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
     $uploadcare_multiupload = $_POST['uploadcare_multiupload'];
     update_option('uploadcare_multiupload', $uploadcare_multiupload);
+    $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
+    update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $saved = true;
 } else {
     $uploadcare_public = get_option('uploadcare_public');
     $uploadcare_secret = get_option('uploadcare_secret');
-    $uploadcare_cdn_base = get_option('uploadcare_cdn_base');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
+    $uploadcare_finetuning = get_option('uploadcare_finetuning');
 }
 ?>
 
@@ -27,30 +27,30 @@ if($_POST['uploadcare_hidden'] == 'Y') {
 <div class="wrap">
 <div id="icon-options-general" class="icon32"><br></div>
     <?php echo "<h2>" . __( 'Uploadcare', 'uploadcare_settings' ) . "</h2>"; ?>
-    <form name="oscimp_form" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">  
-        <input type="hidden" name="uploadcare_hidden" value="Y">  
+    <form name="oscimp_form" method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+        <input type="hidden" name="uploadcare_hidden" value="Y">
         <p>
-            <?php _e("Public key: " ); ?>
+            <?php _e('Public key: '); ?>
             <input type="text" name="uploadcare_public" value="<?php echo $uploadcare_public; ?>" size="20">
-            <?php _e("ex: demopublickey" ); ?>
+            <?php _e('ex: demopublickey'); ?>
         </p>
         <p>
             <?php _e("Secret key: " ); ?>
             <input type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
-            <?php _e("ex: demoprivatekey" ); ?>
-        </p>
-        <p>
-            <?php _e("CDN Base: " ); ?>
-            <input type="text" name="uploadcare_cdn_base" value="<?php echo $uploadcare_cdn_base; ?>" size="20">
-            <?php _e("ex: http://www.ucarecdn.com/, do not change if you are not sure" ); ?>
+            <?php _e('ex: demoprivatekey'); ?>
         </p>
         <p>
             <input type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e("Insert image with URL to the original image" ); ?>
+            />&nbsp;<?php _e('Insert image with URL to the original image'); ?>
         </p>
         <p>
             <input type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e("Allow multiupload in Uploadcare widget" ); ?>
+            />&nbsp;<?php _e('Allow multiupload in Uploadcare widget'); ?>
+        </p>
+        <p>
+            <?php _e('Uploadcare widget fine tuning'); ?>
+            (<a href="https://uploadcare.com/documentation/widget/#advanced-configuration"><?php _e('see documentation'); ?></a>)<br>
+            <textarea name="uploadcare_finetuning" rows="10" cols="50"><?php echo stripcslashes($uploadcare_finetuning); ?></textarea>
         </p>
         <p class="submit">  
         <?php submit_button(); ?>  
