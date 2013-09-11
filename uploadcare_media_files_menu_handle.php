@@ -5,23 +5,23 @@
 	$public_key = get_option('uploadcare_public');
 	$secret_key = get_option('uploadcare_secret');
 	$api = new Uploadcare_Api($public_key, $secret_key);
-	
+
 	wp_enqueue_script('plupload-handlers');
 	wp_enqueue_script('image-edit');
 	wp_enqueue_script('set-post-thumbnail');
 	wp_enqueue_style('imgareaselect');
 	wp_enqueue_script('media-gallery');
 	wp_enqueue_style('media');
-	
+
 	$type = 'uploadcare_files';
-	
+
 	$page = 1;
 	if (isset($_GET['page_num'])) {
 		$page = $_GET['page_num'];
 	}
-		
+
 	$uri = str_replace( '%7E', '~', $_SERVER['REQUEST_URI']);
-	
+
 	function change_param($uri, $param, $value) {
 		$parsed = parse_url($uri);
 		$path = $parsed['path'];
@@ -30,7 +30,7 @@
 		$query[$param] = $value;
 		return $path.'?'.http_build_query($query);
 	}
-	
+
 	$pagination_info = array();
 	$count = $wpdb->get_row('SELECT COUNT(id) as count from uploadcare ORDER BY `id` DESC');
 	$pagination_info['pages'] = floor($count / 20);
@@ -52,9 +52,9 @@
 		<?php else: ?>
 			<a href="<?php echo change_param($uri, 'page_num', $i);?>" style="margin-left: 5px;"><?php echo $i;?></a>
 		<?php endif; ?>
-	<?php endfor; ?>	
+	<?php endfor; ?>
 	<?php endif; ?>
-	
+
 		<div style="margin-top: 20px; margin-left: 10px;">
 			<div>
 				<?php foreach ($files as $_file): ?>
@@ -79,5 +79,5 @@
 		<?php else: ?>
 			<a href="<?php echo change_param($uri, 'page_num', $i);?>" style="margin-left: 5px;"><?php echo $i;?></a>
 		<?php endif; ?>
-	<?php endfor; ?>	
-	<?php endif; ?>			
+	<?php endfor; ?>
+	<?php endif; ?>
