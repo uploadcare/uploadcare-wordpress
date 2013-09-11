@@ -52,3 +52,26 @@ function ucFileDone(data) {
     });
   }
 }
+
+// add button to all inputs with .uploadcare-url-field
+jQuery(function() {
+  jQuery('input.uploadcare-url-field').each(function() {
+    var input = jQuery(this);
+    var img = jQuery('<img />');
+    var preview = function() {
+      if(input.val().length > 0) {
+        img.attr('src', input.val() + '-/preview/300x300/');
+      }
+    }
+    input.before(img);
+    preview();
+    input.after(jQuery('<a class="button"><span>uc</span></a>').on('click', function() {
+      uploadcare.openDialog(null, {multiple: false}).done(function(data) {
+        data.done(function(fileInfo) {
+          input.val(fileInfo.cdnUrl);
+          preview();
+        });
+      });
+    }));
+  });
+});
