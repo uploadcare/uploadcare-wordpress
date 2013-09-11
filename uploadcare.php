@@ -85,16 +85,6 @@ function uploadcare_handle() {
   die();
 }
 
-function remove_media_tab($strings) {
-  unset( $strings['insertMediaTitle'] ); //Insert Media
-  unset( $strings['uploadFilesTitle'] ); //Upload Files
-  $strings['mediaLibraryTitle'] = 'Old Media Library';
-  unset( $strings['createGalleryTitle'] ); //Create Gallery
-  unset( $strings['setFeaturedImageTitle'] ); //Set Featured Image
-  unset( $strings['insertFromUrlTitle'] ); //Insert from URL
-  return $strings;
-}
-
 function uploadcare_install() {
   global $wpdb;
   $table_name = $wpdb->prefix . "uploadcare";
@@ -138,9 +128,7 @@ function uploadcare_media_files_menu_handle() {
 
 register_activation_hook(__FILE__, 'uploadcare_install');
 register_deactivation_hook(__FILE__, 'uploadcare_uninstall');
-// add_filter('media_view_strings','remove_media_tab');
 add_action('media_buttons_context', 'uploadcare_add_media');
 add_action('wp_ajax_uploadcare_handle', 'uploadcare_handle');
-// add_filter('media_upload_tabs', 'uploadcare_media_menu');
-// add_filter('media_upload_default_tab', 'uploadcare_media_menu_default_tab');
-// add_action('media_upload_uploadcare_files', 'uploadcare_media_files_menu_handle');
+add_filter('media_upload_tabs', 'uploadcare_media_menu');
+add_action('media_upload_uploadcare_files', 'uploadcare_media_files_menu_handle');
