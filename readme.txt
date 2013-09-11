@@ -1,9 +1,9 @@
 === Uploadcare: Add media from anywhere ===
-Contributors: grayhound1
+Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
 Requires at least: 3.5+
 Tested up to: 3.5
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,7 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 * Portuguese
 * Russian
 * Spanish
+* Chinese (simplified)
 
 ### More information ###
 Check [Uploadcare.com](https://uploadcare.com/) to learn more.
@@ -39,18 +40,18 @@ Send us your feedback, <feedback@uploadcare.com>
 1. Search for "uploadcare"
 1. Click "install"
 1. Activate the plugin once it is installed
-1. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
+1. Go to "Settings" -> "Uploadcare" and enter the public and secret keys for your account.
 
-To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
+To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/)
 
 ### Manual ###
 
 1. Download the latest release. The zip file contains the Wordpress plugin itself and all its dependencies
 2. Unzip file to your wp-content/plugins folder
 3. Activate the plugin once it is installed
-4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
+4. Go to "Settings" -> "Uploadcare" and enter the public and secret keys for your account.
 
-To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
+To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/)
 
 ### Requirements ###
 * Wordpress 3.5+
@@ -73,6 +74,12 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 5. Press "Done". The image will be inserted into your post.
 
 == Changelog ==
+= 2.0.6 =
+* New setting "Allow multiupload".
+* New setting "Uploadcare widget fine tuning".
+* Uploadcare widget updated to version 0.12
+* Bugfixes
+
 = 2.0.5 =
 * New setting "Insert image with url to the original image".
 
