@@ -13,14 +13,10 @@ It's based on a [uploadcare-php][4] library.
 ## Install 
 
 1. [Download the latest release][3]. The zip file contains the Wordpress plugin itself and all its dependencies.
-
 2. Unzip file to your wp-content/plugins folder.
-
 3. Activate plugin at "Plugins" page inside your Wordpress admin.
-
 4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
-To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
-
+   To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
 5. Create new post and feel yourself proud!
 
 Send us your feedback, feedback@uploadcare.com
@@ -28,13 +24,9 @@ Send us your feedback, feedback@uploadcare.com
 ## Usage
 
 1. Begin adding a new post.
-
 2. Press "Add Media" to insert media with the Uploadcare widget.
-
 3. Upload a file using the widget.
-
 4. Crop the file if you wish. Only the cropped area will be inserted.
-
 5. Press "Store and Insert". The image will be inserted into your post. 
 
 ## Releases
