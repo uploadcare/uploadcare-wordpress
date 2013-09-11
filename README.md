@@ -39,6 +39,12 @@ Send us your feedback, feedback@uploadcare.com
 
 ## Releases
 
+**2.0.6**
+* New setting "Allow multiupload".
+* New setting "Uploadcare widget fine tuning".
+* Uploadcare widget updated to version 0.12
+* Bugfixes
+
 **2.0.5**
 * New setting "Insert image with url to the original image".
 
