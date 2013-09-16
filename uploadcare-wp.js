@@ -56,7 +56,7 @@ function ucFileDone(data) {
 jQuery(function() {
   // add button to all inputs with .uploadcare-url-field
   jQuery('input.uploadcare-url-field').each(function() {
-    var input = jQuery(this).attr('type', 'hidden');
+    var input = jQuery(this);
     var img = jQuery('<img />');
     var preview = function() {
       if(input.val().length > 0) {
