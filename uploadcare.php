@@ -150,7 +150,7 @@ function uc_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $att
   }
   $url = $meta[0];
   $sz = uc_thumbnail_size($size);
-  $src = "{$url}-/resize/$sz/";
+  $src = "{$url}-/stretch/off/-/scale_crop/$sz/";
   $html = '<img src="' . $src . '" alt="" />';
   return $html;
 }
