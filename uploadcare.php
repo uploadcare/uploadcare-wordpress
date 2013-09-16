@@ -154,13 +154,13 @@ function uc_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $att
   $html = '<img src="' . $src . '" alt="" />';
   return $html;
 }
-add_filter( 'post_thumbnail_html', 'uc_post_thumbnail_html', 10, 5);
+add_filter('post_thumbnail_html', 'uc_post_thumbnail_html', 10, 5);
 
 
 /* Remove Featured Image Meta */
 function uploadcare_remove_wp_featured_image_box() {
   if (get_option('uploadcare_replace_featured_image')) {
-    remove_meta_box( 'postimagediv','post','side' );
+    remove_meta_box('postimagediv', NULL, 'side');
   }
 }
 add_action('do_meta_boxes', 'uploadcare_remove_wp_featured_image_box');
@@ -168,18 +168,17 @@ add_action('do_meta_boxes', 'uploadcare_remove_wp_featured_image_box');
 /**
  * Adds a box to the main column on the Post and Page edit screens.
  */
-function uploadcare_add_featured_image_box() {
-  if (get_option('uploadcare_replace_featured_image')) {
-    $screens = array('post', 'page');
-    foreach ( $screens as $screen ) {
-        add_meta_box(
-            'myplugin_sectionid',
-            __('Featured Image (uploadcare)', 'uploadcare'),
-            'uploadcare_featured_image_box',
-            $screen,
-            'side'
-        );
-    }
+function uploadcare_add_featured_image_box($post_type) {
+  if (get_option('uploadcare_replace_featured_image') &&
+      post_type_supports($post_type, 'thumbnail')) {
+
+      add_meta_box(
+          'myplugin_sectionid',
+          __('Featured Image (uploadcare)', 'uploadcare'),
+          'uploadcare_featured_image_box',
+          $post_type,
+          'side'
+      );
   }
 }
 add_action('add_meta_boxes', 'uploadcare_add_featured_image_box');
