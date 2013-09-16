@@ -151,13 +151,9 @@ function uc_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $att
   $url = $meta[0];
   $sz = uc_thumbnail_size($size);
   $src = "{$url}-/stretch/off/-/scale_crop/$sz/";
-  $width = uc_thumbnail_width($size);
-  $height = uc_thumbnail_height($size);
   $html = <<<HTML
 <img src="{$src}"
      alt=""
-     width="{$width}"
-     height="{$height}"
 />
 HTML;
   return $html;
