@@ -10,12 +10,20 @@ function uploadcareMediaButton() {
   var dialog = uploadcare.openDialog().done(ucFileDone);
 };
 
-function ucAddImg(fileInfo) {
+function ucStoreImg(fileInfo, callback) {
   var data = {
     'action': 'uploadcare_handle',
     'file_id': fileInfo.uuid
   };
   jQuery.post(ajaxurl, data, function(response) {
+    if (callback) {
+      callback(response);
+    }
+  });
+}
+
+function ucAddImg(fileInfo) {
+  ucStoreImg(fileInfo, function(response) {
     if (fileInfo.isImage) {
       var $img = '<img src="' + fileInfo.cdnUrl + '\" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_WP_ORIGINAL) {
@@ -68,8 +76,10 @@ jQuery(function() {
     input.after(jQuery('<a class="button"><span>uc</span></a>').on('click', function() {
       uploadcare.openDialog(null, {multiple: false}).done(function(data) {
         data.done(function(fileInfo) {
-          input.val(fileInfo.cdnUrl);
-          preview();
+          ucStoreImg(fileInfo, function() {
+            input.val(fileInfo.cdnUrl);
+            preview();
+          });
         });
       });
     }));
@@ -99,9 +109,11 @@ jQuery(function() {
 
     uploadcare.openDialog(file, {multiple: false}).done(function(data) {
       data.done(function(fileInfo) {
-        addLink.data('uc-url', fileInfo.cdnUrl);
-        jQuery('#uc-featured-image-input').val(fileInfo.cdnUrl);
-        setImg();
+        ucStoreImg(fileInfo, function() {
+          addLink.data('uc-url', fileInfo.cdnUrl);
+          jQuery('#uc-featured-image-input').val(fileInfo.cdnUrl);
+          setImg();
+        });
       });
     });
   });

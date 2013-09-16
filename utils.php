@@ -18,18 +18,32 @@ function _uc_get_sizes() {
     return $sizes;
 }
 
+function _uc_get_size_array($size) {
+    if(is_array($size)) {
+        return $size;
+    }
+    $sizes = _uc_get_sizes();
+    return $sizes[$size];
+}
+
 /**
 * Get thumbnail dimensions for size name
 * @param string $size array|string Optional, default is 'thumbnail'. Size of image, either array or string.
 * @return string Returns "{width}x{height}"
 */
 function uc_thumbnail_size($size='thumbnail') {
-    if(is_array($size)) {
-        return implode('x', $size);
-    }
-    $sizes = _uc_get_sizes();
+    $arr = _uc_get_size_array($size);
+    return implode('x', $arr);
+}
 
-    return implode('x', $sizes[$size]);
+function uc_thumbnail_width($size='thumbnail') {
+    $arr = _uc_get_size_array($size);
+    return $arr[0];
+}
+
+function uc_thumbnail_height($size='thumbnail') {
+    $arr = _uc_get_size_array($size);
+    return $arr[1];
 }
 
 ?>
