@@ -11,12 +11,15 @@ if($_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_multiupload', $uploadcare_multiupload);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
+    $uploadcare_featured = $_POST['uploadcare_featured'];
+    update_option('uploadcare_replace_featured_image', $uploadcare_featured);
     $saved = true;
 } else {
     $uploadcare_public = get_option('uploadcare_public');
     $uploadcare_secret = get_option('uploadcare_secret');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
     $uploadcare_finetuning = get_option('uploadcare_finetuning');
+    $uploadcare_featured = get_option('uploadcare_replace_featured_image');
 }
 ?>
 
@@ -44,6 +47,10 @@ if($_POST['uploadcare_hidden'] == 'Y') {
             />&nbsp;<?php _e('Insert image with URL to the original image'); ?>
         </p>
         <p>
+            <input type="checkbox" name="uploadcare_featured" <?php if ($uploadcare_featured): ?>checked="checked"<?php endif; ?>
+            />&nbsp;<?php _e('Use Uploadcare for featured images'); ?>
+        </p>
+        <p>
             <input type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?>
             />&nbsp;<?php _e('Allow multiupload in Uploadcare widget'); ?>
         </p>
@@ -52,8 +59,8 @@ if($_POST['uploadcare_hidden'] == 'Y') {
             (<a href="https://uploadcare.com/documentation/widget/#advanced-configuration"><?php _e('see documentation'); ?></a>)<br>
             <textarea name="uploadcare_finetuning" rows="10" cols="50"><?php echo stripcslashes($uploadcare_finetuning); ?></textarea>
         </p>
-        <p class="submit">  
-        <?php submit_button(); ?>  
+        <p class="submit">
+        <?php submit_button(); ?>
         </p>
     </form>
     <div>

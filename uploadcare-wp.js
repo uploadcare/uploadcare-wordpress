@@ -8,7 +8,7 @@ function ucEditFile(file_id) {
 
 function uploadcareMediaButton() {
   var dialog = uploadcare.openDialog().done(ucFileDone);
-};  
+};
 
 function ucAddImg(fileInfo) {
   var data = {
@@ -53,10 +53,10 @@ function ucFileDone(data) {
   }
 }
 
-// add button to all inputs with .uploadcare-url-field
 jQuery(function() {
+  // add button to all inputs with .uploadcare-url-field
   jQuery('input.uploadcare-url-field').each(function() {
-    var input = jQuery(this);
+    var input = jQuery(this).attr('type', 'hidden');
     var img = jQuery('<img />');
     var preview = function() {
       if(input.val().length > 0) {
@@ -74,4 +74,43 @@ jQuery(function() {
       });
     }));
   });
+
+  // featured image stuff
+  var addLink = jQuery('#uc-set-featured-img');
+  var removeLink = jQuery('#uc-remove-featured-img');
+
+  function setImg() {
+    var url = addLink.data('uc-url');
+    if (url) {
+      addLink.html('<img src="' + url + '-/resize/255x/' + '">');
+      removeLink.removeClass('hidden');
+    } else {
+      addLink.html('Set featured image');
+      removeLink.addClass('hidden');
+    }
+  }
+
+  addLink.click(function() {
+    var url = addLink.data('uc-url');
+    var file = null;
+    if(url) {
+      file = uploadcare.fileFrom('uploaded', url);
+    }
+
+    uploadcare.openDialog(file, {multiple: false}).done(function(data) {
+      data.done(function(fileInfo) {
+        addLink.data('uc-url', fileInfo.cdnUrl);
+        jQuery('#uc-featured-image-input').val(fileInfo.cdnUrl);
+        setImg();
+      });
+    });
+  });
+
+  removeLink.click(function() {
+    jQuery('#uc-featured-image-input').val('');
+    addLink.data('uc-url', '');
+    setImg();
+  });
+
+  setImg();
 });
