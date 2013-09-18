@@ -56,8 +56,8 @@ function ucFileDone(data) {
     var file = data;
     file.done(ucAddImg)
         .always(function() {
-      jQuery('#content').prop('disabled', false);
-    });
+          jQuery('#content').prop('disabled', false);
+        });
   }
 }
 
