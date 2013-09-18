@@ -8,14 +8,22 @@ function ucEditFile(file_id) {
 
 function uploadcareMediaButton() {
   var dialog = uploadcare.openDialog().done(ucFileDone);
-};  
+};
 
-function ucAddImg(fileInfo) {
+function ucStoreImg(fileInfo, callback) {
   var data = {
     'action': 'uploadcare_handle',
     'file_id': fileInfo.uuid
   };
   jQuery.post(ajaxurl, data, function(response) {
+    if (callback) {
+      callback(response);
+    }
+  });
+}
+
+function ucAddImg(fileInfo) {
+  ucStoreImg(fileInfo, function(response) {
     if (fileInfo.isImage) {
       var $img = '<img src="' + fileInfo.cdnUrl + '\" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_WP_ORIGINAL) {
@@ -48,13 +56,13 @@ function ucFileDone(data) {
     var file = data;
     file.done(ucAddImg)
         .always(function() {
-      jQuery('#content').prop('disabled', false);
-    });
+          jQuery('#content').prop('disabled', false);
+        });
   }
 }
 
-// add button to all inputs with .uploadcare-url-field
 jQuery(function() {
+  // add button to all inputs with .uploadcare-url-field
   jQuery('input.uploadcare-url-field').each(function() {
     var input = jQuery(this);
     var img = jQuery('<img />');
@@ -68,10 +76,53 @@ jQuery(function() {
     input.after(jQuery('<a class="button"><span>uc</span></a>').on('click', function() {
       uploadcare.openDialog(null, {multiple: false}).done(function(data) {
         data.done(function(fileInfo) {
-          input.val(fileInfo.cdnUrl);
-          preview();
+          ucStoreImg(fileInfo, function() {
+            input.val(fileInfo.cdnUrl);
+            preview();
+          });
         });
       });
     }));
   });
+
+  // featured image stuff
+  var addLink = jQuery('#uc-set-featured-img');
+  var removeLink = jQuery('#uc-remove-featured-img');
+
+  function setImg() {
+    var url = addLink.data('uc-url');
+    if (url) {
+      addLink.html('<img src="' + url + '-/resize/255x/' + '">');
+      removeLink.removeClass('hidden');
+    } else {
+      addLink.html('Set featured image');
+      removeLink.addClass('hidden');
+    }
+  }
+
+  addLink.click(function() {
+    var url = addLink.data('uc-url');
+    var file = null;
+    if(url) {
+      file = uploadcare.fileFrom('uploaded', url);
+    }
+
+    uploadcare.openDialog(file, {multiple: false}).done(function(data) {
+      data.done(function(fileInfo) {
+        ucStoreImg(fileInfo, function() {
+          addLink.data('uc-url', fileInfo.cdnUrl);
+          jQuery('#uc-featured-image-input').val(fileInfo.cdnUrl);
+          setImg();
+        });
+      });
+    });
+  });
+
+  removeLink.click(function() {
+    jQuery('#uc-featured-image-input').val('');
+    addLink.data('uc-url', '');
+    setImg();
+  });
+
+  setImg();
 });
