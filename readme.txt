@@ -3,7 +3,7 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
 Requires at least: 3.5+
 Tested up to: 3.5
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,7 +73,17 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 4. Crop the image if you wish. Only the cropped area will be inserted.
 5. Press "Done". The image will be inserted into your post.
 
+== Featured images ==
+
+1. Go to "Settings" -> "Uploadcare" and check "Use Uploadcare for featured images" setting
+2. "Fetured Image" meta box will be replaced with "Fetured Image (uploadcare)" if post type supports featured images
+
 == Changelog ==
+= 2.0.7 =
+* support featured images vie Uploadcare
+* New setting "Use Uploadcare for featured images".
+* Bugfixes
+
 = 2.0.6 =
 * New setting "Allow multiupload".
 * New setting "Uploadcare widget fine tuning".

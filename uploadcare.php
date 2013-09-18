@@ -139,6 +139,12 @@ function uploadcare_media_files_menu_handle() {
 add_action('media_upload_uploadcare_files', 'uploadcare_media_files_menu_handle');
 
 
+/**
+ * Replace featured image HTML with Uploadcare image if:
+ * - use uploadcare for featured images is set
+ * - post's meta 'uploadcare_featured_image' is set
+ * otherwise, uses default html code.
+ */
 function uc_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr) {
   if (!get_option('uploadcare_replace_featured_image')) {
     return $html;
@@ -221,6 +227,12 @@ HTML;
  * @param int $post_id The ID of the post being saved.
  */
 function uploadcare_save_postdata($post_id) {
+  // at the moment this is used only for featured images, so skip it if
+  //   the option is not set
+  if (!get_option('uploadcare_replace_featured_image')) {
+    return $post_id;
+  }
+
   /*
    * We need to verify this came from the our screen and with proper authorization,
    * because save_post can be triggered at other times.
@@ -238,7 +250,7 @@ function uploadcare_save_postdata($post_id) {
   }
 
   // If this is an autosave, our form has not been submitted, so we don't want to do anything.
-  if (defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE) {
+  if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
     return $post_id;
   }
 
