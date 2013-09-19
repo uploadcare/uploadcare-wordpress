@@ -3,7 +3,7 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
 Requires at least: 3.5+
 Tested up to: 3.6.1
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,8 +79,11 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 2. "Fetured Image" meta box will be replaced with "Fetured Image (uploadcare)" if post type supports featured images
 
 == Changelog ==
+= 2.0.8 =
+* Fix pagination in media tab
+
 = 2.0.7 =
-* support featured images vie Uploadcare
+* Support featured images via Uploadcare
 * New setting "Use Uploadcare for featured images".
 * Bugfixes
 

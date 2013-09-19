@@ -31,8 +31,11 @@ Send us your feedback, feedback@uploadcare.com
 
 ## Releases
 
+**2.0.8**
+* Fix pagination in media tab
+
 **2.0.7** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.7.zip))
-* support featured images vie Uploadcare
+* Support featured images via Uploadcare
 * New setting "Use Uploadcare for featured images".
 * Bugfixes
 
