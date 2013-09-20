@@ -31,7 +31,7 @@ Send us your feedback, feedback@uploadcare.com
 
 ## Releases
 
-**2.0.8**
+**2.0.8** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.8.zip))
 * Fix pagination in media tab
 
 **2.0.7** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.7.zip))
