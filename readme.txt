@@ -15,7 +15,7 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 * Upload images of any resolution
 * Crop images
 * Upload documents and archives
-* Choose images from Facebook, Instagram or Flickr
+* Choose images from Facebook, Instagram or VK
 * Choose files from Dropbox or Google Drive
 * Deliver your media through CDN, it's up to 5x times faster
 
