@@ -3,7 +3,7 @@ function ucEditFile(file_id) {
     tb_remove();
   } catch(e) {};
   var file = uploadcare.fileFrom('uploaded', file_id);
-  var dialog = uploadcare.openDialog(file).done(ucFileDone);
+  var dialog = uploadcare.openDialog(file, {crop: true}).done(ucFileDone);
 }
 
 function uploadcareMediaButton() {
@@ -125,4 +125,17 @@ jQuery(function() {
   });
 
   setImg();
+
+
+  // media tab
+  jQuery('#uploadcare-more').on('click', function() {
+    jQuery('#uploadcare-more-container').hide();
+    jQuery('#uploadcare-lib-container').hide();
+    uploadcare.openPanel('#uploadcare-panel-container', [], {
+      multiple: true,
+      autostore: true,
+    }).done(function() {
+        location.reload();
+    });
+  });
 });

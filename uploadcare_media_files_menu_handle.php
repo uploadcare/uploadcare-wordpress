@@ -1,17 +1,16 @@
 <?php
     global $wp_version;
 
-    $ver = explode('.', $wp_version);
-    $wp_ver_main = $ver[0];
-    $wp_ver_major = $ver[1];
+    list($wp_ver_main, $wp_ver_major) = explode('.', $wp_version);
 
     $api = uploadcare_api();
 
-    wp_enqueue_script('plupload-handlers');
-    wp_enqueue_script('image-edit');
-    wp_enqueue_script('set-post-thumbnail');
-    wp_enqueue_style('imgareaselect');
-    wp_enqueue_script('media-gallery');
+    // wp_enqueue_script('plupload-handlers');
+    // wp_enqueue_script('image-edit');
+    // wp_enqueue_script('set-post-thumbnail');
+    // wp_enqueue_style('imgareaselect');
+    // wp_enqueue_script('media-gallery');
+    wp_enqueue_script('my_custom_script', UPLOADCARE_PLUGIN_URL . 'uploadcare-wp.js');
     wp_enqueue_style('media');
 
     $type = 'uploadcare_files';
@@ -69,13 +68,15 @@
     if ($wp_ver_main == 3 and $wp_ver_major < 5 ) {
         echo media_upload_header();
     }
+
+    echo $api->widget->getScriptTag();
     ?>
 
     <script type="text/javascript">
       var win = window.dialogArguments || opener || parent || top;
     </script>
 
-    <div class="uploadcare-lib-container">
+    <div id="uploadcare-lib-container">
     <?php paginator($pages, $page); ?>
     <div style="padding-top: 20px; margin-left: 10px;">
         <div>
@@ -98,4 +99,8 @@
         <br class="clear">
     </div>
     <?php paginator($pages, $page); ?>
+    </div>
+    <div id="uploadcare-panel-container"></div>
+    <div id="uploadcare-more-container" style="text-align: center;">
+        <a href="javascript:;" class="browser button button-hero" id="uploadcare-more">Upload more</a>
     </div>
