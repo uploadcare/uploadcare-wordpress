@@ -36,9 +36,19 @@
         return $p_info['pages'];
     }
 
-    // FIXME: two requests. api should be fixed.
-    $files = $api->getFileList($page);
-    $pages = get_total_pages($api);
+    function get_file_list_and_pages($api, $page = 1) {
+        # modified version of $api->getFileList()
+
+        $data = $api->__preparedRequest('file_list', 'GET', array('page' => $page));
+
+        $result = array();
+        foreach ((array)$data->results as $file_raw) {
+          $result[] = new Uploadcare_File($file_raw->uuid, $api, $file_raw);
+        }
+        return array($result, $data->pages);
+    }
+
+    list($files, $pages) = get_file_list_and_pages($api, $page);
 
     function paginator($pages, $page) {
         if ($pages > 1) { ?>
