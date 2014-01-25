@@ -10,7 +10,7 @@ License: GPL2
 */
 
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.0.9-dev');
+define('UPLOADCARE_PLUGIN_VERSION', '2.0.10');
 
 // FIXME: this does not work with symlinks
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
@@ -18,13 +18,13 @@ define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
 
 if (is_admin()) {
-  require_once UPLOADCARE_PLUGIN_PATH . '/admin.php';
+  require_once UPLOADCARE_PLUGIN_PATH . 'admin.php';
 }
 
-require_once UPLOADCARE_PLUGIN_PATH . '/utils.php';
-require_once UPLOADCARE_PLUGIN_PATH . '/filters.php';
-require_once UPLOADCARE_PLUGIN_PATH . '/actions.php';
-require_once UPLOADCARE_PLUGIN_PATH . '/uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'utils.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'filters.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'actions.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
 
 
 function add_uploadcare_js_to_admin($hook) {
@@ -178,34 +178,6 @@ function uploadcare_media_files_menu_handle() {
   return wp_iframe('uploadcare_media_files');
 }
 add_action('media_upload_uploadcare_files', 'uploadcare_media_files_menu_handle');
-
-
-/**
- * Replace featured image HTML with Uploadcare image if:
- * - use uploadcare for featured images is set
- * - post's meta 'uploadcare_featured_image' is set
- * otherwise, uses default html code.
- */
-function uc_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr) {
-  if (!get_option('uploadcare_replace_featured_image')) {
-    return $html;
-  }
-
-  $meta = get_post_meta($post_id, 'uploadcare_featured_image');
-  if(empty($meta)) {
-    return $html;
-  }
-  $url = $meta[0];
-  $sz = uc_thumbnail_size($size);
-  $src = "{$url}-/stretch/off/-/scale_crop/$sz/";
-  $html = <<<HTML
-<img src="{$src}"
-     alt=""
-/>
-HTML;
-  return $html;
-}
-add_filter('post_thumbnail_html', 'uc_post_thumbnail_html', 10, 5);
 
 
 /* Remove Featured Image Meta */

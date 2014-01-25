@@ -32,4 +32,35 @@ function uploadcare_image_downsize($value = false, $id, $size = 'medium') {
     );
 }
 
+/**
+ * Replace featured image HTML with Uploadcare image if:
+ * - use uploadcare for featured images is set
+ * - post's meta 'uploadcare_featured_image' is set
+ * otherwise, uses default html code.
+ */
+add_filter('post_thumbnail_html', 'uploadcare_post_thumbnail_html', 10, 5);
+function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr) {
+    if (!get_option('uploadcare_replace_featured_image')) {
+        return $html;
+    }
+
+    $meta = get_post_meta($post_id, 'uploadcare_featured_image');
+    if(empty($meta)) {
+        return $html;
+    }
+    $url = $meta[0];
+    $sz = uc_thumbnail_size($size);
+    if($sz) {
+        $src = "{$url}-/stretch/off/-/scale_crop/$sz/";
+    } else {
+        $src = $url;
+    }
+    $html = <<<HTML
+<img src="{$src}"
+     alt=""
+/>
+HTML;
+    return $html;
+}
+
 ?>
