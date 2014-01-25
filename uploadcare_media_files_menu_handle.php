@@ -1,16 +1,16 @@
 <?php
     global $wp_version;
-    list($wp_ver_main, $wp_ver_major, $wp_ver_minor) = explode('.', $wp_version);
 
-    $public_key = get_option('uploadcare_public');
-    $secret_key = get_option('uploadcare_secret');
-    $api = new Uploadcare_Api($public_key, $secret_key);
+    list($wp_ver_main, $wp_ver_major) = explode('.', $wp_version);
 
-    wp_enqueue_script('plupload-handlers');
-    wp_enqueue_script('image-edit');
-    wp_enqueue_script('set-post-thumbnail');
-    wp_enqueue_style('imgareaselect');
-    wp_enqueue_script('media-gallery');
+    $api = uploadcare_api();
+
+    // wp_enqueue_script('plupload-handlers');
+    // wp_enqueue_script('image-edit');
+    // wp_enqueue_script('set-post-thumbnail');
+    // wp_enqueue_style('imgareaselect');
+    // wp_enqueue_script('media-gallery');
+    wp_enqueue_script('my_custom_script', UPLOADCARE_PLUGIN_URL . 'uploadcare-wp.js');
     wp_enqueue_style('media');
 
     $type = 'uploadcare_files';
@@ -27,8 +27,28 @@
         $query = array();
         parse_str($parsed['query'], $query);
         $query[$param] = $value;
-        return $path.'?'.http_build_query($query);
+        return $path . '?' . http_build_query($query);
     }
+
+    function get_total_pages($api) {
+        $p_info = $api->getFilePaginationInfo(1);
+        return $p_info['pages'];
+    }
+
+    function get_file_list_and_pages($api, $page = 1) {
+        # modified version of $api->getFileList()
+
+        $limit = 25;
+        $data = $api->__preparedRequest('file_list', 'GET', array('page' => $page, 'limit' => $limit));
+
+        $result = array();
+        foreach ((array)$data->results as $file_raw) {
+          $result[] = new Uploadcare_File($file_raw->uuid, $api, $file_raw);
+        }
+        return array($result, $data->pages);
+    }
+
+    list($files, $pages) = get_file_list_and_pages($api, $page);
 
     function paginator($pages, $page) {
         if ($pages > 1) { ?>
@@ -46,36 +66,30 @@
         }
     }
 
-    $pagination_info = array();
-    $count = $wpdb->get_row("SELECT COUNT(*) as count from {$wpdb->prefix}uploadcare");
-    $pagination_info['pages'] = ceil($count->count / 20);
-    $limit_floor = ($page - 1) * 20;
-    $sql = <<<SQL
-SELECT file_id, is_file, filename
-FROM {$wpdb->prefix}uploadcare
-ORDER BY `id` DESC LIMIT {$limit_floor},20
-SQL;
-    $files = $wpdb->get_results($sql);
-?>
-<script type="text/javascript">
-  var win = window.dialogArguments || opener || parent || top;
-</script>
-<?php if ($wp_ver_main == 3 and $wp_ver_major < 5 ): ?>
-<?php echo media_upload_header(); ?>
-<?php endif; ?>
-    <?php paginator($pagination_info['pages'], $page) ?>
-    <div style="margin-top: 20px; margin-left: 10px;">
+    if ($wp_ver_main == 3 and $wp_ver_major < 5 ) {
+        echo media_upload_header();
+    }
+
+    echo $api->widget->getScriptTag();
+    ?>
+
+    <script type="text/javascript">
+      var win = window.dialogArguments || opener || parent || top;
+    </script>
+
+    <div id="uploadcare-lib-container">
+    <?php paginator($pages, $page); ?>
+    <div style="padding-top: 20px; margin-left: 10px;">
         <div>
-            <?php foreach ($files as $_file): ?>
-                <?php $file = $api->getFile($_file->file_id); ?>
+            <?php foreach ($files as $file): ?>
                 <div style="float: left; width: 110px; height: 110px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
-                    <a href="javascript: win.ucEditFile('<?php echo $_file->file_id?>');">
-                        <?php if ($_file->is_file): ?>
+                    <a href="javascript: win.ucEditFile('<?php echo $file->getFileId() ?>');">
+                        <?php if ($file->is_file): ?>
                             <div style="width: 110px; height: 100px;line-height: 100px;">
                                 <img src="https://ucarecdn.com/assets/images/logo.png" />
                             </div>
                             <br />
-                            <?php echo $_file->filename;?>
+                            <?php echo $file->filename ?>
                         <?php else: ?>
                             <img src="<?php echo $file->scaleCrop(100, 100, true); ?>" />
                         <?php endif; ?>
@@ -85,4 +99,9 @@ SQL;
         </div>
         <br class="clear">
     </div>
-    <?php paginator($pagination_info['pages'], $page) ?>
+    <?php paginator($pages, $page); ?>
+    </div>
+    <div id="uploadcare-panel-container"></div>
+    <div id="uploadcare-more-container" style="text-align: center;">
+        <a href="javascript:;" class="browser button button-hero" id="uploadcare-more">Upload more</a>
+    </div>

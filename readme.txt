@@ -1,25 +1,29 @@
 === Uploadcare: Add media from anywhere ===
+
 Contributors: grayhound1, dmitry-mukhin
-Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive
+Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images
 Requires at least: 3.5+
-Tested up to: 3.6.1
-Stable tag: 2.0.8
+Tested up to: 3.8.1
+Stable tag: 2.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Uploadcare provides media uploading, processing and CDN for your blog. You can upload even very large images and crop them.
 
+
 == Description ==
 
 ### Features ###
+
 * Upload images of any resolution
 * Crop images
 * Upload documents and archives
 * Choose images from Facebook, Instagram or VK
-* Choose files from Dropbox or Google Drive
+* Choose files from Dropbox, Google Drive, Box, Evernote
 * Deliver your media through CDN, it's up to 5x times faster
 
 ### Languages ###
+
 * English
 * Latvian
 * Polish
@@ -29,6 +33,7 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 * Chinese (simplified)
 
 ### More information ###
+
 Check [Uploadcare.com](https://uploadcare.com/) to learn more.
 Send us your feedback, <feedback@uploadcare.com>
 
@@ -57,6 +62,7 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 * Wordpress 3.5+
 * PHP 5.2+
 * php-curl
+* php-json
 
 == Screenshots ==
 
@@ -79,6 +85,13 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 2. "Fetured Image" meta box will be replaced with "Fetured Image (uploadcare)" if post type supports featured images
 
 == Changelog ==
+
+= 2.0.9 =
+* Uploadcare media library tab now shows all files from your Uploadcare account (project)
+* Allow cropping when inserting images via Uploadcare media library tab
+* Make Wordpress attachment when uploading file via "Add Media" button
+  This should impove Uploadcare integration with Wordpress and 3rd party plugins
+
 = 2.0.8 =
 * Fix pagination in media tab
 
@@ -99,7 +112,7 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 = 2.0.4 =
 * Uploadcare widget updated to version 0.8.1.2
 
-= 2.0.3 = 
+= 2.0.3 =
 * Bugfixes
 
 = 2.0.2 =
@@ -111,19 +124,19 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 = 2.0 =
 * New widget version, plugin refactored and ready to go.
 
-= 1.0.5 = 
+= 1.0.5 =
 * Minor fixes
 
 = 1.0.4 =
 * Minor fixes
 
-= 1.0.3 = 
+= 1.0.3 =
 * More operations form validation
 * Fixed files deletion.
 * "Files" are presented as Uploadcare logo.
 * Header is not displayed for Wordpress 3.5, updated for new "Add Media"
 
-= 1.0.2 = 
+= 1.0.2 =
 * Operation values no longer nulled when operation type is changed.
 * Now inserts files, not only images.
 
@@ -145,10 +158,10 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 * New tab: Uploadcare Files - Select previously uploaded files.
 * "Uploadcare" admin menu: view and delet previously uploaded files.
 
-= 0.1.1 = 
+= 0.1.1 =
 * Wordpress readme added.
 * Preview is now at the bottom of the form.
 * Scale and Crop "center" option is defaulted to "checked".
 
-= 0.1.0 = 
+= 0.1.0 =
 * Initial release

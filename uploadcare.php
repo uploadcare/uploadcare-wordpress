@@ -3,18 +3,28 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 2.0.8
+Version: 2.0.9
 Author: Uploadcare
 Author URI: https://uploadcare.com/
 License: GPL2
 */
 
+
+define('UPLOADCARE_PLUGIN_VERSION', '2.0.9-dev');
+
+// FIXME: this does not work with symlinks
+define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
+// define('UPLOADCARE_PLUGIN_URL', '/wp-content/plugins/uploadcare-dev/');
+define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
+
 if (is_admin()) {
-  require_once dirname( __FILE__ ) . '/admin.php';
+  require_once UPLOADCARE_PLUGIN_PATH . '/admin.php';
 }
 
-require_once dirname( __FILE__ ) . '/utils.php';
-require_once dirname( __FILE__ ) . '/uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
+require_once UPLOADCARE_PLUGIN_PATH . '/utils.php';
+require_once UPLOADCARE_PLUGIN_PATH . '/filters.php';
+require_once UPLOADCARE_PLUGIN_PATH . '/actions.php';
+require_once UPLOADCARE_PLUGIN_PATH . '/uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
 
 
 function add_uploadcare_js_to_admin($hook) {
@@ -22,27 +32,29 @@ function add_uploadcare_js_to_admin($hook) {
     // add js only on add and edit pages
     return;
   }
-  // FIXME: this does not work with symlinks
-  wp_enqueue_script('my_custom_script', plugins_url('uploadcare-wp.js', __FILE__));
+  wp_enqueue_script('my_custom_script', UPLOADCARE_PLUGIN_URL . 'uploadcare-wp.js');
 }
 add_action( 'admin_enqueue_scripts', 'add_uploadcare_js_to_admin' );
 
-// function uploadcare_gallery_func($attrs, $content, $tag) {
-//   $out  = "<div class=\"fotorama\">";
-//   foreach(explode("\n", strip_tags($content)) as $url) {
-//     $out .= '<img src="' . $url . '" />';
-//   }
-//   $out .= "</div>";
-//   return $out;
-// }
-// add_shortcode('uc_gallery', 'uploadcare_gallery_func');
+/**
+ * Get Api object
+ *
+ */
+function uploadcare_api() {
+    global $wp_version;
+    $user_agent = 'Uploadcare Wordpress ' . UPLOADCARE_PLUGIN_VERSION . '/' . $wp_version;
+    return new Uploadcare_Api(
+        get_option('uploadcare_public'),
+        get_option('uploadcare_secret'),
+        $user_agent
+    );
+}
 
 function uploadcare_add_media($context) {
-  $public_key = get_option('uploadcare_public');
-  $secret_key = get_option('uploadcare_secret');
-  $api = new Uploadcare_Api($public_key, $secret_key);
+  $api = uploadcare_api();
 
   $img = plugins_url('logo.png', __FILE__);
+
   $original = get_option('uploadcare_original') ? "true" : "false";
   $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
   if(get_option('uploadcare_finetuning')) {
@@ -75,23 +87,51 @@ HTML;
 }
 add_action('media_buttons_context', 'uploadcare_add_media');
 
+
+/**
+ * Create WP attachment (add image to media library)
+ *
+ * @param $file Uploadcare File object to attach
+ */
+function uploadcare_attach($file) {
+    $currentuser = get_current_user_id();
+    $filename = $file->data['original_filename'];
+    $title = $filename;
+
+    $attachment = array(
+     'post_author'    => $currentuser,
+     'post_date'      => date('Y-m-d H:i:s'),
+     'post_type'      => 'attachment',
+     'post_title'     => $title,
+     'post_parent'    => (!empty($_REQUEST['post_id']) ? $_REQUEST['post_id'] : null),
+     'post_status'    => 'inherit',
+     'post_mime_type' => $file->data['mime_type'],
+    );
+
+    $attachment_id = wp_insert_post($attachment, true);
+
+    $meta = array('width' => $file->data['image_info']->width,
+                  'height' => $file->data['image_info']->height);
+
+    add_post_meta($attachment_id, '_wp_attached_file', $file->data['original_file_url'], true);
+    add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
+    add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
+}
+
 function uploadcare_handle() {
-  // save uploadcare file to wp db
-  global $wpdb;
-  $public_key = get_option('uploadcare_public');
-  $secret_key = get_option('uploadcare_secret');
-  $api = new Uploadcare_Api($public_key, $secret_key);
+  // store file
+  $api = uploadcare_api();
   $file_id = $_POST['file_id'];
   $file = $api->getFile($file_id);
   $file->store();
-  $result = $wpdb->insert($wpdb->prefix.'uploadcare',
-      array('id' => 'NULL',
-            'file_id' => $file_id,
-            'filename' => $file->data['original_filename'],
-            'is_file' => $file->data['is_image'] ? 0 : 1));
-  die();
+
+  uploadcare_attach($file);
 }
 add_action('wp_ajax_uploadcare_handle', 'uploadcare_handle');
+
+
+/*
+TODO: delete table on upgrade
 
 function uploadcare_install() {
   global $wpdb;
@@ -115,6 +155,7 @@ function uploadcare_uninstall() {
   $wpdb->query("DROP TABLE IF EXISTS $thetable");
 }
 register_deactivation_hook(__FILE__, 'uploadcare_uninstall');
+*/
 
 function uploadcare_media_menu($tabs) {
   $newtab = array(

@@ -23,7 +23,10 @@ function _uc_get_size_array($size) {
         return $size;
     }
     $sizes = _uc_get_sizes();
-    return $sizes[$size];
+    if(in_array($size, $sizes)) {
+        return $sizes[$size];
+    }
+    return false;
 }
 
 /**
@@ -31,18 +34,27 @@ function _uc_get_size_array($size) {
 * @param string $size array|string Optional, default is 'thumbnail'. Size of image, either array or string.
 * @return string Returns "{width}x{height}"
 */
-function uc_thumbnail_size($size='thumbnail') {
+function uc_thumbnail_size($size = 'thumbnail') {
     $arr = _uc_get_size_array($size);
+    if(!$arr) {
+        return false;
+    }
     return implode('x', $arr);
 }
 
-function uc_thumbnail_width($size='thumbnail') {
+function uc_thumbnail_width($size = 'thumbnail') {
     $arr = _uc_get_size_array($size);
+    if(!$arr) {
+        return false;
+    }
     return $arr[0];
 }
 
-function uc_thumbnail_height($size='thumbnail') {
+function uc_thumbnail_height($size = 'thumbnail') {
     $arr = _uc_get_size_array($size);
+    if(!$arr) {
+        return false;
+    }
     return $arr[1];
 }
 
