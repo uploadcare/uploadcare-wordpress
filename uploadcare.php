@@ -3,7 +3,7 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 2.0.9-dev
+Version: 2.0.9
 Author: Uploadcare
 Author URI: https://uploadcare.com/
 License: GPL2
@@ -54,6 +54,7 @@ function uploadcare_add_media($context) {
   $api = uploadcare_api();
 
   $img = plugins_url('logo.png', __FILE__);
+
   $original = get_option('uploadcare_original') ? "true" : "false";
   $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
   if(get_option('uploadcare_finetuning')) {
