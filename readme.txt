@@ -4,7 +4,7 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images
 Requires at least: 3.5+
 Tested up to: 3.8.1
-Stable tag: 2.0.9
+Stable tag: 2.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -87,18 +87,21 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 
 == Frequently Asked Questions ==
 
-Please read up-to-date [FAQ](https://uploadcare.com/faq/) on [Uploadcare.com](https://uploadcare.com)
+Please read up-to-date [FAQ](https://uploadcare.com/about/faq/) on [Uploadcare.com](https://uploadcare.com)
 
 == Upgrade Notice ==
 
 = 2.0.10 =
-Fixed Featured Images.
+Upgrade if you are using Uploadcare for Featured Images.
 
 = 2.0.9 =
 Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+
+= 2.0.10 =
+Fix Featured Images.
 
 = 2.0.9 =
 * Uploadcare media library tab now shows all files from your Uploadcare account (project)
