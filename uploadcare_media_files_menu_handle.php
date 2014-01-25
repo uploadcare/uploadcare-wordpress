@@ -38,7 +38,8 @@
     function get_file_list_and_pages($api, $page = 1) {
         # modified version of $api->getFileList()
 
-        $data = $api->__preparedRequest('file_list', 'GET', array('page' => $page));
+        $limit = 25;
+        $data = $api->__preparedRequest('file_list', 'GET', array('page' => $page, 'limit' => $limit));
 
         $result = array();
         foreach ((array)$data->results as $file_raw) {
