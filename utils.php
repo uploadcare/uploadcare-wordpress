@@ -23,7 +23,7 @@ function _uc_get_size_array($size) {
         return $size;
     }
     $sizes = _uc_get_sizes();
-    if(in_array($size, $sizes)) {
+    if(array_key_exists($size, $sizes)) {
         return $sizes[$size];
     }
     return false;
