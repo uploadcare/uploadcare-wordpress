@@ -63,4 +63,16 @@ HTML;
     return $html;
 }
 
+/*
+ * Add Uploadcare tab to defalt media upload tabs
+ */
+add_filter('media_upload_tabs', 'uploadcare_media_menu');
+function uploadcare_media_menu($tabs) {
+    $newtab = array(
+        'uploadcare_files' => __('Uploadcare', 'uploadcare_files')
+    );
+    return array_merge($newtab, $tabs);
+}
+
 ?>
+
