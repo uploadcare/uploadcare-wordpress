@@ -1,5 +1,23 @@
 <?php
 
+
+/*
+ * Init Uploadcare plugin
+ *
+ * register scripts
+ * register new Post type and Taxonomy
+ */
+add_action('init', 'uploadcare_plugin_init');
+function uploadcare_plugin_init() {
+    wp_register_script('uploadcare-widget', 'https://ucarecdn.com/widget/0.17.2/uploadcare/uploadcare-0.17.2.min.js');
+    wp_register_script('uploadcare-main', UPLOADCARE_PLUGIN_URL . 'js/main.js');
+    wp_register_script('uploadcare-shortcodes', UPLOADCARE_PLUGIN_URL . 'js/shortcodes.js');
+
+    // _uploadcare_register_user_images();
+}
+
+
+
 /*
  * Add uploadcare-wp.js script to certain pages
  */
@@ -9,7 +27,18 @@ function add_uploadcare_js_to_admin($hook) {
         // add js only on add and edit pages
         return;
     }
-    wp_enqueue_script('my_custom_script', UPLOADCARE_PLUGIN_URL . 'uploadcare-wp.js');
+
+    $original = get_option('uploadcare_original') ? "true" : "false";
+    $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
+    $params = array(
+        'public_key' => get_option('uploadcare_public'),
+        'original' => $original,
+        'multiple' => $multiple
+    );
+
+    wp_enqueue_script('uploadcare-main');
+    wp_localize_script('uploadcare-main', 'WP_UC_PARAMS', $params);
+    wp_enqueue_script('uploadcare-widget');
 }
 
 
@@ -22,14 +51,11 @@ function uploadcare_add_media($context) {
 
     $img = plugins_url('logo.png', __FILE__);
 
-    $original = get_option('uploadcare_original') ? "true" : "false";
-    $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
     if(get_option('uploadcare_finetuning')) {
         $finetuning = stripcslashes(get_option('uploadcare_finetuning'));
     } else {
         $finetuning = '';
     }
-    $widget_tag = $api->widget->getScriptTag();
 
     $context = <<<HTML
 <div style="float: left">
@@ -43,12 +69,7 @@ function uploadcare_add_media($context) {
   </a>
 </div>
 <style tyle="text/css">#wp-content-media-buttons>a:first-child { display: none }</style>
-<script type="text/javascript">
-  UPLOADCARE_WP_ORIGINAL = {$original};
-  UPLOADCARE_MULTIPLE = {$multiple};
-  {$finetuning}
-</script>
-{$widget_tag}
+<script type="text/javascript">{$finetuning}</script>
 HTML;
     return $context;
 }
@@ -251,5 +272,37 @@ function uploadcare_media_upload() {
     </p>
     <?php
 }
+
+
+/*
+ * Display Thumbnail column to Uploadcare User Images list in admin
+ */
+add_action('manage_uc_user_image_posts_custom_column', 'uploadcare_display_thumbnail_column', 5, 2);
+function uploadcare_display_thumbnail_column($col, $id) {
+    switch($col) {
+        case 'uploadcare_post_thumb':
+            if( function_exists('the_post_thumbnail') )
+                echo the_post_thumbnail('thumbnail');
+            else
+                // echo 'Not supported in theme';
+                echo '-';
+            break;
+    }
+}
+
+
+function uploadcare_settings() {
+    include('inc/uploadcare_settings.php');
+}
+
+
+/*
+ * Add Uploadcare settings page to admin
+ */
+add_action('admin_menu', 'uploadcare_settings_actions');
+function uploadcare_settings_actions() {
+    add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', 'uploadcare_settings');
+}
+
 
 ?>

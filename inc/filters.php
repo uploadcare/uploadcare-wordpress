@@ -74,5 +74,15 @@ function uploadcare_media_menu($tabs) {
     return array_merge($newtab, $tabs);
 }
 
-?>
 
+/*
+ * Add Thumbnail column to Uploadcare User Images list in admin
+ */
+add_filter('manage_edit-uc_user_image_columns', 'uploadcare_add_uc_user_image_thumbnail_column', 5);
+function uploadcare_add_uc_user_image_thumbnail_column($cols) {
+    $cols['uploadcare_post_thumb'] = __('Thumb');
+    return $cols;
+}
+
+
+?>
