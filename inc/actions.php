@@ -9,9 +9,26 @@
  */
 add_action('init', 'uploadcare_plugin_init');
 function uploadcare_plugin_init() {
-    wp_register_script('uploadcare-widget', 'https://ucarecdn.com/widget/0.17.2/uploadcare/uploadcare-0.17.2.min.js');
-    wp_register_script('uploadcare-main', UPLOADCARE_PLUGIN_URL . 'js/main.js');
-    wp_register_script('uploadcare-shortcodes', UPLOADCARE_PLUGIN_URL . 'js/shortcodes.js');
+    wp_register_script(
+        'uploadcare-widget',
+        'https://ucarecdn.com/widget/0.17.2/uploadcare/uploadcare-0.17.2.min.js');
+
+    wp_register_script(
+        'uploadcare-config',
+        UPLOADCARE_PLUGIN_URL . 'js/config.js',
+        array('uploadcare-widget'));
+    wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', _uploadcare_get_js_cfg());
+
+    wp_register_script(
+        'uploadcare-main',
+        UPLOADCARE_PLUGIN_URL . 'js/main.js',
+        array('uploadcare-config'));
+
+    wp_register_script(
+        'uploadcare-shortcodes',
+        UPLOADCARE_PLUGIN_URL . 'js/shortcodes.js',
+        array('uploadcare-config'));
+
 
     // _uploadcare_register_user_images();
 }
@@ -19,7 +36,7 @@ function uploadcare_plugin_init() {
 
 
 /*
- * Add uploadcare-wp.js script to certain pages
+ * Add main.js script to certain pages
  */
 add_action('admin_enqueue_scripts', 'add_uploadcare_js_to_admin');
 function add_uploadcare_js_to_admin($hook) {
@@ -28,17 +45,7 @@ function add_uploadcare_js_to_admin($hook) {
         return;
     }
 
-    $original = get_option('uploadcare_original') ? "true" : "false";
-    $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
-    $params = array(
-        'public_key' => get_option('uploadcare_public'),
-        'original' => $original,
-        'multiple' => $multiple
-    );
-
     wp_enqueue_script('uploadcare-main');
-    wp_localize_script('uploadcare-main', 'WP_UC_PARAMS', $params);
-    wp_enqueue_script('uploadcare-widget');
 }
 
 

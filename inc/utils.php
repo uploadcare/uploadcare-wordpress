@@ -125,4 +125,18 @@ function _uploadcare_register_user_images() {
     register_taxonomy('uploadcare_user_image_category', array('uc_user_image'), $image_category_args);
 }
 
+
+/*
+ * Build config array for javascript
+ */
+function _uploadcare_get_js_cfg() {
+    $original = get_option('uploadcare_original') ? "true" : "false";
+    $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
+    return array(
+        'public_key' => get_option('uploadcare_public'),
+        'original' => $original,
+        'multiple' => $multiple,
+    );
+}
+
 ?>

@@ -17,10 +17,6 @@ define('UPLOADCARE_PLUGIN_VERSION', '2.0.11');
 define('UPLOADCARE_PLUGIN_URL', '/wp-content/plugins/uploadcare-dev/');
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
 
-if (is_admin()) {
-  require_once UPLOADCARE_PLUGIN_PATH . 'admin.php';
-}
-
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/filters.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/actions.php';
