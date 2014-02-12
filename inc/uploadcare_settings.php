@@ -11,15 +11,12 @@ if($_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_multiupload', $uploadcare_multiupload);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
-    $uploadcare_featured = $_POST['uploadcare_featured'];
-    update_option('uploadcare_replace_featured_image', $uploadcare_featured);
     $saved = true;
 } else {
     $uploadcare_public = get_option('uploadcare_public');
     $uploadcare_secret = get_option('uploadcare_secret');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
     $uploadcare_finetuning = get_option('uploadcare_finetuning');
-    $uploadcare_featured = get_option('uploadcare_replace_featured_image');
 }
 ?>
 
@@ -47,10 +44,6 @@ if($_POST['uploadcare_hidden'] == 'Y') {
             />&nbsp;<?php _e('Insert image with URL to the original image'); ?>
         </p>
         <p>
-            <input type="checkbox" name="uploadcare_featured" <?php if ($uploadcare_featured): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e('Use Uploadcare for featured images'); ?>
-        </p>
-        <p>
             <input type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?>
             />&nbsp;<?php _e('Allow multiupload in Uploadcare widget'); ?>
         </p>
@@ -65,8 +58,8 @@ if($_POST['uploadcare_hidden'] == 'Y') {
     </form>
     <div>
     <ul>
-        <li>File at demo account (demopublickey) are deleted after some time.</li>
-        <li>You can get your own account here: <a href="https://uploadcare.com/accounts/create/">https://uploadcare.com/accounts/create/</a></li>
+        <li>Files uploaded to demo account (demopublickey) are deleted after some time.</li>
+        <li>You can get your own account <a href="https://uploadcare.com/pricing/">here</a>.</li>
     </ul>
     </div>
 </div>

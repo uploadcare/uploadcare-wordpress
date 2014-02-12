@@ -4,7 +4,7 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images
 Requires at least: 3.5+
 Tested up to: 3.8.1
-Stable tag: 2.0.10
+Stable tag: 2.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -91,6 +91,9 @@ Please read up-to-date [FAQ](https://uploadcare.com/about/faq/) on [Uploadcare.c
 
 == Upgrade Notice ==
 
+= 2.0.11 =
+Upgrade if you want to allow your readers to upload files.
+
 = 2.0.10 =
 Upgrade if you are using Uploadcare for Featured Images.
 
@@ -100,8 +103,15 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.0.11 =
+* Add custom post type "User Images"
+* Add [uploadcare] shortcode, that shows widget for users. Uploaded images are attached to post
+  and are saved as "User Images"
+* Remove custom Featured Images meta box. Build in should work with attachments.
+* Uploadcare widget updated to version 0.18.0
+
 = 2.0.10 =
-Fix Featured Images.
+* Fix Featured Images.
 
 = 2.0.9 =
 * Uploadcare media library tab now shows all files from your Uploadcare account (project)

@@ -11,10 +11,9 @@ License: GPL2
 
 
 define('UPLOADCARE_PLUGIN_VERSION', '2.0.11');
+define('UPLOADCARE_WIDGET_VERSION', '0.18.0');
 
-// FIXME: this does not work with symlinks
-// define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
-define('UPLOADCARE_PLUGIN_URL', '/wp-content/plugins/uploadcare-dev/');
+define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
 
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';

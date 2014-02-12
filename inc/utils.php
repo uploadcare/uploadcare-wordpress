@@ -95,6 +95,7 @@ function _uploadcare_register_user_images() {
         'hierarchical' => false,
         'map_meta_cap' => true,
         'menu_position' => null,
+        'menu_icon' => 'dashicons-art',
         'supports' => array('title', 'author', 'thumbnail')
     );
 
@@ -130,12 +131,11 @@ function _uploadcare_register_user_images() {
  * Build config array for javascript
  */
 function _uploadcare_get_js_cfg() {
-    $original = get_option('uploadcare_original') ? "true" : "false";
-    $multiple = get_option('uploadcare_multiupload') ? "true" : "false";
     return array(
         'public_key' => get_option('uploadcare_public'),
-        'original' => $original,
-        'multiple' => $multiple,
+        'original' => get_option('uploadcare_original') ? "true" : "false",
+        'multiple' => get_option('uploadcare_multiupload') ? "true" : "false",
+        'ajaxurl' => admin_url('admin-ajax.php'),
     );
 }
 

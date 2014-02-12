@@ -1,5 +1,15 @@
 ## Changelog
 
+= 2.0.11 =
+* Add custom post type "User Images"
+* Add [uploadcare] shortcode, that shows widget for users. Uploaded images are attached to post
+  and are saved as "User Images"
+* Remove custom Featured Images meta box. Build in should work with attachments.
+* Uploadcare widget updated to version 0.18.0
+
+= 2.0.10 =
+* Fix Featured Images.
+
 **2.0.9** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.9.zip))
 * Uploadcare media library tab now shows all files from your Uploadcare account (project)
 * Allow cropping when inserting images via Uploadcare media library tab
