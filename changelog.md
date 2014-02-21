@@ -5,7 +5,7 @@
 * Add [uploadcare] shortcode, that shows widget for users. Uploaded images are attached to post
   and are saved as "User Images"
 * Remove custom Featured Images meta box. Build in should work with attachments.
-* Uploadcare widget updated to version 0.18.0
+* Uploadcare widget updated to version 0.18.1
 
 = 2.0.10 =
 * Fix Featured Images.

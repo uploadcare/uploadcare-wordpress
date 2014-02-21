@@ -11,7 +11,7 @@ License: GPL2
 
 
 define('UPLOADCARE_PLUGIN_VERSION', '2.0.11');
-define('UPLOADCARE_WIDGET_VERSION', '0.18.0');
+define('UPLOADCARE_WIDGET_VERSION', '0.18.1');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
