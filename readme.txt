@@ -4,9 +4,10 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images
 Requires at least: 3.5+
 Tested up to: 3.8.1
-Stable tag: 2.0.9
+Stable tag: 2.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Donate link: https://uploadcare.com/pricing/
 
 Uploadcare provides media uploading, processing and CDN for your blog. You can upload even very large images and crop them.
 
@@ -84,7 +85,33 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 1. Go to "Settings" -> "Uploadcare" and check "Use Uploadcare for featured images" setting
 2. "Fetured Image" meta box will be replaced with "Fetured Image (uploadcare)" if post type supports featured images
 
+== Frequently Asked Questions ==
+
+Please read up-to-date [FAQ](https://uploadcare.com/about/faq/) on [Uploadcare.com](https://uploadcare.com)
+
+== Upgrade Notice ==
+
+= 2.0.11 =
+Upgrade if you want to allow your readers to upload files.
+
+= 2.0.10 =
+Upgrade if you are using Uploadcare for Featured Images.
+
+= 2.0.9 =
+Access all files in your Uploadcare account via Media Library.
+
+
 == Changelog ==
+
+= 2.0.11 =
+* Add custom post type "User Images"
+* Add [uploadcare] shortcode, that shows widget for users. Uploaded images are attached to post
+  and are saved as "User Images"
+* Remove custom Featured Images meta box. Build in should work with attachments.
+* Uploadcare widget updated to version 0.18.0
+
+= 2.0.10 =
+* Fix Featured Images.
 
 = 2.0.9 =
 * Uploadcare media library tab now shows all files from your Uploadcare account (project)
