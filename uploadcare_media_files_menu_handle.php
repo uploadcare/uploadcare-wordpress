@@ -5,11 +5,6 @@
 
     $api = uploadcare_api();
 
-    // wp_enqueue_script('plupload-handlers');
-    // wp_enqueue_script('image-edit');
-    // wp_enqueue_script('set-post-thumbnail');
-    // wp_enqueue_style('imgareaselect');
-    // wp_enqueue_script('media-gallery');
     wp_enqueue_script('my_custom_script', UPLOADCARE_PLUGIN_URL . 'uploadcare-wp.js');
     wp_enqueue_style('media');
 
