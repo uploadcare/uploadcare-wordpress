@@ -25,13 +25,14 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 
 ### Languages ###
 
+* Chinese (simplified)
 * English
 * Latvian
 * Polish
 * Portuguese
 * Russian
 * Spanish
-* Chinese (simplified)
+* Turkish
 
 ### More information ###
 
