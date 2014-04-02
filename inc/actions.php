@@ -179,7 +179,7 @@ function uploadcare_shortcode_handle() {
  */
 function uploadcare_media_files() {
     global $wpdb;
-    require_once 'uploadcare_media_files_menu_handle.php';
+    require_once UPLOADCARE_PLUGIN_PATH . 'inc/uploadcare_media_files_menu_handle.php';
 }
 
 

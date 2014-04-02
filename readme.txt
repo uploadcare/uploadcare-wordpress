@@ -81,10 +81,10 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 4. Crop the image if you wish. Only the cropped area will be inserted.
 5. Press "Done". The image will be inserted into your post.
 
-== Featured images ==
+== Shortcode ==
 
-1. Go to "Settings" -> "Uploadcare" and check "Use Uploadcare for featured images" setting
-2. "Fetured Image" meta box will be replaced with "Fetured Image (uploadcare)" if post type supports featured images
+Drop `[uploadcare]` shortcode anywhere in post to allow your readers to upload files to your Wordpress via Uploadcare.
+You can see all uploaded user images in admin interface under "User Images".
 
 == Frequently Asked Questions ==
 

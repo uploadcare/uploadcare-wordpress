@@ -38,7 +38,7 @@
 
         $result = array();
         foreach ((array)$data->results as $file_raw) {
-          $result[] = new Uploadcare_File($file_raw->uuid, $api, $file_raw);
+          $result[] = new Uploadcare\File($file_raw->uuid, $api, $file_raw);
         }
         return array($result, $data->pages);
     }

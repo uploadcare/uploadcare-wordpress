@@ -3,15 +3,15 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 2.0.11
+Version: 2.1.0
 Author: Uploadcare
 Author URI: https://uploadcare.com/
 License: GPL2
 */
 
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.0.11');
-define('UPLOADCARE_WIDGET_VERSION', '0.18.1');
+define('UPLOADCARE_PLUGIN_VERSION', '2.1.0');
+define('UPLOADCARE_WIDGET_VERSION', '1.0.1');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
@@ -20,8 +20,13 @@ require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/filters.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/actions.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/shortcodes.php';
-require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/uploadcare/lib/5.2/Uploadcare.php';
 
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Api.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/File.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Group.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Uploader.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Widget.php';
+use \Uploadcare;
 
 /**
  * Get Api object
@@ -30,7 +35,7 @@ require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/uploadcare/lib/5.2/Uploadc
 function uploadcare_api() {
     global $wp_version;
     $user_agent = 'Uploadcare Wordpress ' . UPLOADCARE_PLUGIN_VERSION . '/' . $wp_version;
-    return new Uploadcare_Api(
+    return new Uploadcare\Api(
         get_option('uploadcare_public'),
         get_option('uploadcare_secret'),
         $user_agent
