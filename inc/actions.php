@@ -28,7 +28,10 @@ function uploadcare_plugin_init() {
         'uploadcare-shortcodes',
         UPLOADCARE_PLUGIN_URL . 'js/shortcodes.js',
         array('uploadcare-config'));
-
+    wp_register_style(
+        'uploadcare-style',
+        UPLOADCARE_PLUGIN_URL . 'css/uploadcare.css'
+    );
 
     _uploadcare_register_user_images();
 }
@@ -46,6 +49,7 @@ function add_uploadcare_js_to_admin($hook) {
     }
 
     wp_enqueue_script('uploadcare-main');
+    wp_enqueue_style('uploadcare-style');
 }
 
 
@@ -124,7 +128,9 @@ function uploadcare_handle() {
     $file = $api->getFile($file_id);
     $file->store();
 
-    uploadcare_attach($file);
+    $attachment_id = uploadcare_attach($file);
+    echo "{\"attach_id\": $attachment_id}";
+    die;
 }
 
 
@@ -192,24 +198,20 @@ function uploadcare_media_files_menu_handle() {
 }
 
 
-// add_action('post-upload-ui', 'uploadcare_media_upload');
+add_action('post-upload-ui', 'uploadcare_media_upload');
 function uploadcare_media_upload() {
-
-    // if ( $post = get_post() )
-    //     $browser_uploader .= '&amp;post_id=' . intval( $post->ID );
-    // elseif ( ! empty( $GLOBALS['post_ID'] ) )
-    //     $browser_uploader .= '&amp;post_id=' . intval( $GLOBALS['post_ID'] );
-
     $img = plugins_url('media/logo.png', dirname(__FILE__));
-
     ?>
 
     <p class="uploadcare-picker">
-      <a class="button" style="padding-left: .4em;" href="javascript: uploadcareMediaButton();">
-        <span class="wp-media-buttons-icon" style="padding-right: 2px; vertical-align: text-bottom; background: url('<?php $img ?>') no-repeat 0px 0px;">
-      </span>Upload via Uploadcare
-        </a>
+      <a  id="uploadcare-post-upload-ui-btn"
+          class="button button-hero"
+          style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
+          href="javascript:ucPostUploadUiBtn();">
+        Upload via Uploadcare
+      </a>
     </p>
+    <p class="max-upload-size">Maximum upload file size: 100MB (or more).</p>
     <?php
 }
 

@@ -61,6 +61,42 @@ function ucFileDone(data) {
   }
 }
 
+function ucPostUploadUiBtn() {
+  uploadcare.openDialog([], {
+    multiple: true,
+  }).done(function(data) {
+    data.promise().done(function(fileGroupInfo) {
+      var files = data.files();
+      var stored = 0;
+      for(var idx = 0; idx < files.length; idx++) {
+        var file = files[idx];
+        file.done(function(data) {
+          ucStoreImg(data, function(response) {
+
+            // select attachment
+            var obj = jQuery.parseJSON(response);
+            var selection = wp.media.frame.state().get('selection'),
+            attachment = wp.media.attachment(obj.attach_id);
+            attachment.fetch();
+            selection.add(attachment);
+
+            stored++;
+            if(stored == files.length) {
+              // all files are stored
+              // TODO: disable everything until now
+
+              // switch to attachment browser
+              wp.media.frame.content.mode('browse');
+              // refresh attachment collection
+              wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][1].collection.props.set({ignore:(+(new Date()))});
+            }
+          });
+        });
+      }
+    });
+  });
+}
+
 jQuery(function() {
   // add button to all inputs with .uploadcare-url-field
   jQuery('input.uploadcare-url-field').each(function() {

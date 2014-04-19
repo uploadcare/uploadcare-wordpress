@@ -7,7 +7,7 @@ It's based on a [uploadcare-php][4] library.
 ## Requirements
 
 - Wordpress 3.5+
-- PHP 5.2+
+- PHP 5.3+
 - php-curl
 
 ## Install

@@ -1,0 +1,4 @@
+.uploadcare-dialog {
+	/* popup on top of WP media popup :( */
+	z-index: 160001;
+}
