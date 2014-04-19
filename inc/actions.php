@@ -43,8 +43,11 @@ function uploadcare_plugin_init() {
  */
 add_action('admin_enqueue_scripts', 'add_uploadcare_js_to_admin');
 function add_uploadcare_js_to_admin($hook) {
-    if('post.php' != $hook && 'post-new.php' != $hook) {
+    if('post.php' != $hook &&
+       'post-new.php' != $hook &&
+       'media-new.php' != $hook ) {
         // add js only on add and edit pages
+        // and add media
         return;
     }
 
