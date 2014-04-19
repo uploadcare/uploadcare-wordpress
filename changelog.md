@@ -1,13 +1,19 @@
 ## Changelog
 
-= 2.0.11 =
+**2.1.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.1.0.zip))
+* Uploadcare widget updated to version 1.0.1
+* Update underlying uploadcare-php
+* Ditch support of php-5.2
+* Add Uploadcare button to default media library uploader
+
+**2.0.11** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.11.zip))
 * Add custom post type "User Images"
 * Add [uploadcare] shortcode, that shows widget for users. Uploaded images are attached to post
   and are saved as "User Images"
 * Remove custom Featured Images meta box. Build in should work with attachments.
 * Uploadcare widget updated to version 0.18.1
 
-= 2.0.10 =
+**2.0.10** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.10.zip))
 * Fix Featured Images.
 
 **2.0.9** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.0.9.zip))

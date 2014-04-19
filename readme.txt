@@ -3,8 +3,8 @@
 Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images
 Requires at least: 3.5+
-Tested up to: 3.8.1
-Stable tag: 2.0.11
+Tested up to: 3.9
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -62,7 +62,7 @@ To receive your keys, create your FREE account at [Uploadcare](https://uploadcar
 
 ### Requirements ###
 * Wordpress 3.5+
-* PHP 5.2+
+* PHP 5.3+
 * php-curl
 * php-json
 
@@ -103,6 +103,11 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+
+= 2.1.0 =
+* Uploadcare widget updated to version 1.0.1
+* Update underlying uploadcare-php
+* Add Uploadcare button to default media library uploader
 
 = 2.0.11 =
 * Add custom post type "User Images"
