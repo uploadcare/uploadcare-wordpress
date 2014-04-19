@@ -107,6 +107,7 @@ Access all files in your Uploadcare account via Media Library.
 = 2.1.0 =
 * Uploadcare widget updated to version 1.0.1
 * Update underlying uploadcare-php
+* Ditch support of php-5.2
 * Add Uploadcare button to default media library uploader
 
 = 2.0.11 =
