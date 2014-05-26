@@ -3,15 +3,15 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 2.1.0
+Version: 2.2.0
 Author: Uploadcare
 Author URI: https://uploadcare.com/
 License: GPL2
 */
 
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.1.0');
-define('UPLOADCARE_WIDGET_VERSION', '1.0.1');
+define('UPLOADCARE_PLUGIN_VERSION', '2.2.0');
+define('UPLOADCARE_WIDGET_VERSION', '1.2.0');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );

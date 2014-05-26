@@ -131,11 +131,28 @@ function _uploadcare_register_user_images() {
  * Build config array for javascript
  */
 function _uploadcare_get_js_cfg() {
+    $tab_options = get_option('uploadcare_source_tabs', array(
+        'file',
+        'url',
+        'facebook',
+        'instagram',
+        'flickr',
+        'gdrive',
+        'evernote',
+        'box',
+        'skydrive',
+    ));
+    if(in_array('all', $tab_options)) {
+        $tabs = 'all';
+    } else {
+        $tabs = implode(' ', $tab_options);
+    }
     return array(
         'public_key' => get_option('uploadcare_public'),
         'original' => get_option('uploadcare_original') ? "true" : "false",
         'multiple' => get_option('uploadcare_multiupload') ? "true" : "false",
         'ajaxurl' => admin_url('admin-ajax.php'),
+        'tabs' => $tabs,
     );
 }
 
