@@ -1,5 +1,11 @@
 ## Changelog
 
+**2.2.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.2.0.zip))
+* Uploadcare widget updated to version 1.2.0
+* Add Flickr support
+* Add 'da' locale
+* Add source tab setting
+
 **2.1.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.1.0.zip))
 * Uploadcare widget updated to version 1.0.1
 * Update underlying uploadcare-php

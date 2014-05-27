@@ -16,7 +16,7 @@ It's based on a [uploadcare-php][4] library.
 2. Unzip file to your wp-content/plugins folder.
 3. Activate plugin at "Plugins" page inside your Wordpress admin.
 4. Go to "Settings" -> "Uploadcare settings" and enter the public and secret keys for your account.
-   To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/plan-based/2/)
+   To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/free/)
 5. Create new post and feel yourself proud!
 
 Send us your feedback, feedback@uploadcare.com

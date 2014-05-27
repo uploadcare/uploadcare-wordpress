@@ -64,12 +64,7 @@ function uploadcare_add_media($context) {
     $api = uploadcare_api();
 
     $img = plugins_url('media/logo.png', dirname(__FILE__));
-
-    if(get_option('uploadcare_finetuning')) {
-        $finetuning = stripcslashes(get_option('uploadcare_finetuning'));
-    } else {
-        $finetuning = '';
-    }
+    $finetuning = stripcslashes(get_option('uploadcare_finetuning', ''));
 
     $context = <<<HTML
 <div style="float: left">

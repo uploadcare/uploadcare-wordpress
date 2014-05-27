@@ -1,10 +1,10 @@
 === Uploadcare: Add media from anywhere ===
 
 Contributors: grayhound1, dmitry-mukhin
-Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images
+Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
 Tested up to: 3.9
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -16,17 +16,21 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 
 ### Features ###
 
-* Upload images of any resolution
+* Upload images of any resolution and size
 * Crop images
 * Upload documents and archives
-* Choose images from Facebook, Instagram or VK
+* Choose images from Facebook, Instagram, Flickr or VK
 * Choose files from Dropbox, Google Drive, Box, Evernote
 * Deliver your media through CDN, it's up to 5x times faster
 
 ### Languages ###
 
 * Chinese (simplified)
+* Danish
+* Dutch
 * English
+* French
+* Hebrew
 * Latvian
 * Polish
 * Portuguese
@@ -92,6 +96,12 @@ Please read up-to-date [FAQ](https://uploadcare.com/about/faq/) on [Uploadcare.c
 
 == Upgrade Notice ==
 
+= 2.2.0 =
+If you were controlling source tabs via "finetuning" setting, you should delete it and set new "source tab" config.
+
+= 2.1.0 =
+PHP 5.2 is not supported since this version
+
 = 2.0.11 =
 Upgrade if you want to allow your readers to upload files.
 
@@ -103,6 +113,12 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+
+= 2.2.0 =
+* Uploadcare widget updated to version 1.2.0
+* Add Flickr support
+* Add 'da' locale
+* Add source tab setting
 
 = 2.1.0 =
 * Uploadcare widget updated to version 1.0.1
