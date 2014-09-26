@@ -3,7 +3,7 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 2.2.0
+Version: 2.3.0-dev
 Author: Uploadcare
 Author URI: https://uploadcare.com/
 License: GPL2
@@ -47,6 +47,18 @@ function uploadcare_api() {
 // TODO: delete table on upgrade
 register_activation_hook(__FILE__, 'uploadcare_install');
 function uploadcare_install() {
+    if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+        wp_die("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>",
+               "Error activating Uploadcare",
+               array('back_link' => true)
+        );
+    }
+    if ( ! function_exists("curl_init") ) {
+        wp_die("Uploadcare plugin requires <b>php-curl</b> to function",
+               "Error activating Uploadcare",
+               array('back_link' => true)
+        );
+    }
     /*
     global $wpdb;
     $table_name = $wpdb->prefix . "uploadcare";
