@@ -3,8 +3,8 @@
 Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
-Tested up to: 3.9
-Stable tag: 2.2.0
+Tested up to: 4.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -30,6 +30,7 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 * Dutch
 * English
 * French
+* German
 * Hebrew
 * Latvian
 * Polish
@@ -113,6 +114,12 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+
+= 2.3.0 =
+* Uploadcare widget updated to version 1.4.2
+* Test up to Wordpress 4.0
+* Add 'de' locale
+* Check PHP version and php-curl lib on plugin activation
 
 = 2.2.0 =
 * Uploadcare widget updated to version 1.2.0
