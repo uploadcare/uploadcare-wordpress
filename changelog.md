@@ -1,6 +1,6 @@
 ## Changelog
 
-**2.2.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.0.zip))
+**2.3.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.0.zip))
 * Uploadcare widget updated to version 1.4.2
 * Test up to Wordpress 4.0
 * Add 'de' locale
