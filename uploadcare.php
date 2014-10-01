@@ -3,18 +3,23 @@
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
 Description: Implements a way to use Uploadcare inside you Wordpress blog.
-Version: 2.3.0
+Version: 2.3.1
 Author: Uploadcare
 Author URI: https://uploadcare.com/
 License: GPL2
 */
 
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.3.0');
+if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+    exit("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>");
+}
+
+define('UPLOADCARE_PLUGIN_VERSION', '2.3.1');
 define('UPLOADCARE_WIDGET_VERSION', '1.4.2');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
+
 
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/filters.php';
@@ -26,38 +31,13 @@ require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/File.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Group.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Uploader.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Widget.php';
-use \Uploadcare;
-
-/**
- * Get Api object
- *
- */
-function uploadcare_api() {
-    global $wp_version;
-    $user_agent = 'Uploadcare Wordpress ' . UPLOADCARE_PLUGIN_VERSION . '/' . $wp_version;
-    return new Uploadcare\Api(
-        get_option('uploadcare_public'),
-        get_option('uploadcare_secret'),
-        $user_agent
-    );
-}
-
 
 
 // TODO: delete table on upgrade
 register_activation_hook(__FILE__, 'uploadcare_install');
 function uploadcare_install() {
-    if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
-        wp_die("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>",
-               "Error activating Uploadcare",
-               array('back_link' => true)
-        );
-    }
     if ( ! function_exists("curl_init") ) {
-        wp_die("Uploadcare plugin requires <b>php-curl</b> to function",
-               "Error activating Uploadcare",
-               array('back_link' => true)
-        );
+        exit("Uploadcare plugin requires <b>php-curl</b> to function");
     }
     /*
     global $wpdb;

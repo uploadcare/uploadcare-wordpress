@@ -1,5 +1,21 @@
 <?php
 
+use \Uploadcare;
+
+/**
+ * Get Api object
+ *
+ */
+function uploadcare_api() {
+    global $wp_version;
+    $user_agent = 'Uploadcare Wordpress ' . UPLOADCARE_PLUGIN_VERSION . '/' . $wp_version;
+    return new Uploadcare\Api(
+        get_option('uploadcare_public'),
+        get_option('uploadcare_secret'),
+        $user_agent
+    );
+}
+
 
 function _uc_get_sizes() {
     global $_wp_additional_image_sizes;

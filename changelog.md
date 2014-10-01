@@ -1,5 +1,8 @@
 ## Changelog
 
+**2.3.1** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.1.zip))
+* Fix plugin activation message on PHP 5.2-
+
 **2.3.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.0.zip))
 * Uploadcare widget updated to version 1.4.2
 * Test up to Wordpress 4.0
