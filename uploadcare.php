@@ -2,7 +2,7 @@
 /*
 Plugin Name: Uploadcare
 Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
-Description: Implements a way to use Uploadcare inside you Wordpress blog.
+Description: Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
 Version: 2.3.1
 Author: Uploadcare
 Author URI: https://uploadcare.com/
