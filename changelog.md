@@ -1,5 +1,8 @@
 ## Changelog
 
+**2.3.2** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.2.zip))
+* Fix "add via uploadcare" button in media library
+
 **2.3.1** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.1.zip))
 * Fix plugin activation message on PHP 5.2-
 
