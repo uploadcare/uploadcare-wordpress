@@ -240,10 +240,11 @@ function uploadcare_settings() {
 /*
  * Add Uploadcare settings page to admin
  */
-add_action('admin_menu', 'uploadcare_settings_actions');
-function uploadcare_settings_actions() {
-    add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', 'uploadcare_settings');
+add_action( 'admin_menu', 'uploadcare_add_admin_menu' );
+add_action( 'admin_init', 'uploadcare_settings_init' );
+
+
+function uploadcare_add_admin_menu(  ) {
+    add_options_page( 'Uploadcare', 'Uploadcare', 'manage_options', 'uploadcare', 'uploadcare_options_page' );
 }
-
-
-?>
+include( plugin_dir_path( __FILE__ ) . 'uploadcare_settings.php');

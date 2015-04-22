@@ -1,108 +1,198 @@
 <?php
+function uploadcare_settings_init()
+{
+    register_setting('pluginPage', 'uploadcare_settings');
 
-$tabs = array(
-    'file',
-    'url',
-    'facebook',
-    'instagram',
-    'flickr',
-    'gdrive',
-    'evernote',
-    'box',
-    'skydrive',
-    'dropbox',
-    'vk'
-);
-$tab_defaults = array(
-    'file',
-    'url',
-    'facebook',
-    'instagram',
-    'flickr',
-    'gdrive',
-    'evernote',
-    'box',
-    'skydrive',
-);
+    /*
+     * Add Uploadcare settings sections
+     */
+    add_settings_section(
+        'uploadcare_pluginPage_section_API',
+        __('API Keys <a href="https://uploadcare.com/documentation/keys/">[?]</a>', 'uploadcare'),
+        'uploadcare_settings_section_callback',
+        'pluginPage'
+    );
+
+    add_settings_section(
+        'uploadcare_pluginPage_section_OPTIONS',
+        __('Options', 'uploadcare'),
+        'uploadcare_settings_section_callback',
+        'pluginPage'
+    );
+
+    add_settings_section(
+        'uploadcare_pluginPage_section_TABS',
+        __('Source tabs', 'uploadcare'),
+        'uploadcare_settings_section_callback',
+        'pluginPage'
+    );
+
+    add_settings_section(
+        'uploadcare_pluginPage_section_TUNING',
+        __('Widget fine tuning <a href="https://uploadcare.com/documentation/widget/#advanced-configuration">[?]</a>', 'uploadcare'),
+        'uploadcare_settings_section_callback',
+        'pluginPage'
+    );
 
 
-$saved = false;
-if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
-    $uploadcare_public = $_POST['uploadcare_public'];
-    update_option('uploadcare_public', $uploadcare_public);
-    $uploadcare_secret = $_POST['uploadcare_secret'];
-    update_option('uploadcare_secret', $uploadcare_secret);
-    $uploadcare_original = $_POST['uploadcare_original'];
-    update_option('uploadcare_original', $uploadcare_original);
-    $uploadcare_multiupload = $_POST['uploadcare_multiupload'];
-    update_option('uploadcare_multiupload', $uploadcare_multiupload);
-    $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
-    update_option('uploadcare_finetuning', $uploadcare_finetuning);
-    $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
-    update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
-    $saved = true;
-} else {
-    $uploadcare_public = get_option('uploadcare_public');
-    $uploadcare_secret = get_option('uploadcare_secret');
-    $uploadcare_multiupload = get_option('uploadcare_multiupload');
-    $uploadcare_finetuning = get_option('uploadcare_finetuning');
-    $uploadcare_source_tabs = get_option('uploadcare_source_tabs', $tab_defaults);
+    /*
+     * Add Uploadcare settings fields
+     */
+    add_settings_field(
+        'uploadcare_public',
+        __('Public key:', 'uploadcare'),
+        'uploadcare_public_render',
+        'pluginPage',
+        'uploadcare_pluginPage_section_API'
+    );
+
+    add_settings_field(
+        'uploadcare_secret',
+        __('Secret key:', 'uploadcare'),
+        'uploadcare_secret_render',
+        'pluginPage',
+        'uploadcare_pluginPage_section_API'
+    );
+
+    add_settings_field(
+        'uploadcare_original',
+        __('Insert image with URL to the original image', 'uploadcare'),
+        'uploadcare_original_render',
+        'pluginPage',
+        'uploadcare_pluginPage_section_OPTIONS'
+    );
+
+    add_settings_field(
+        'uploadcare_multiupload',
+        __('Allow multiupload in Uploadcare widget', 'uploadcare'),
+        'uploadcare_multiupload_render',
+        'pluginPage',
+        'uploadcare_pluginPage_section_OPTIONS'
+    );
+
+    add_settings_field(
+        'uploadcare_source_tabs',
+        __('Tabs:', 'uploadcare'),
+        'uploadcare_source_tabs_render',
+        'pluginPage',
+        'uploadcare_pluginPage_section_TABS'
+    );
+
+    add_settings_field(
+        'uploadcare_finetuning',
+        __('Code:', 'uploadcare'),
+        'uploadcare_finetuning_render',
+        'pluginPage',
+        'uploadcare_pluginPage_section_TUNING'
+    );
+
+}
+
+/*
+  * Fields renders
+*/
+function uploadcare_public_render()
+{
+    $options = get_option('uploadcare_settings');
+    ?>
+    <input type='text' name='uploadcare_settings[uploadcare_public]'
+           value='<?php echo $options['uploadcare_public']; ?>'>
+<?php
+}
+
+function uploadcare_secret_render()
+{
+    $options = get_option('uploadcare_settings');
+    ?>
+    <input type='text' name='uploadcare_settings[uploadcare_secret]'
+           value='<?php echo $options['uploadcare_secret']; ?>'>
+<?php
+}
+
+function uploadcare_original_render()
+{
+    $options = get_option('uploadcare_settings');
+    ?>
+    <input type='checkbox'
+           name='uploadcare_settings[uploadcare_original]' <?php checked($options['uploadcare_original'], 1); ?>
+           value='1'>
+<?php
+}
+
+function uploadcare_multiupload_render()
+{
+    $options = get_option('uploadcare_settings');
+    ?>
+    <input type='checkbox'
+           name='uploadcare_settings[uploadcare_multiupload]' <?php checked($options['uploadcare_multiupload'], 1); ?>
+           value='1'>
+<?php
+}
+
+function uploadcare_source_tabs_render()
+{
+    $options = get_option('uploadcare_settings');
+    $tabs = array(
+        'file',
+        'url',
+        'facebook',
+        'instagram',
+        'flickr',
+        'gdrive',
+        'evernote',
+        'box',
+        'skydrive',
+        'dropbox',
+        'vk'
+    );
+    ?>
+    <select name='uploadcare_settings[uploadcare_source_tabs][]' multiple='' size='12' style='width: 120px;'>
+        <?
+        $options = get_option('uploadcare_settings');
+        $selected = in_array('all', $options['uploadcare_source_tabs']) ? 'selected="selected"' : '';
+        echo '<option ' . $selected . ' value="all">All tabs</option>';
+        foreach ($tabs as $tab) {
+            $selected = in_array($tab, $options['uploadcare_source_tabs']) ? 'selected="selected"' : '';
+            echo '<option ' . $selected . ' value="' . $tab . '">' . $tab . '</option>';
+        }
+        ?>
+    </select>
+<?php
+}
+
+function uploadcare_finetuning_render()
+{
+    $options = get_option('uploadcare_settings');
+    ?>
+    <textarea cols='40' rows='5'
+              name='uploadcare_settings[uploadcare_finetuning]'><?php echo stripcslashes($options['uploadcare_finetuning']); ?></textarea>
+<?php
+
+}
+
+
+function uploadcare_settings_section_callback()
+{
+    // Show sections description
+    // NOT NULL
+}
+
+/*
+  * Generate Page
+*/
+function uploadcare_options_page()
+{
+    ?>
+    <form action='options.php' method='post'>
+
+        <h2>Uploadcare</h2>
+        <?php
+        settings_fields('pluginPage');
+        do_settings_sections('pluginPage');
+        submit_button();
+        ?>
+
+    </form>
+<?php
 }
 ?>
-
-<?php if ($saved): ?>
-<div class="updated"><p><strong><?php _e('Options saved.' ); ?></strong></p></div>
-<?php endif; ?>
-
-<div class="wrap">
-<div id="icon-options-general" class="icon32"><br></div>
-    <?php echo "<h2>" . __( 'Uploadcare', 'uploadcare_settings' ) . "</h2>"; ?>
-    <form name="oscimp_form" method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-        <input type="hidden" name="uploadcare_hidden" value="Y">
-        <h3>API Keys <a href="https://uploadcare.com/documentation/keys/">[?]</a></h3>
-        <p>
-            <?php _e('Public key: '); ?>
-            <input type="text" name="uploadcare_public" value="<?php echo $uploadcare_public; ?>" size="20">
-            <?php _e('ex: demopublickey'); ?>
-        </p>
-        <p>
-            <?php _e("Secret key: " ); ?>
-            <input type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
-            <?php _e('ex: demoprivatekey'); ?>
-        </p>
-        <h3>Options</h3>
-        <p>
-            <input type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e('Insert image with URL to the original image'); ?>
-        </p>
-        <p>
-            <input type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e('Allow multiupload in Uploadcare widget'); ?>
-        </p>
-        <h3>Source tabs</h3>
-        <select name="uploadcare_source_tabs[]" multiple="" size="12" style="width: 120px;">
-            <?php
-                $selected = in_array('all', $uploadcare_source_tabs) ? 'selected="selected"' : '';
-                echo '<option ' . $selected . ' value="all">All tabs</option>';
-                foreach ($tabs as $tab) {
-                    $selected = in_array($tab, $uploadcare_source_tabs) ? 'selected="selected"' : '';
-                    echo '<option ' . $selected . ' value="' . $tab . '">' . $tab . '</option>';
-                }
-            ?>
-        </select>
-
-        <h3>Widget fine tuning <a href="https://uploadcare.com/documentation/widget/#advanced-configuration">[?]</a></h3>
-        <p>
-            <textarea name="uploadcare_finetuning" rows="10" cols="50"><?php echo stripcslashes($uploadcare_finetuning); ?></textarea>
-        </p>
-        <p class="submit">
-        <?php submit_button(); ?>
-        </p>
-    </form>
-    <div>
-    <ul>
-        <li>Files uploaded to demo account (demopublickey) are deleted after some time.</li>
-        <li>You can get your own account <a href="https://uploadcare.com/pricing/">here</a>.</li>
-    </ul>
-    </div>
-</div>
