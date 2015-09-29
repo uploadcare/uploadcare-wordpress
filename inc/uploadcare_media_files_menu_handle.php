@@ -1,19 +1,27 @@
 <?php
     global $wp_version;
 
+    define('UC_PER_LOAD_LIMIT', 24);
+
     list($wp_ver_main, $wp_ver_major) = explode('.', $wp_version);
 
     $api = uploadcare_api();
 
     wp_enqueue_script('uploadcare-main');
     wp_enqueue_style('media');
+    wp_enqueue_style('uploadcare-style');
 
     $type = 'uploadcare_files';
 
-    $page = 1;
-    if (isset($_GET['page_num'])) {
-        $page = $_GET['page_num'];
-    }
+    $files = $api->getFileList(array(
+        'request_limit' => UC_PER_LOAD_LIMIT,
+    ));
+
+    $pages = ceil(count($files) / UC_PER_LOAD_LIMIT);
+    $page = isset($_GET['page_num']) ? (int)$_GET['page_num'] : 1;
+    if ($page < 1 || $page > $pages) $page = 1;
+    $start = ($page - 1) * UC_PER_LOAD_LIMIT;
+    $end = min($start + UC_PER_LOAD_LIMIT, count($files));
 
     function change_param($param, $value) {
         $uri = str_replace('%7E', '~', $_SERVER['REQUEST_URI']);
@@ -25,39 +33,18 @@
         return $path . '?' . http_build_query($query);
     }
 
-    function get_total_pages($api) {
-        $p_info = $api->getFilePaginationInfo(1);
-        return $p_info['pages'];
-    }
-
-    function get_file_list_and_pages($api, $page = 1) {
-        # modified version of $api->getFileList()
-
-        $limit = 25;
-        $data = $api->__preparedRequest('file_list', 'GET', array('page' => $page, 'limit' => $limit));
-
-        $result = array();
-        foreach ((array)$data->results as $file_raw) {
-          $result[] = new Uploadcare\File($file_raw->uuid, $api, $file_raw);
-        }
-        return array($result, $data->pages);
-    }
-
-    list($files, $pages) = get_file_list_and_pages($api, $page);
-
     function paginator($pages, $page) {
-        if ($pages > 1) { ?>
-    <div>
-    Pages:
-    <?php for ($i = 1; $i <= $pages; $i++): ?>
-        <?php if ($i == $page): ?>
-            <span style="margin-left: 5px;"><?php echo $i; ?></span>
-        <?php else: ?>
-            <a href="<?php echo change_param('page_num', $i); ?>" style="margin-left: 5px;"><?php echo $i; ?></a>
-        <?php endif; ?>
-    <?php endfor; ?>
-    </div>
-    <?php
+        if ($pages > 1) {
+            if ($page > 1) {
+                ?>
+                <a href="<?php echo change_param('page_num', $page - 1); ?>" class="browser button button-hero" data-navi="prev">&laquo; Previous</a>
+                <?php
+            }
+            if ($page < $pages) {
+                ?>
+                <a href="<?php echo change_param('page_num', $page + 1); ?>" class="browser button button-hero" data-navi="next">Next &raquo;</a>
+                <?php
+            }
         }
     }
 
@@ -73,10 +60,12 @@
     </script>
 
     <div id="uploadcare-lib-container">
-    <?php paginator($pages, $page); ?>
     <div style="padding-top: 20px; margin-left: 10px;">
         <div>
-            <?php foreach ($files as $file): ?>
+            <?php for ($i = $start; $i < $end; $i++):
+                /** @var Uploadcare\File $file */
+                $file = $files[$i];
+            ?>
                 <div style="float: left; width: 110px; height: 110px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
                     <a href="javascript: win.ucEditFile('<?php echo $file->getFileId() ?>');">
                         <?php if ($file->is_file): ?>
@@ -90,13 +79,13 @@
                         <?php endif; ?>
                     </a>
                 </div>
-            <?php endforeach; ?>
+            <?php endfor; ?>
         </div>
         <br class="clear">
     </div>
-    <?php paginator($pages, $page); ?>
     </div>
     <div id="uploadcare-panel-container"></div>
-    <div id="uploadcare-more-container" style="text-align: center;">
+    <div id="uploadcare-more-container">
+        <?php paginator($pages, $page); ?>
         <a href="javascript:;" class="browser button button-hero" id="uploadcare-more">Upload more</a>
     </div>

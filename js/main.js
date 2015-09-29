@@ -1,14 +1,14 @@
 function ucEditFile(file_id) {
   try {
     tb_remove();
-  } catch(e) {};
+  } catch(e) {}
   var file = uploadcare.fileFrom('uploaded', file_id);
   var dialog = uploadcare.openDialog(file, {crop: true}).done(ucFileDone);
 }
 
 function uploadcareMediaButton() {
   var dialog = uploadcare.openDialog().done(ucFileDone);
-};
+}
 
 function ucStoreImg(fileInfo, callback) {
   var data = {
@@ -72,6 +72,15 @@ function ucPostUploadUiBtn() {
         var file = files[idx];
         file.done(function(data) {
           ucStoreImg(data, function(response) {
+            function updateAttachments() {
+              var viewIds = [1, 3];
+              for (var i = 0; i < viewIds.length; i++) {
+                if (wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][viewIds[i]].collection) {
+                  wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][viewIds[i]].collection.props.set({ignore: (+(new Date()))});
+                  break;
+                }
+              }
+            }
             if(wp.media) {
               // select attachment
               var obj = jQuery.parseJSON(response);
@@ -89,9 +98,9 @@ function ucPostUploadUiBtn() {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
                 // refresh attachment collection
-                wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][1].collection.props.set({ignore:(+(new Date()))});
+                updateAttachments();
               } else if (adminpage == 'media-new-php') {
-                location = 'upload.php'
+                location = 'upload.php';
               }
             }
           });
@@ -110,7 +119,7 @@ jQuery(function() {
       if(input.val().length > 0) {
         img.attr('src', input.val() + '-/preview/300x300/');
       }
-    }
+    };
     input.before(img);
     preview();
     input.after(jQuery('<a class="button"><span>uc</span></a>').on('click', function() {
@@ -166,14 +175,13 @@ jQuery(function() {
 
   setImg();
 
-
   // media tab
   jQuery('#uploadcare-more').on('click', function() {
     jQuery('#uploadcare-more-container').hide();
     jQuery('#uploadcare-lib-container').hide();
     uploadcare.openPanel('#uploadcare-panel-container', [], {
       multiple: true,
-      autostore: true,
+      autostore: true
     }).done(function() {
         location.reload();
     });

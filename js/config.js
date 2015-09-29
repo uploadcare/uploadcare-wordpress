@@ -6,5 +6,5 @@ UPLOADCARE_TABS = WP_UC_PARAMS.tabs;
 
 UPLOADCARE_CONF = {
     original: (WP_UC_PARAMS.original === 'true'),
-    ajaxurl: WP_UC_PARAMS.ajaxurl,
-}
+    ajaxurl: WP_UC_PARAMS.ajaxurl
+};

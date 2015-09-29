@@ -9,8 +9,9 @@
  */
 add_action('init', 'uploadcare_plugin_init');
 function uploadcare_plugin_init() {
-    $widget_url = sprintf('https://ucarecdn.com/widget/%s/uploadcare/uploadcare-%s.min.js',
-        UPLOADCARE_WIDGET_VERSION, UPLOADCARE_WIDGET_VERSION);
+    $api = uploadcare_api();
+    $widget = new Uploadcare\Widget($api);
+    $widget_url = $widget->getScriptSrc();
     wp_register_script('uploadcare-widget', $widget_url);
 
     wp_register_script(
@@ -88,7 +89,7 @@ HTML;
 /**
  * Create WP attachment (add image to media library)
  *
- * @param $file Uploadcare File object to attach
+ * @param $file Uploadcare\File object to attach
  */
 function uploadcare_attach($file) {
     $currentuser = get_current_user_id();
@@ -136,8 +137,8 @@ function uploadcare_handle() {
 /**
  * Create User Image post
  *
- * @param $file Uploadcare File object to attach
- * @param $post_id Post ID image should be attached to
+ * @param $file Uploadcare\File object to attach
+ * @param $post_id int Post ID image should be attached to
  */
 function uploadcare_attach_user_image($file, $post_id) {
     $attachment_id = uploadcare_attach($file);
@@ -244,6 +245,3 @@ add_action('admin_menu', 'uploadcare_settings_actions');
 function uploadcare_settings_actions() {
     add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', 'uploadcare_settings');
 }
-
-
-?>
