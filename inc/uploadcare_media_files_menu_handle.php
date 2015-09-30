@@ -19,7 +19,9 @@
 
     $pages = ceil(count($files) / UC_PER_LOAD_LIMIT);
     $page = isset($_GET['page_num']) ? (int)$_GET['page_num'] : 1;
-    if ($page < 1 || $page > $pages) $page = 1;
+    if ($page < 1 || $page > $pages) {
+        $page = 1;
+    }
     $start = ($page - 1) * UC_PER_LOAD_LIMIT;
     $end = min($start + UC_PER_LOAD_LIMIT, count($files));
 
