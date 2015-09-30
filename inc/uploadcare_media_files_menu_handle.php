@@ -33,8 +33,11 @@
         return $path . '?' . http_build_query($query);
     }
 
-    function paginator($pages, $page) {
+    $paginator = function() use($pages, $page, $start, $end, $files) {
         if ($pages > 1) {
+            ?>
+            <div class="paginator">
+            <?php
             if ($page > 1) {
                 ?>
                 <a href="<?php echo change_param('page_num', $page - 1); ?>" class="browser button button-hero" data-navi="prev">&laquo; Previous</a>
@@ -45,8 +48,12 @@
                 <a href="<?php echo change_param('page_num', $page + 1); ?>" class="browser button button-hero" data-navi="next">Next &raquo;</a>
                 <?php
             }
+            ?>
+                <span>Showing <?php echo $start + 1; ?> - <?php echo $end; ?> of <?php echo count($files); ?> pics</span>
+            </div>
+            <?php
         }
-    }
+    };
 
     if ($wp_ver_main == 3 and $wp_ver_major < 5 ) {
         echo media_upload_header();
@@ -86,6 +93,6 @@
     </div>
     <div id="uploadcare-panel-container"></div>
     <div id="uploadcare-more-container">
-        <?php paginator($pages, $page); ?>
+        <?php $paginator(); ?>
         <a href="javascript:;" class="browser button button-hero" id="uploadcare-more">Upload more</a>
     </div>

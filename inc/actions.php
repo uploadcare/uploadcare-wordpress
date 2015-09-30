@@ -11,7 +11,7 @@ add_action('init', 'uploadcare_plugin_init');
 function uploadcare_plugin_init() {
     $api = uploadcare_api();
     $widget = new Uploadcare\Widget($api);
-    $widget_url = $widget->getScriptSrc();
+    $widget_url = $widget->getScriptSrc(UPLOADCARE_WIDGET_VERSION);
     wp_register_script('uploadcare-widget', $widget_url);
 
     wp_register_script(

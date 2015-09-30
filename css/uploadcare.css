@@ -4,15 +4,16 @@
 }
 
 #uploadcare-more-container {
-    text-align: center;
+    text-align: right;
+    margin-right: 25px;
 }
 
-#uploadcare-more-container [data-navi="prev"] {
+.paginator {
     float: left;
     margin-left: 25px;
 }
 
-#uploadcare-more-container [data-navi="next"] {
-    float: right;
-    margin-right: 25px;
+.paginator > span {
+    line-height: 46px;
+    margin-left: 15px;
 }
