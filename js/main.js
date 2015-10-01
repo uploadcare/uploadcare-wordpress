@@ -63,7 +63,7 @@ function ucFileDone(data) {
 
 function ucPostUploadUiBtn() {
   uploadcare.openDialog([], {
-    multiple: true,
+    multiple: true
   }).done(function(data) {
     data.promise().done(function(fileGroupInfo) {
       var files = data.files();

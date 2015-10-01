@@ -111,10 +111,39 @@ function uploadcare_attach($file) {
     $meta = array('width' => $file->data['image_info']->width,
                   'height' => $file->data['image_info']->height);
 
-    add_post_meta($attachment_id, '_wp_attached_file', $file->data['original_file_url'], true);
+    if (get_option('uploadcare_download_to_server')) {
+        $attached_file = uploadcare_download($file);
+    } else {
+        $attached_file = $file->data['original_file_url'];
+        add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
+    }
+
+    add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
     add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
-    add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
     return $attachment_id;
+}
+
+/**
+ * Download image from Uploadcare and save it to local storage
+ *
+ * @param \Uploadcare\File $file
+ * @return string
+ */
+function uploadcare_download(Uploadcare\File $file) {
+    // downloading contents of image
+    $contents = wp_remote_get($file);
+
+    $dirInfo = wp_upload_dir();
+    $absPath = $dirInfo['basedir'] . '/';
+    $localFilename = 'uploadcare' . $dirInfo['subdir'] . '/' . basename($file) . '.jpg';
+
+    // creating folders tree
+    wp_mkdir_p($absPath . dirname($localFilename));
+
+    // saving image
+    file_put_contents($absPath . $localFilename, $contents['body']);
+
+    return $localFilename;
 }
 
 /**
