@@ -15,5 +15,3 @@ Upload files:
 HTML;
     echo $html;
 }
-
-?>

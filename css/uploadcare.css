@@ -1,4 +1,19 @@
 .uploadcare-dialog {
-	/* popup on top of WP media popup :( */
-	z-index: 160001;
+    /* popup on top of WP media popup :( */
+    z-index: 160001;
+}
+
+#uploadcare-more-container {
+    text-align: right;
+    margin-right: 25px;
+}
+
+.paginator {
+    float: left;
+    margin-left: 25px;
+}
+
+.paginator > span {
+    line-height: 46px;
+    margin-left: 15px;
 }

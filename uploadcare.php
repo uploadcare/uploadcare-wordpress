@@ -15,10 +15,10 @@ if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 }
 
 define('UPLOADCARE_PLUGIN_VERSION', '2.3.2');
-define('UPLOADCARE_WIDGET_VERSION', '1.4.2');
+define('UPLOADCARE_WIDGET_VERSION', '2.5.5');
 
-define('UPLOADCARE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
-define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__) );
+define('UPLOADCARE_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
 
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';
@@ -28,6 +28,7 @@ require_once UPLOADCARE_PLUGIN_PATH . 'inc/shortcodes.php';
 
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Api.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/File.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/FileIterator.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Group.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Uploader.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Widget.php';

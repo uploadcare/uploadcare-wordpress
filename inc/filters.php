@@ -84,6 +84,3 @@ function uploadcare_add_uc_user_image_thumbnail_column($cols) {
     $cols['uploadcare_post_thumb'] = __('Thumb');
     return $cols;
 }
-
-
-?>

@@ -171,5 +171,3 @@ function _uploadcare_get_js_cfg() {
         'tabs' => $tabs,
     );
 }
-
-?>

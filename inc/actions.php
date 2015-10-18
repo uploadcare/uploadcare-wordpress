@@ -9,8 +9,9 @@
  */
 add_action('init', 'uploadcare_plugin_init');
 function uploadcare_plugin_init() {
-    $widget_url = sprintf('https://ucarecdn.com/widget/%s/uploadcare/uploadcare-%s.min.js',
-        UPLOADCARE_WIDGET_VERSION, UPLOADCARE_WIDGET_VERSION);
+    $api = uploadcare_api();
+    $widget = new Uploadcare\Widget($api);
+    $widget_url = $widget->getScriptSrc(UPLOADCARE_WIDGET_VERSION);
     wp_register_script('uploadcare-widget', $widget_url);
 
     wp_register_script(
@@ -88,7 +89,7 @@ HTML;
 /**
  * Create WP attachment (add image to media library)
  *
- * @param $file Uploadcare File object to attach
+ * @param $file Uploadcare\File object to attach
  */
 function uploadcare_attach($file) {
     $currentuser = get_current_user_id();
@@ -110,10 +111,39 @@ function uploadcare_attach($file) {
     $meta = array('width' => $file->data['image_info']->width,
                   'height' => $file->data['image_info']->height);
 
-    add_post_meta($attachment_id, '_wp_attached_file', $file->data['original_file_url'], true);
+    if (get_option('uploadcare_download_to_server')) {
+        $attached_file = uploadcare_download($file);
+    } else {
+        $attached_file = $file->data['original_file_url'];
+        add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
+    }
+
+    add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
     add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
-    add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
     return $attachment_id;
+}
+
+/**
+ * Download image from Uploadcare and save it to local storage
+ *
+ * @param \Uploadcare\File $file
+ * @return string
+ */
+function uploadcare_download(Uploadcare\File $file) {
+    // downloading contents of image
+    $contents = wp_remote_get($file);
+
+    $dirInfo = wp_upload_dir();
+    $absPath = $dirInfo['basedir'] . '/';
+    $localFilename = 'uploadcare' . $dirInfo['subdir'] . '/' . basename($file) . '.jpg';
+
+    // creating folders tree
+    wp_mkdir_p($absPath . dirname($localFilename));
+
+    // saving image
+    file_put_contents($absPath . $localFilename, $contents['body']);
+
+    return $localFilename;
 }
 
 /**
@@ -136,8 +166,8 @@ function uploadcare_handle() {
 /**
  * Create User Image post
  *
- * @param $file Uploadcare File object to attach
- * @param $post_id Post ID image should be attached to
+ * @param $file Uploadcare\File object to attach
+ * @param $post_id int Post ID image should be attached to
  */
 function uploadcare_attach_user_image($file, $post_id) {
     $attachment_id = uploadcare_attach($file);
@@ -244,6 +274,3 @@ add_action('admin_menu', 'uploadcare_settings_actions');
 function uploadcare_settings_actions() {
     add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', 'uploadcare_settings');
 }
-
-
-?>
