@@ -1,5 +1,10 @@
 ## Changelog
 
+**2.3.3**
+* Add Welcome screen (with settings)
+* Update Uploadcare-PHP library
+* Uploadcare widget updated to version 2.5.9
+
 **2.3.2** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.2.zip))
 * Fix "add via uploadcare" button in media library
 
