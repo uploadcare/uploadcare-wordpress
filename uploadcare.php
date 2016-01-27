@@ -15,7 +15,7 @@ if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 }
 
 define('UPLOADCARE_PLUGIN_VERSION', '2.3.3');
-define('UPLOADCARE_WIDGET_VERSION', '2.5.5');
+define('UPLOADCARE_WIDGET_VERSION', '2.5.9');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__));

@@ -155,7 +155,6 @@ function uploadcare_handle() {
     $api = uploadcare_api();
     $file_id = $_POST['file_id'];
     $file = $api->getFile($file_id);
-    $file->store();
 
     $attachment_id = uploadcare_attach($file);
     echo "{\"attach_id\": $attachment_id}";
@@ -202,7 +201,6 @@ function uploadcare_shortcode_handle() {
     $file_id = $_POST['file_id'];
     $post_id = $_POST['post_id'];
     $file = $api->getFile($file_id);
-    $file->store();
 
     // create user image
     uploadcare_attach_user_image($file, $post_id);
