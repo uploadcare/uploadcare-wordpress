@@ -115,6 +115,11 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.4.0 =
+* Uploadcare widget updated to version 2.6.0
+* Test up to Wordpress 4.4.2
+* update uploadcare-php lib
+
 = 2.3.2 =
 * Fix "add via uploadcare" button in media library
 

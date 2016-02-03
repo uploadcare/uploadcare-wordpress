@@ -1,8 +1,9 @@
 ## Changelog
 
 **2.4.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.0.zip))
-* ...
-* ...
+* Uploadcare widget updated to version 2.6.0
+* Test up to Wordpress 4.4.2
+* update uploadcare-php lib
 
 **2.3.2** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.2.zip))
 * Fix "add via uploadcare" button in media library
