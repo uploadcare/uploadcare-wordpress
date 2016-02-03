@@ -1,5 +1,9 @@
 ## Changelog
 
+**2.4.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.0.zip))
+* ...
+* ...
+
 **2.3.2** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.3.2.zip))
 * Fix "add via uploadcare" button in media library
 
