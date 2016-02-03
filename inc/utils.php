@@ -1,7 +1,5 @@
 <?php
 
-use \Uploadcare;
-
 /**
  * Get Api object
  *
