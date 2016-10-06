@@ -10,7 +10,8 @@ function uploadcare_api() {
     return new Uploadcare\Api(
         get_option('uploadcare_public'),
         get_option('uploadcare_secret'),
-        $user_agent
+        $user_agent,
+		get_option('uploadcare_cdn_base')
     );
 }
 

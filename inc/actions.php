@@ -120,6 +120,9 @@ function uploadcare_attach($file) {
 
     add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
     add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
+		
+	$uploadcare_path = parse_url($file->data['original_file_url']);
+	add_post_meta($attachment_id, 'uploadcare_path', $uploadcare_path['path'], true);
     return $attachment_id;
 }
 

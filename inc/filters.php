@@ -10,8 +10,8 @@ function uploadcare_get_attachment_url($url, $post_id) {
 }
 
 add_filter('image_downsize', 'uploadcare_image_downsize', 9, 3);
-function uploadcare_image_downsize($value = false, $id, $size = 'medium') {
-    if(! $uc_url = get_post_meta($id, 'uploadcare_url', true)) {
+function uploadcare_image_downsize($value = false, $post_id, $size = 'medium') {
+    if(! $uc_url = get_post_meta($post_id, 'uploadcare_url', true)) {
         return false;
     }
 
