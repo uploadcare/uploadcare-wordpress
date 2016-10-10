@@ -75,7 +75,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
             <?php _e("Secret key: " ); ?>
             <input type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
         </p>
-		<h3>CDN Base URL</h3>
+		<h3>CDN base</h3>
         <p>
             <input type="text" name="uploadcare_cdn_base" <?php if ($uploadcare_cdn_base): ?>value="<?php echo $uploadcare_cdn_base; ?>"<?php else: ?>value="ucarecdn.com"<?php endif; ?> size="20"><br>
 			<?php _e("Default: ucarecdn.com" ); ?>
