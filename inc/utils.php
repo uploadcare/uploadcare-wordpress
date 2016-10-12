@@ -11,7 +11,7 @@ function uploadcare_api() {
         get_option('uploadcare_public'),
         get_option('uploadcare_secret'),
         $user_agent,
-		get_option('uploadcare_cdn_base')
+        get_option('uploadcare_cdn_base')
     );
 }
 

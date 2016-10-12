@@ -32,7 +32,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_public', $uploadcare_public);
     $uploadcare_secret = $_POST['uploadcare_secret'];
     update_option('uploadcare_secret', $uploadcare_secret);
-	$uploadcare_cdn_base = $_POST['uploadcare_cdn_base'];
+    $uploadcare_cdn_base = $_POST['uploadcare_cdn_base'];
     update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
     $uploadcare_original = $_POST['uploadcare_original'];
     update_option('uploadcare_original', $uploadcare_original);
@@ -48,7 +48,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
 } else {
     $uploadcare_public = get_option('uploadcare_public');
     $uploadcare_secret = get_option('uploadcare_secret');
-	$uploadcare_cdn_base = get_option('uploadcare_cdn_base');
+    $uploadcare_cdn_base = get_option('uploadcare_cdn_base');
     $uploadcare_original = get_option('uploadcare_original');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
     // $uploadcare_download_to_server = get_option('uploadcare_download_to_server');
@@ -78,7 +78,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
 		<h3>CDN base</h3>
         <p>
             <input type="text" name="uploadcare_cdn_base" <?php if ($uploadcare_cdn_base): ?>value="<?php echo $uploadcare_cdn_base; ?>"<?php else: ?>value="ucarecdn.com"<?php endif; ?> size="20"><br>
-			<?php _e("Default: ucarecdn.com" ); ?>
+            <?php _e("Default: ucarecdn.com" ); ?>
         </p>
         <h3>Options</h3>
         <p>
