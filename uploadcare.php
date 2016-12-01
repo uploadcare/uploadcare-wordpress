@@ -14,7 +14,7 @@ if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
     exit("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>");
 }
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.4.0');
+define('UPLOADCARE_PLUGIN_VERSION', '2.5.0');
 define('UPLOADCARE_WIDGET_VERSION', '2.10.2');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url(__FILE__));
