@@ -27,7 +27,7 @@ function ucStoreImg(fileInfo, callback) {
 function ucAddImg(fileInfo) {
   ucStoreImg(fileInfo, function(response) {
     if (fileInfo.isImage) {
-      var $img = '<img src="' + fileInfo.cdnUrl + '\" alt="' + fileInfo.name + '"/>';
+      var $img = '<img src="' + fileInfo.cdnUrl + '" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_CONF.original) {
         window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + $img + '</a>');
       } else {
