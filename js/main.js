@@ -84,26 +84,28 @@ function ucPostUploadUiBtn() {
               }
             }
             if(wp.media) {
-              // select attachment
               var obj = uploadcare.jQuery.parseJSON(response);
-              var selection = wp.media.frame.state().get('selection'),
-              attachment = wp.media.attachment(obj.attach_id);
+              var attachment = wp.media.attachment(obj.attach_id);
               attachment.fetch();
-              selection.add(attachment);
+              var libCollection = wp.media.frame.library;
+              if(!libCollection) {
+                var libState = wp.media.frame.state('library');
+                libCollection = libState.get('library');
+              }
+              libCollection.add(attachment);
             }
             stored++;
             if(stored == files.length) {
-              // all files are stored
               // TODO: disable everything until now
 
               if(wp.media) {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
-                // refresh attachment collection
-                updateAttachments();
+                
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
+              
             }
           });
         });
