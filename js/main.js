@@ -79,12 +79,23 @@ function ucPostUploadUiBtn() {
               var obj = uploadcare.jQuery.parseJSON(response);
               var attachment = wp.media.attachment(obj.attach_id);
               attachment.fetch();
-              var libCollection = wp.media.frame.library;
-              if(!libCollection) {
-                var libState = wp.media.frame.state('library');
-                libCollection = libState.get('library');
+              var library = null;
+              switch(wp.media.frame._state) {
+                case 'insert':
+                case 'gallery':
+                case 'featured-image':
+                case 'library':
+                  wp.media.frame.content.mode('browse');
+                  library = wp.media.frame.content.mode('library').get().collection;
+                break;
+                case 'edit-attachment':
+                  library = wp.media.frame.content.mode('library').view.library;
+                break;
               }
-              libCollection.add(attachment);
+
+              if(library) {
+                library.add(attachment);
+              }
             }
             stored++;
             if(stored == files.length) {
