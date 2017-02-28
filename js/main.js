@@ -104,7 +104,11 @@ function ucPostUploadUiBtn() {
               if(wp.media) {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
-                
+                // refresh attachment collection
+                // no need for WP 4.7.2 but kept for older WP versions
+                try {
+                  updateAttachments();
+                } catch(ex) {}
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
