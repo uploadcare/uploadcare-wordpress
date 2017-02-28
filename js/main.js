@@ -84,12 +84,26 @@ function ucPostUploadUiBtn() {
               }
             }
             if(wp.media) {
-              // select attachment
               var obj = uploadcare.jQuery.parseJSON(response);
-              var selection = wp.media.frame.state().get('selection'),
-              attachment = wp.media.attachment(obj.attach_id);
+              var attachment = wp.media.attachment(obj.attach_id);
               attachment.fetch();
-              selection.add(attachment);
+              var library = null;
+              switch(wp.media.frame._state) {
+                case 'insert':
+                case 'gallery':
+                case 'featured-image':
+                case 'library':
+                  wp.media.frame.content.mode('browse');
+                  library = wp.media.frame.content.mode('library').get().collection;
+                break;
+                case 'edit-attachment':
+                  library = wp.media.frame.content.mode('library').view.library;
+                break;
+              }
+
+              if(library) {
+                library.add(attachment);
+              }
             }
             stored++;
             if(stored == files.length) {
@@ -99,8 +113,12 @@ function ucPostUploadUiBtn() {
               if(wp.media) {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
+
                 // refresh attachment collection
-                updateAttachments();
+                // no need for WP 4.7.2 but kept for older WP versions
+                try {
+                  updateAttachments();
+                } catch(ex) {}
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
