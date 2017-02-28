@@ -115,6 +115,10 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.4.1 =
+* Minor bug fix for usage jQuery.
+* Test up to Wordpress 4.7.2
+
 = 2.4.0 =
 * Uploadcare widget updated to version 2.6.0
 * Test up to Wordpress 4.4.2

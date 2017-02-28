@@ -1,4 +1,7 @@
 ## Changelog
+**2.4.1**
+* Minor bug fix for usage jQuery.
+* Test up to Wordpress 4.7.2
 
 **2.4.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.0.zip))
 * Uploadcare widget updated to version 2.6.0
