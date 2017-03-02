@@ -1,3 +1,5 @@
+'use strict';
+
 function ucEditFile(file_id) {
   try {
     tb_remove();
@@ -15,7 +17,7 @@ function ucStoreImg(fileInfo, callback) {
     'action': 'uploadcare_handle',
     'file_id': fileInfo.uuid
   };
-  jQuery.post(ajaxurl, data, function(response) {
+  uploadcare.jQuery.post(ajaxurl, data, function(response) {
     if (callback) {
       callback(response);
     }
@@ -25,21 +27,21 @@ function ucStoreImg(fileInfo, callback) {
 function ucAddImg(fileInfo) {
   ucStoreImg(fileInfo, function(response) {
     if (fileInfo.isImage) {
-      var $img = '<img src="' + fileInfo.cdnUrl + '\" alt="' + fileInfo.name + '"/>';
+      var $img = '<img src="' + fileInfo.cdnUrl + '" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_CONF.original) {
-        window.send_to_editor('<a href="' + UPLOADCARE_CDN_BASE + fileInfo.uuid + '/">' + $img + '</a>');
+        window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + $img + '</a>');
       } else {
         window.send_to_editor($img);
       }
     } else {
-      window.send_to_editor('<a href="' + fileInfo.cdnUrl + '\">' + fileInfo.name + '</a>');
+      window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + fileInfo.name + '</a>');
     }
     window.send_to_editor('\n');
   });
 }
 
 function ucFileDone(data) {
-  jQuery('#content').prop('disabled', true);
+  uploadcare.jQuery('#content').prop('disabled', true);
   if(UPLOADCARE_MULTIPLE) {
     data.promise().done(function(fileGroupInfo) {
       var files = data.files();
@@ -50,13 +52,13 @@ function ucFileDone(data) {
         });
       }
     }).always(function() {
-      jQuery('#content').prop('disabled', false);
+      uploadcare.jQuery('#content').prop('disabled', false);
     });
   } else {
     var file = data;
     file.done(ucAddImg)
         .always(function() {
-          jQuery('#content').prop('disabled', false);
+          uploadcare.jQuery('#content').prop('disabled', false);
         });
   }
 }
@@ -82,12 +84,26 @@ function ucPostUploadUiBtn() {
               }
             }
             if(wp.media) {
-              // select attachment
-              var obj = jQuery.parseJSON(response);
-              var selection = wp.media.frame.state().get('selection'),
-              attachment = wp.media.attachment(obj.attach_id);
+              var obj = uploadcare.jQuery.parseJSON(response);
+              var attachment = wp.media.attachment(obj.attach_id);
               attachment.fetch();
-              selection.add(attachment);
+              var library = null;
+              switch(wp.media.frame._state) {
+                case 'insert':
+                case 'gallery':
+                case 'featured-image':
+                case 'library':
+                  wp.media.frame.content.mode('browse');
+                  library = wp.media.frame.content.mode('library').get().collection;
+                break;
+                case 'edit-attachment':
+                  library = wp.media.frame.content.mode('library').view.library;
+                break;
+              }
+
+              if(library) {
+                library.add(attachment);
+              }
             }
             stored++;
             if(stored == files.length) {
@@ -97,8 +113,12 @@ function ucPostUploadUiBtn() {
               if(wp.media) {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
+
                 // refresh attachment collection
-                updateAttachments();
+                // no need for WP 4.7.2 but kept for older WP versions
+                try {
+                  updateAttachments();
+                } catch(ex) {}
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
@@ -110,11 +130,11 @@ function ucPostUploadUiBtn() {
   });
 }
 
-jQuery(function() {
+uploadcare.jQuery(function() {
   // add button to all inputs with .uploadcare-url-field
-  jQuery('input.uploadcare-url-field').each(function() {
-    var input = jQuery(this);
-    var img = jQuery('<img />');
+  uploadcare.jQuery('input.uploadcare-url-field').each(function() {
+    var input = uploadcare.jQuery(this);
+    var img = uploadcare.jQuery('<img />');
     var preview = function() {
       if(input.val().length > 0) {
         img.attr('src', input.val() + '-/preview/300x300/');
@@ -122,7 +142,7 @@ jQuery(function() {
     };
     input.before(img);
     preview();
-    input.after(jQuery('<a class="button"><span>uc</span></a>').on('click', function() {
+    input.after(uploadcare.jQuery('<a class="button"><span>uc</span></a>').on('click', function() {
       uploadcare.openDialog(null, {multiple: false}).done(function(data) {
         data.done(function(fileInfo) {
           ucStoreImg(fileInfo, function() {
@@ -135,8 +155,8 @@ jQuery(function() {
   });
 
   // featured image stuff
-  var addLink = jQuery('#uc-set-featured-img');
-  var removeLink = jQuery('#uc-remove-featured-img');
+  var addLink = uploadcare.jQuery('#uc-set-featured-img');
+  var removeLink = uploadcare.jQuery('#uc-remove-featured-img');
 
   function setImg() {
     var url = addLink.data('uc-url');
@@ -160,7 +180,7 @@ jQuery(function() {
       data.done(function(fileInfo) {
         ucStoreImg(fileInfo, function() {
           addLink.data('uc-url', fileInfo.cdnUrl);
-          jQuery('#uc-featured-image-input').val(fileInfo.cdnUrl);
+          uploadcare.jQuery('#uc-featured-image-input').val(fileInfo.cdnUrl);
           setImg();
         });
       });
@@ -168,7 +188,7 @@ jQuery(function() {
   });
 
   removeLink.click(function() {
-    jQuery('#uc-featured-image-input').val('');
+    uploadcare.jQuery('#uc-featured-image-input').val('');
     addLink.data('uc-url', '');
     setImg();
   });
@@ -176,9 +196,9 @@ jQuery(function() {
   setImg();
 
   // media tab
-  jQuery('#uploadcare-more').on('click', function() {
-    jQuery('#uploadcare-more-container').hide();
-    jQuery('#uploadcare-lib-container').hide();
+  uploadcare.jQuery('#uploadcare-more').on('click', function() {
+    uploadcare.jQuery('#uploadcare-more-container').hide();
+    uploadcare.jQuery('#uploadcare-lib-container').hide();
     uploadcare.openPanel('#uploadcare-panel-container', [], {
       multiple: true,
       autostore: true
