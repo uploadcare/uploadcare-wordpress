@@ -26,15 +26,18 @@ function ucStoreImg(fileInfo, callback) {
 
 function ucAddImg(fileInfo) {
   ucStoreImg(fileInfo, function(response) {
+    console.log(response);
+    var obj = uploadcare.jQuery.parseJSON(response);
+    var fileUrl = obj.fileUrl;
     if (fileInfo.isImage) {
-      var $img = '<img src="' + fileInfo.cdnUrl + '" alt="' + fileInfo.name + '"/>';
+      var $img = '<img src="' + fileUrl + '" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_CONF.original) {
-        window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + $img + '</a>');
+        window.send_to_editor('<a href="' + fileUrl + '">' + $img + '</a>');
       } else {
         window.send_to_editor($img);
       }
     } else {
-      window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + fileInfo.name + '</a>');
+      window.send_to_editor('<a href="' + fileUrl + '">' + fileInfo.name + '</a>');
     }
     window.send_to_editor('\n');
   });
@@ -74,7 +77,6 @@ function ucPostUploadUiBtn() {
         var file = files[idx];
         file.done(function(data) {
           ucStoreImg(data, function(response) {
-            
             if(wp.media) {
               var obj = uploadcare.jQuery.parseJSON(response);
               var attachment = wp.media.attachment(obj.attach_id);
