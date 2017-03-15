@@ -77,6 +77,15 @@ function ucPostUploadUiBtn() {
         var file = files[idx];
         file.done(function(data) {
           ucStoreImg(data, function(response) {
+            function updateAttachments() {
+              var viewIds = [1, 3];
+              for (var i = 0; i < viewIds.length; i++) {
+                if (wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][viewIds[i]].collection) {
+                  wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][viewIds[i]].collection.props.set({ignore: (+(new Date()))});
+                  break;
+                }
+              }
+            }
             if(wp.media) {
               var obj = uploadcare.jQuery.parseJSON(response);
               var attachment = wp.media.attachment(obj.attach_id);
