@@ -117,7 +117,8 @@ Access all files in your Uploadcare account via Media Library.
 
 = 2.4.1 =
 * Minor bug fix for usage jQuery.
-* Test up to Wordpress 4.7.2
+* Test up to Wordpress 4.7.3
+* Added possibility to download images to server from Uploadcare before publish. This feature can be enabled in the plugin settings.
 
 = 2.4.0 =
 * Uploadcare widget updated to version 2.6.0
