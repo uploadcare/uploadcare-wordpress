@@ -1,7 +1,8 @@
 ## Changelog
 **2.4.1** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.1.zip))
 * Minor bug fix for usage jQuery.
-* Test up to Wordpress 4.7.2
+* Test up to Wordpress 4.7.3
+* Added possibility to store added images to local Wordpress server. This feature can be enabled in the plugin settings.   
 
 **2.4.0** ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.0.zip))
 * Uploadcare widget updated to version 2.6.0
