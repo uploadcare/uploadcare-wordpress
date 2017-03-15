@@ -212,7 +212,7 @@ uploadcare.jQuery(function() {
   });
 
 
-  uploadcare.jQuery('body').append('<div class="uploadcare-loading-screen uploadcare-hidden"><div class="sk-fading-circle">' 
+  uploadcare.jQuery('body').append('<div class="uploadcare-loading-screen uploadcare-hidden"><div class="uploadcare-sk-fading-circle">' 
   + '<div class="sk-circle1 sk-circle"></div>'
   + '<div class="sk-circle2 sk-circle"></div>'
   + '<div class="sk-circle3 sk-circle"></div>'
