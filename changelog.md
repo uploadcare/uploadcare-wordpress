@@ -1,6 +1,10 @@
 # Changelog
 
 
+### 2.4.x
+- Test up to Wordpress 4.7.3
+
+
 ### 2.4.1 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.1.zip))
 - Minor bug fix for usage jQuery.
 - Test up to Wordpress 4.7.2
