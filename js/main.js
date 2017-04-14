@@ -26,15 +26,18 @@ function ucStoreImg(fileInfo, callback) {
 
 function ucAddImg(fileInfo) {
   ucStoreImg(fileInfo, function(response) {
+    console.log(response);
+    var obj = uploadcare.jQuery.parseJSON(response);
+    var fileUrl = obj.fileUrl;
     if (fileInfo.isImage) {
-      var $img = '<img src="' + fileInfo.cdnUrl + '" alt="' + fileInfo.name + '"/>';
+      var $img = '<img src="' + fileUrl + '" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_CONF.original) {
-        window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + $img + '</a>');
+        window.send_to_editor('<a href="' + fileUrl + '">' + $img + '</a>');
       } else {
         window.send_to_editor($img);
       }
     } else {
-      window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + fileInfo.name + '</a>');
+      window.send_to_editor('<a href="' + fileUrl + '">' + fileInfo.name + '</a>');
     }
     window.send_to_editor('\n');
   });
@@ -77,15 +80,6 @@ function ucPostUploadUiBtn() {
         var file = files[idx];
         file.done(function(data) {
           ucStoreImg(data, function(response) {
-            function updateAttachments() {
-              var viewIds = [1, 3];
-              for (var i = 0; i < viewIds.length; i++) {
-                if (wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][viewIds[i]].collection) {
-                  wp.media.frame.content.view.views._views[".media-frame-content"][0].views._views[""][viewIds[i]].collection.props.set({ignore: (+(new Date()))});
-                  break;
-                }
-              }
-            }
             if(wp.media) {
               var obj = uploadcare.jQuery.parseJSON(response);
               var attachment = wp.media.attachment(obj.attach_id);
@@ -110,13 +104,11 @@ function ucPostUploadUiBtn() {
             }
             stored++;
             if(stored == files.length) {
-              // all files are stored
               // TODO: disable everything until now
 
               if(wp.media) {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
-
                 // refresh attachment collection
                 // no need for WP 4.7.2 but kept for older WP versions
                 try {
@@ -126,6 +118,7 @@ function ucPostUploadUiBtn() {
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
+              
             }
           });
         });
