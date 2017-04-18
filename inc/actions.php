@@ -116,6 +116,7 @@ function uploadcare_attach($file) {
         add_post_meta($attachment_id, '_uc_is_local_file', true, true);
     } else {
         $attached_file = $file->data['original_file_url'];
+        add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
     }
 
     add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
