@@ -45,6 +45,7 @@ function ucAddImg(fileInfo) {
 
 function ucFileDone(data) {
   uploadcare.jQuery('#content').prop('disabled', true);
+  uploadcare.jQuery('.uploadcare-loading-screen').removeClass('uploadcare-hidden');
   if(UPLOADCARE_MULTIPLE) {
     data.promise().done(function(fileGroupInfo) {
       var files = data.files();
@@ -52,10 +53,11 @@ function ucFileDone(data) {
         var file = files[idx];
         file.done(function(fileInfo) {
           ucAddImg(fileInfo);
+          uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden');
         });
       }
     }).always(function() {
-      uploadcare.jQuery('#content').prop('disabled', false);
+      uploadcare.jQuery('#content').prop('disabled', false);      
     });
   } else {
     var file = data;
@@ -70,6 +72,7 @@ function ucPostUploadUiBtn() {
   uploadcare.openDialog([], {
     multiple: true
   }).done(function(data) {
+    uploadcare.jQuery('.uploadcare-loading-screen').removeClass('uploadcare-hidden');
     data.promise().done(function(fileGroupInfo) {
       var files = data.files();
       var stored = 0;
@@ -120,6 +123,7 @@ function ucPostUploadUiBtn() {
                 try {
                   updateAttachments();
                 } catch(ex) {}
+                uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden');
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
@@ -208,4 +212,20 @@ uploadcare.jQuery(function() {
         location.reload();
     });
   });
+
+
+  uploadcare.jQuery('body').append('<div class="uploadcare-loading-screen uploadcare-hidden"><div class="uploadcare-sk-fading-circle">' 
+  + '<div class="sk-circle1 sk-circle"></div>'
+  + '<div class="sk-circle2 sk-circle"></div>'
+  + '<div class="sk-circle3 sk-circle"></div>'
+  + '<div class="sk-circle4 sk-circle"></div>'
+  + '<div class="sk-circle5 sk-circle"></div>'
+  + '<div class="sk-circle6 sk-circle"></div>'
+  + '<div class="sk-circle7 sk-circle"></div>'
+  + '<div class="sk-circle8 sk-circle"></div>'
+  + '<div class="sk-circle9 sk-circle"></div>'
+  + '<div class="sk-circle10 sk-circle"></div>'
+  + '<div class="sk-circle11 sk-circle"></div>'
+  + '<div class="sk-circle12 sk-circle"></div>'
+  + '</div></div>');
 });
