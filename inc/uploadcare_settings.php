@@ -85,7 +85,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
             <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
                 />&nbsp;<?php _e('Download images to server from Uploadcare before publish'); ?>
         </p>
-        <h3>Source tabs</h3>
+        <h3>Upload Sources</h3>
         <select name="uploadcare_source_tabs[]" multiple="" size="12" style="width: 120px;">
             <?php
                 $selected = in_array('all', $uploadcare_source_tabs) ? 'selected="selected"' : '';
