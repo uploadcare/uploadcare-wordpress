@@ -57,14 +57,15 @@ function ucFileDone(data) {
         });
       }
     }).always(function() {
-      uploadcare.jQuery('#content').prop('disabled', false);      
+      uploadcare.jQuery('#content').prop('disabled', false);
     });
   } else {
     var file = data;
     file.done(ucAddImg)
-        .always(function() {
-          uploadcare.jQuery('#content').prop('disabled', false);
-        });
+      .always(function() {
+        uploadcare.jQuery('#content').prop('disabled', false);
+        uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden');
+      });
   }
 }
 
