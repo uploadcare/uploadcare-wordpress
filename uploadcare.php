@@ -16,6 +16,7 @@ if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 
 define('UPLOADCARE_PLUGIN_VERSION', '2.4.2');
 define('UPLOADCARE_WIDGET_VERSION', '3.x');
+define('UPLOADCARE_TAB_EFFECTS_VERSION', '1.x');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__));
