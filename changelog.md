@@ -1,8 +1,10 @@
 # Changelog
 
 
-### 2.4.x
-- Test up to Wordpress 4.7.3
+### 2.4.2
+- Test up to Wordpress 4.8.3
+- Uploadcare widget updated to version 3.x
+- Added image effects on image insert
 
 
 ### 2.4.1 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.1.zip))
