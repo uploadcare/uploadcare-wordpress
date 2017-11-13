@@ -4,7 +4,7 @@
 ### 2.4.2
 - Test up to Wordpress 4.8.3
 - Uploadcare widget updated to version 3.x
-- Added image effects on image insert
+- Added In-browser image editing and filters
 
 
 ### 2.4.1 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.1.zip))
