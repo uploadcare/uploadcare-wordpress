@@ -19,16 +19,15 @@ function uploadcare_image_downsize($value = false, $id, $size = 'medium') {
     if($sz) {
         // chop filename part
         $url = preg_replace('/[^\/]*$/', '', $uc_url);
-        $url .= '-/stretch/off/-/scale_crop/' . $sz . '/';
+        $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
     } else {
         $url = $uc_url;
     }
     return Array(
         $url,
-        0, // size
         0, // width
         0, // height
-        false,
+        true,
     );
 }
 
@@ -52,7 +51,7 @@ function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $si
     $url = $meta[0];
     $sz = uc_thumbnail_size($size);
     if($sz) {
-        $src = "{$url}-/stretch/off/-/scale_crop/$sz/";
+        $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
     } else {
         $src = $url;
     }
