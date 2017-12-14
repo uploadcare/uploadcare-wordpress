@@ -1,8 +1,8 @@
 # Changelog
 
 
-### 2.4.2
-- Test up to Wordpress 4.8.3
+### 2.5.0
+- Test up to Wordpress 4.9.1
 - Uploadcare widget updated to version 3.x
 - Added In-browser image editing and filters
 
