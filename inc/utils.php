@@ -161,10 +161,25 @@ function _uploadcare_get_js_cfg() {
     } else {
         $tabs = implode(' ', $tab_options);
     }
+
+    $effects = get_option('uploadcare_tab_effects');
+    if(count($effects) == 1 && in_array('none', $effects)) {
+        $previewStep = "false";
+        $effects = array();
+    } else {
+        $previewStep = "true";
+        $noneInd = array_search('none', $effects);
+        if($noneInd) {
+            unset($effects[$noneInd]);
+        }
+    }
+
     return array(
         'public_key' => get_option('uploadcare_public'),
         'original' => get_option('uploadcare_original') ? "true" : "false",
         'multiple' => get_option('uploadcare_multiupload') ? "true" : "false",
+        'previewStep' => $previewStep,
+        'effects' => implode(',', $effects),
         'ajaxurl' => admin_url('admin-ajax.php'),
         'tabs' => $tabs,
     );

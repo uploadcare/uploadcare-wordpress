@@ -1,5 +1,6 @@
 'use strict';
 
+uploadcare.registerTab('preview', uploadcareTabEffects);
 function ucEditFile(file_id) {
   try {
     tb_remove();
@@ -15,7 +16,8 @@ function uploadcareMediaButton() {
 function ucStoreImg(fileInfo, callback) {
   var data = {
     'action': 'uploadcare_handle',
-    'file_id': fileInfo.uuid
+    'file_id': fileInfo.uuid,
+    'file_url': fileInfo.cdnUrl,
   };
   uploadcare.jQuery.post(ajaxurl, data, function(response) {
     if (callback) {
@@ -54,13 +56,14 @@ function ucFileDone(data) {
         });
       }
     }).always(function() {
-      uploadcare.jQuery('#content').prop('disabled', false);      
+      uploadcare.jQuery('#content').prop('disabled', false);
     });
   } else {
     var file = data;
     file.done(ucAddImg)
         .always(function() {
           uploadcare.jQuery('#content').prop('disabled', false);
+          uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden');
         });
   }
 }
