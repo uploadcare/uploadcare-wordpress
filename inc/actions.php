@@ -115,6 +115,7 @@ function uploadcare_attach($file) {
 
     if (get_option('uploadcare_download_to_server')) {
         $attached_file = uploadcare_download($file);
+        add_post_meta($attachment_id, '_uc_is_local_file', true, true);
     } else {
         $attached_file = $file->data['original_file_url'];
         add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
@@ -164,7 +165,15 @@ function uploadcare_handle() {
     }
     $file->store();
     $attachment_id = uploadcare_attach($file);
-    echo "{\"attach_id\": $attachment_id}";
+    $fileUrl = get_post_meta($attachment_id, '_wp_attached_file', true);
+    $isLocal = "false";
+    if(get_post_meta($attachment_id, '_uc_is_local_file', true)) {
+        $isLocal = "true";
+        $uploadBaseUrl = wp_upload_dir(false, false, false)["baseurl"];
+        $fileUrl = "$uploadBaseUrl/$fileUrl";
+    }
+    
+    echo "{\"attach_id\": $attachment_id, \"fileUrl\": \"$fileUrl\", \"isLocal\": $isLocal}";
     die;
 }
 

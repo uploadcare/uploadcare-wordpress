@@ -28,15 +28,18 @@ function ucStoreImg(fileInfo, callback) {
 
 function ucAddImg(fileInfo) {
   ucStoreImg(fileInfo, function(response) {
+    console.log(response);
+    var obj = uploadcare.jQuery.parseJSON(response);
+    var fileUrl = obj.fileUrl;
     if (fileInfo.isImage) {
-      var $img = '<img src="' + fileInfo.cdnUrl + '" alt="' + fileInfo.name + '"/>';
+      var $img = '<img src="' + fileUrl + '" alt="' + fileInfo.name + '"/>';
       if(UPLOADCARE_CONF.original) {
-        window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + $img + '</a>');
+        window.send_to_editor('<a href="' + fileUrl + '">' + $img + '</a>');
       } else {
         window.send_to_editor($img);
       }
     } else {
-      window.send_to_editor('<a href="' + fileInfo.cdnUrl + '">' + fileInfo.name + '</a>');
+      window.send_to_editor('<a href="' + fileUrl + '">' + fileInfo.name + '</a>');
     }
     window.send_to_editor('\n');
   });
@@ -61,10 +64,10 @@ function ucFileDone(data) {
   } else {
     var file = data;
     file.done(ucAddImg)
-        .always(function() {
-          uploadcare.jQuery('#content').prop('disabled', false);
-          uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden');
-        });
+      .always(function() {
+        uploadcare.jQuery('#content').prop('disabled', false);
+        uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden');
+      });
   }
 }
 
@@ -113,13 +116,11 @@ function ucPostUploadUiBtn() {
             }
             stored++;
             if(stored == files.length) {
-              // all files are stored
               // TODO: disable everything until now
 
               if(wp.media) {
                 // switch to attachment browser
                 wp.media.frame.content.mode('browse');
-
                 // refresh attachment collection
                 // no need for WP 4.7.2 but kept for older WP versions
                 try {
@@ -129,6 +130,7 @@ function ucPostUploadUiBtn() {
               } else if (adminpage == 'media-new-php') {
                 location = 'upload.php';
               }
+              
             }
           });
         });

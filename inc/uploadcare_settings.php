@@ -55,8 +55,8 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_original', $uploadcare_original);
     $uploadcare_multiupload = $_POST['uploadcare_multiupload'];
     update_option('uploadcare_multiupload', $uploadcare_multiupload);
-    // $uploadcare_download_to_server = $_POST['uploadcare_download_to_server'];
-    // update_option('uploadcare_download_to_server', $uploadcare_download_to_server);
+    $uploadcare_download_to_server = $_POST['uploadcare_download_to_server'];
+    update_option('uploadcare_download_to_server', $uploadcare_download_to_server);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
@@ -71,7 +71,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     $uploadcare_secret = get_option('uploadcare_secret');
     $uploadcare_original = get_option('uploadcare_original');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
-    // $uploadcare_download_to_server = get_option('uploadcare_download_to_server');
+    $uploadcare_download_to_server = get_option('uploadcare_download_to_server');
     $uploadcare_finetuning = get_option('uploadcare_finetuning');
     $uploadcare_source_tabs = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_tab_effects = get_option('uploadcare_tab_effects', $effects_defaults);
@@ -105,6 +105,10 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
             <input type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?>
             />&nbsp;<?php _e('Allow multiupload in Uploadcare widget'); ?>
         </p>
+        <p>
+            <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
+                />&nbsp;<?php _e('Download images to server from Uploadcare before publish'); ?>
+        </p>
         <h3>Tab effects</h3>
         <select name="uploadcare_tab_effects[]" multiple="" size="12" style="width: 120px;">
         <?php
@@ -116,12 +120,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
             }
         ?>
         </select>
-
-<!--         <p>
-            <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
-                />&nbsp;<?php _e('Download images to server from Uploadcare before publish'); ?>
-        </p>
- -->        <h3>Upload Sources</h3>
+        <h3>Upload Sources</h3>
         <select name="uploadcare_source_tabs[]" multiple="" size="12" style="width: 120px;">
             <?php
                 $selected = in_array('all', $uploadcare_source_tabs) ? 'selected="selected"' : '';
