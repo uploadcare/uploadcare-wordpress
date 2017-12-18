@@ -115,10 +115,15 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.5.0 =
+- Test up to Wordpress 4.9.1
+- Uploadcare widget updated to version 3.x
+- Added In-browser image editing and filters
+- Added storing Uploadcare images localy on your WordPress host
+
 = 2.4.1 =
 * Minor bug fix for usage jQuery.
 * Test up to Wordpress 4.7.3
-* Added possibility to download images to server from Uploadcare before publish. This feature can be enabled in the plugin settings.
 
 = 2.4.0 =
 * Uploadcare widget updated to version 2.6.0
