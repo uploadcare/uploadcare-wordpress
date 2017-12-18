@@ -1,8 +1,11 @@
 # Changelog
 
 
-### 2.4.x
-- Test up to Wordpress 4.7.3
+### 2.5.0 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.0.zip))
+- Test up to Wordpress 4.9.1
+- Uploadcare widget updated to version 3.x
+- Added In-browser image editing and filters
+- Added storing Uploadcare images localy on your WordPress host
 
 
 ### 2.4.1 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.4.1.zip))

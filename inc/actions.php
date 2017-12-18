@@ -13,11 +13,13 @@ function uploadcare_plugin_init() {
     $widget = new Uploadcare\Widget($api);
     $widget_url = $widget->getScriptSrc(UPLOADCARE_WIDGET_VERSION);
     wp_register_script('uploadcare-widget', $widget_url);
+    $widget_tab_effects_url = 'https://ucarecdn.com/libs/widget-tab-effects/'.UPLOADCARE_TAB_EFFECTS_VERSION.'/uploadcare.tab-effects.min.js';
+    wp_register_script('uploadcare-tab-effects', $widget_tab_effects_url);
 
     wp_register_script(
         'uploadcare-config',
         UPLOADCARE_PLUGIN_URL . 'js/config.js',
-        array('uploadcare-widget'));
+        array('uploadcare-widget', 'uploadcare-tab-effects'));
     wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', _uploadcare_get_js_cfg());
 
     wp_register_script(
@@ -116,7 +118,7 @@ function uploadcare_attach($file) {
         add_post_meta($attachment_id, '_uc_is_local_file', true, true);
     } else {
         $attached_file = $file->data['original_file_url'];
-        add_post_meta($attachment_id, 'uploadcare_url', $file->data['original_file_url'], true);
+        add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
     }
 
     add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
@@ -155,9 +157,13 @@ function uploadcare_handle() {
     // store file
     $api = uploadcare_api();
     $file_id = $_POST['file_id'];
-    $file = $api->getFile($file_id);
+    $file_url = $_POST['file_url'];
+    if($file_url) {
+        $file = $api->uploader->fromUrl($file_url);
+    } else {
+        $file = $api->getFile($file_id);
+    }
     $file->store();
-
     $attachment_id = uploadcare_attach($file);
     $fileUrl = get_post_meta($attachment_id, '_wp_attached_file', true);
     $isLocal = "false";

@@ -26,7 +26,7 @@ Send us your feedback, feedback@uploadcare.com
 1. Begin adding a new post.
 2. Press "Add Media" to insert media with the Uploadcare widget.
 3. Upload a file using the widget.
-4. Crop the file if you wish. Only the cropped area will be inserted.
+4. Apply any image effects just in browser. Only modified images will be inserted.
 5. Press "Store and Insert". The image will be inserted into your post.
 
 
