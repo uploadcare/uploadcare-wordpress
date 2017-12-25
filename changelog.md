@@ -1,5 +1,7 @@
 # Changelog
 
+### 2.5.1 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.1.zip))
+- Fixed initialization warnings in utils.php module
 
 ### 2.5.0 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.0.zip))
 - Test up to Wordpress 4.9.1
