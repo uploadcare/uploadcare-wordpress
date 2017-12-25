@@ -162,7 +162,13 @@ function _uploadcare_get_js_cfg() {
         $tabs = implode(' ', $tab_options);
     }
 
-    $effects = get_option('uploadcare_tab_effects');
+    $effects = get_option('uploadcare_tab_effects', array(
+        'crop',
+        'rotate',
+        'sharp',
+        'enhance',
+        'grayscale',
+    ));
     if(count($effects) == 1 && in_array('none', $effects)) {
         $previewStep = "false";
         $effects = array();
