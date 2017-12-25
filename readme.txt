@@ -4,7 +4,7 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
 Tested up to: 4.9.1
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -115,11 +115,14 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.5.1 =
+* Fixed initialization warnings in utils.php module
+
 = 2.5.0 =
-- Test up to Wordpress 4.9.1
-- Uploadcare widget updated to version 3.x
-- Added In-browser image editing and filters
-- Added storing Uploadcare images localy on your WordPress host
+* Test up to Wordpress 4.9.1
+* Uploadcare widget updated to version 3.x
+* Added In-browser image editing and filters
+* Added storing Uploadcare images localy on your WordPress host
 
 = 2.4.1 =
 * Minor bug fix for usage jQuery.
