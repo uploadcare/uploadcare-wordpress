@@ -1,7 +1,7 @@
 # Changelog
 
 ### 2.5.2 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.2.zip))
-- Fixed missed fine tuning settings for widget
+- Fixed missed "Fine tuning" setup for widget
 
 ### 2.5.1 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.1.zip))
 - Fixed initialization warnings in utils.php module
