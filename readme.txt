@@ -115,6 +115,9 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.5.2 =
+* Fixed missed fine tuning settings for widget
+
 = 2.5.1 =
 * Fixed initialization warnings in utils.php module
 

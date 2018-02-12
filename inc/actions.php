@@ -244,9 +244,9 @@ function uploadcare_media_files_menu_handle() {
 
 add_action('post-upload-ui', 'uploadcare_media_upload');
 function uploadcare_media_upload() {
+    $finetuning = stripcslashes(get_option('uploadcare_finetuning', ''));
     $img = plugins_url('media/logo.png', dirname(__FILE__));
     ?>
-
     <p class="uploadcare-picker">
       <a  id="uploadcare-post-upload-ui-btn"
           class="button button-hero"
@@ -256,6 +256,7 @@ function uploadcare_media_upload() {
       </a>
     </p>
     <p class="max-upload-size">Maximum upload file size: 100MB (or more).</p>
+    <script type="text/javascript"><?php  echo $finetuning ?></script>
     <?php
 }
 
