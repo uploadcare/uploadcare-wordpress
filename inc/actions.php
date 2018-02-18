@@ -158,12 +158,13 @@ function uploadcare_handle() {
     $api = uploadcare_api();
     $file_id = $_POST['file_id'];
     $file_url = $_POST['file_url'];
-    if($file_url) {
-        $file = $api->uploader->fromUrl($file_url);
-    } else {
-        $file = $api->getFile($file_id);
-    }
+    
+    $srcFile = $api->getFile($file_id);
+    $srcFile->updateInfo();
+    
+    $file = $api->uploader->fromUrl($file_url);
     $file->store();
+    $srcFile->delete();
     $attachment_id = uploadcare_attach($file);
     $fileUrl = get_post_meta($attachment_id, '_wp_attached_file', true);
     $isLocal = "false";
