@@ -61,10 +61,8 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
     update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
-
     $uploadcare_tab_effects = $_POST['uploadcare_tab_effects'];
     update_option('uploadcare_tab_effects', $uploadcare_tab_effects);
-
     $saved = true;
 } else {
     $uploadcare_public = get_option('uploadcare_public');
