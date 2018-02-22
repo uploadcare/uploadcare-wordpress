@@ -289,6 +289,10 @@ function uploadcare_settings_actions() {
  * Calculate final image dimensions
  */
 function uploadcare_get_final_dim($file) {
+    if(!$file->default_effects) {
+        return array('width' => $file->data['image_info']->width,
+                    'height' => $file->data['image_info']->height);
+    }
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $file->getUrl().'-/json/');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
