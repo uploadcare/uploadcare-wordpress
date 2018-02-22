@@ -4,7 +4,7 @@ Contributors: grayhound1, dmitry-mukhin
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
 Tested up to: 4.9.4
-Stable tag: 2.5.2
+Stable tag: 2.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -114,6 +114,10 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+
+= 2.5.3 =
+* Fixed file duplication on upload
+* Fixed widget effects tab settings
 
 = 2.5.2 =
 * Fixed missed "Fine tuning" setup for widget

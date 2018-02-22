@@ -107,17 +107,15 @@ function uploadcare_attach($file) {
         'post_status'    => 'inherit',
         'post_mime_type' => $file->data['mime_type'],
     );
-
+    $isImage = $file->data['is_image'];
     $attachment_id = wp_insert_post($attachment, true);
-
-    $meta = array('width' => $file->data['image_info']->width,
-                  'height' => $file->data['image_info']->height);
+    $meta = $isImage ? uploadcare_get_final_dim($file) : array('width' => null, 'height' => null);
 
     if (get_option('uploadcare_download_to_server')) {
         $attached_file = uploadcare_download($file);
         add_post_meta($attachment_id, '_uc_is_local_file', true, true);
     } else {
-        $attached_file = $file->data['original_file_url'];
+        $attached_file = $file->getUrl(!$isImage ? $filename : null);
         add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
     }
 
@@ -134,11 +132,11 @@ function uploadcare_attach($file) {
  */
 function uploadcare_download(Uploadcare\File $file) {
     // downloading contents of image
-    $contents = wp_remote_get($file);
+    $contents = wp_remote_get($file->getUrl());
 
     $dirInfo = wp_upload_dir();
     $absPath = $dirInfo['basedir'] . '/';
-    $localFilename = 'uploadcare' . $dirInfo['subdir'] . '/' . basename($file) . '.jpg';
+    $localFilename = 'uploadcare' . $dirInfo['subdir'] . '/' . $file->getUuid().'.'. $file->data['original_filename'];
 
     // creating folders tree
     wp_mkdir_p($absPath . dirname($localFilename));
@@ -150,19 +148,15 @@ function uploadcare_download(Uploadcare\File $file) {
 }
 
 /**
- * Add ajax upload handler
+ * Ajax upload handler - registers the new images in the Wordpress media library
  */
 add_action('wp_ajax_uploadcare_handle', 'uploadcare_handle');
 function uploadcare_handle() {
     // store file
     $api = uploadcare_api();
-    $file_id = $_POST['file_id'];
     $file_url = $_POST['file_url'];
-    if($file_url) {
-        $file = $api->uploader->fromUrl($file_url);
-    } else {
-        $file = $api->getFile($file_id);
-    }
+
+    $file = $api->getFile($file_url);
     $file->store();
     $attachment_id = uploadcare_attach($file);
     $fileUrl = get_post_meta($attachment_id, '_wp_attached_file', true);
@@ -289,4 +283,24 @@ function uploadcare_settings() {
 add_action('admin_menu', 'uploadcare_settings_actions');
 function uploadcare_settings_actions() {
     add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', 'uploadcare_settings');
+}
+
+/*
+ * Calculate final image dimensions
+ */
+function uploadcare_get_final_dim($file) {
+    if(!$file->default_effects) {
+        return array('width' => $file->data['image_info']->width,
+                    'height' => $file->data['image_info']->height);
+    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $file->getUrl().'-/json/');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ));
+    $res = json_decode(curl_exec($ch), true);
+    curl_close($ch);
+    return array('width' => $res['width'], 'height' => $res['height']);
 }

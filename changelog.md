@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.5.3 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.3.zip))
+- Fixed file duplication on upload
+- Fixed widget effects tab settings
+
 ### 2.5.2 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.2.zip))
 - Fixed missed "Fine tuning" setup for widget
 - Test up to Wordpress 4.9.4

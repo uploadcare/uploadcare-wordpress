@@ -1,6 +1,5 @@
 'use strict';
 
-uploadcare.registerTab('preview', uploadcareTabEffects);
 function ucEditFile(file_id) {
   try {
     tb_remove();
@@ -16,7 +15,6 @@ function uploadcareMediaButton() {
 function ucStoreImg(fileInfo, callback) {
   var data = {
     'action': 'uploadcare_handle',
-    'file_id': fileInfo.uuid,
     'file_url': fileInfo.cdnUrl,
   };
   uploadcare.jQuery.post(ajaxurl, data, function(response) {
@@ -28,7 +26,6 @@ function ucStoreImg(fileInfo, callback) {
 
 function ucAddImg(fileInfo) {
   ucStoreImg(fileInfo, function(response) {
-    console.log(response);
     var obj = uploadcare.jQuery.parseJSON(response);
     var fileUrl = obj.fileUrl;
     if (fileInfo.isImage) {
@@ -140,6 +137,10 @@ function ucPostUploadUiBtn() {
 }
 
 uploadcare.jQuery(function() {
+  if(WP_UC_PARAMS.effects) {
+    uploadcare.registerTab('preview', uploadcareTabEffects);
+  }
+
   // add button to all inputs with .uploadcare-url-field
   uploadcare.jQuery('input.uploadcare-url-field').each(function() {
     var input = uploadcare.jQuery(this);
