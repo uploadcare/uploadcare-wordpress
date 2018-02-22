@@ -15,7 +15,6 @@ function uploadcareMediaButton() {
 function ucStoreImg(fileInfo, callback) {
   var data = {
     'action': 'uploadcare_handle',
-    'file_id': fileInfo.uuid,
     'file_url': fileInfo.cdnUrl,
   };
   uploadcare.jQuery.post(ajaxurl, data, function(response) {
