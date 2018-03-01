@@ -13,6 +13,15 @@ The plugin is based on the [uploadcare-php][4] library.
 
 ## Install
 
+### In Wordpress
+
+<a href="https://wordpress.org/plugins/uploadcare/" title="Navigate to the plugin page">
+  <img src="https://ucarecdn.com/a6ed4f07-46d4-45f1-9a2e-1bef04d9f21a/InstallFromWP.gif"
+       width="888" alt="Installing WP plugin">
+</a>
+
+### Manual install
+
 1. Download the [latest release][3]. The download is a ZIP archive holding the
    plugin together with all of its dependencies.
 2. Unzip the archive to your `wp-content/plugins` directory.
