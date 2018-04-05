@@ -1,7 +1,8 @@
 # Uploadcare superpowers for WordPress
 
-This is a plugin that lets you add any media to your [WordPress][5] post via
-[Uploadcare][1].
+This is a plugin that lets you add any media to your [WordPress][5] library or
+post via [Uploadcare][1]. `uploadcare-wordpress` also helps you accelerate media
+content, check out this [article][ext-wparena-article] for details.
 
 The plugin is based on the [uploadcare-php][4] library.
 
@@ -54,3 +55,4 @@ Feel free to provide [your feedback](mailto:hello@uploadcare.com).
 [3]: https://github.com/uploadcare/uploadcare-wordpress/releases
 [4]: https://github.com/uploadcare/uploadcare-php
 [5]: http://wordpress.org/
+[ext-wparena-article]: https://wparena.com/3-must-have-wordpress-plugins-to-start-a-photoblog/
