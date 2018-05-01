@@ -81,7 +81,7 @@ function uploadcare_add_media($context) {
     <span class="wp-media-buttons-icon"></span>Wordpress Media Library
   </a>
 </div>
-<style tyle="text/css">#wp-content-media-buttons>a:first-child { display: none }</style>
+<style type="text/css">#wp-content-media-buttons>a:first-child { display: none }</style>
 <script type="text/javascript">{$finetuning}</script>
 HTML;
     return $context;
@@ -166,7 +166,7 @@ function uploadcare_handle() {
         $uploadBaseUrl = wp_upload_dir(false, false, false)["baseurl"];
         $fileUrl = "$uploadBaseUrl/$fileUrl";
     }
-    
+
     echo "{\"attach_id\": $attachment_id, \"fileUrl\": \"$fileUrl\", \"isLocal\": $isLocal}";
     die;
 }
