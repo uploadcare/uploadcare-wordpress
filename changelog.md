@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.6.0 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.6.0.zip))
+- Updated [https://github.com/uploadcare/uploadcare-php](https://github.com/uploadcare/uploadcare-php)
+- Added integration to the widget config to provide info
+  on the Wordpress version and plugin version for User Agent with requests
+  to Uploadcare Upload API.
+
 ### 2.5.3 ([Download](http://downloads.wordpress.org/plugin/uploadcare.2.5.3.zip))
 - Fixed file duplication on upload
 - Fixed widget effects tab settings
