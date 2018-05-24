@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.6.0] — 2018-05-25
+## [2.6.0] — 2018-05-24
 
 ### Added
 - Integration to the widget config to provide info on the Wordpress version and plugin version for User Agent with requests to Uploadcare Upload API.
