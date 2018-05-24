@@ -1,10 +1,28 @@
-# Uploadcare superpowers for WordPress
+# File Uploader by Uploadcare
 
-This is a plugin that lets you add any media to your [WordPress][5] library or
-post via [Uploadcare][1]. `uploadcare-wordpress` also helps you accelerate media
-content, check out this [article][ext-wparena-article] for details.
+<a href="https://uploadcare.com/?utm_source=github&utm_campaign=uploadcare-wordpress">
+  <img align="right" width="64" height="64"
+    src="https://ucarecdn.com/2f4864b7-ed0e-4411-965b-8148623aa680/uploadcare-logo-mark.svg"
+    alt="">
+</a>
 
-The plugin is based on the [uploadcare-php][4] library.
+This is a plugin for [WordPress][wordpress], that powers beautiful websites for businesses, professionals, and bloggers, providing it for working with [Uploadcare Widget][uc-feature-widget].
+
+The plugin allows WordPress users to upload media
+from their devices, social media, cloud storage, and more, check out this [article][wparena-article] for details.
+
+[![GitHub release][badge-release-img]][badge-release-url]&nbsp;
+[![Uploadcare stack on StackShare][badge-stack-img]][badge-stack-url]
+
+* [Requirements](#requirements)
+* [Install](#install)
+* [Usage](#usage)
+* [Configuration](#configuration)
+  * [Plugin configuration](#plugin-configuration)
+  * [Widget configuration](#widget-configuration)
+* [Contributors](#contributors)
+* [Security issues](#security-issues)
+* [Feedback](#feedback)
 
 ## Requirements
 
@@ -21,10 +39,9 @@ The plugin is based on the [uploadcare-php][4] library.
        width="888" alt="Installing WP plugin">
 </a>
 
-### Manual install
+### Manual installation
 
-1. Download the [latest release][3]. The download is a ZIP archive holding the
-   plugin together with all of its dependencies.
+1. Download the [latest release][github-releases]. The download is a ZIP archive holding the plugin together with all of its dependencies.
 2. Unzip the archive to your `wp-content/plugins` directory.
 3. Activate the plugin on your "Plugins" page in a WordPress admin area.
 4. Go to "Settings" -> "Uploadcare settings" and set your public and secret API.
@@ -33,26 +50,86 @@ The plugin is based on the [uploadcare-php][4] library.
    testing purposes. The keys point to the demo Uploadcare account where all the
    files are wiped out every 24 hours.
    To acquire your own keys, you will need to create
-   an [Uploadcare account](https://uploadcare.com/accounts/create/free/). The
+   an [Uploadcare account][uc-account]. The
    provided link will navigate you to creating a FREE one.
 5. Make a new post. That is it!
-
-Feel free to provide [your feedback](mailto:hello@uploadcare.com).
 
 ## Usage
 
 1. Start adding a new post.
 2. Press "Add Media" to insert any media with
-   [Uploadcare Widget](https://uploadcare.com/features/widget/).
+   [Uploadcare Widget][uc-widget-features].
 3. Upload a file using the widget.
 4. When uploading images, you can edit them right in your mobile or desktop
    browser. This adds the modified image to your post. You can learn more about
-   in-browser image editing [here](https://uploadcare.com/features/image_processing/).
+   in-browser image editing [here][uc-widget-image-processing].
 5. Press "Store and Insert." You are there: an image gets added to your post.
 
-[1]: https://uploadcare.com/
-[2]: https://uploadcare.com/documentation/reference/basic/cdn.html
-[3]: https://github.com/uploadcare/uploadcare-wordpress/releases
-[4]: https://github.com/uploadcare/uploadcare-php
-[5]: http://wordpress.org/
-[ext-wparena-article]: https://wparena.com/3-must-have-wordpress-plugins-to-start-a-photoblog/
+## Configuration
+
+### Widget configuration
+
+Uploadcare Widget can be deeply customized to suit your UX/UI. You can define
+allowed upload sources, implement file validation, and more.
+
+Use our live [widget sandbox][uc-widget-configure] as a starting point and consider
+checking out the docs on [widget configuration][uc-docs-widget-config] and its
+[JavaScript API][uc-docs-widget-js-api].
+
+## Contributors
+
+This list of contributors is based on the git history of this repo.
+
+Gray Hound <https://github.com/grayhound>
+
+Dmitry Mukhin <https://github.com/dmitry-mukhin>
+
+Nikolay Zherdev <https://github.com/ZNick1982>
+
+Dmitry Petrov <https://github.com/dimaninc>
+
+Zarema Khalilova <https://github.com/Zmoki>
+
+Elijah <https://github.com/dayton1987>
+
+Igor Debatur <https://github.com/igordebatur>
+
+Roman Sedykh <https://github.com/rsedykh>
+
+Siarhei Bautrukevich <https://github.com/bautrukevich>
+
+[All contributors][github-contributors]
+
+## Security issues
+
+If you think you ran into something in Uploadcare libraries which might have
+security implications, please hit us up at [bugbounty@uploadcare.com][uc-email-bounty]
+or Hackerone.
+
+We'll contact you personally in a short time to fix an issue through co-op and
+prior to any public disclosure.
+
+## Feedback
+
+Issues and PRs are welcome. You can provide your feedback or drop us a support
+request at [hello@uploadcare.com][uc-email-hello].
+
+[wordpress]: http://www.wordpress.org/
+[wparena-article]: https://wparena.com/3-must-have-wordpress-plugins-to-start-a-photoblog/
+[uc-account]: https://uploadcare.com/accounts/create/free/
+[uc-widget-features]: https://uploadcare.com/features/widget/
+[uc-widget-image-processing]: https://uploadcare.com/features/image_processing/
+[uc-docs-widget-config]: https://uploadcare.com/docs/uploads/widget/config/?utm_source=github&utm_campaign=uploadcare-wordpress
+[uc-docs-widget-js-api]: https://uploadcare.com/docs/api_reference/javascript/?utm_source=github&utm_campaign=uploadcare-wordpress
+[uc-widget-configure]: https://uploadcare.com/widget/configure/?utm_source=github&utm_campaign=uploadcare-wordpress
+[uc-feature-widget]: https://uploadcare.com/features/widget/?utm_source=github&utm_campaign=uploadcare-wordpress
+[uc-email-bounty]: mailto:bugbounty@uploadcare.com
+[uc-email-hello]: mailto:hello@uploadcare.com
+
+[github-releases]: https://github.com/uploadcare/uploadcare-wordpress/releases
+[github-contributors]: https://github.com/uploadcare/uploadcare-wordpress/graphs/contributors
+
+[badge-stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
+[badge-stack-url]: https://stackshare.io/uploadcare/stacks/
+[badge-release-img]: https://img.shields.io/github/release/uploadcare/uploadcare-wordpress.svg
+[badge-release-url]: https://github.com/uploadcare/uploadcare-wordpress/releases
