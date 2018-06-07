@@ -6,12 +6,14 @@
  */
 function uploadcare_api() {
     global $wp_version;
-    $user_agent = 'Uploadcare Wordpress ' . UPLOADCARE_PLUGIN_VERSION . '/' . $wp_version;
-    return new Uploadcare\Api(
+    $api = new Uploadcare\Api(
         get_option('uploadcare_public'),
-        get_option('uploadcare_secret'),
-        $user_agent
+        get_option('uploadcare_secret')
     );
+    $api->setFramework('Wordpress', $wp_version);
+    $api->setExtension('PHPUploadcare-Wordpress', UPLOADCARE_PLUGIN_VERSION);
+
+    return $api;
 }
 
 
