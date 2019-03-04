@@ -1,10 +1,10 @@
 === Uploadcare: Add media from anywhere ===
 
-Contributors: grayhound1, dmitry-mukhin
+Contributors: grayhound1, dmitry-mukhin, bautrukevich
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
-Tested up to: 4.9.4
-Stable tag: 2.5.3
+Tested up to: 5.1.0
+Stable tag: 2.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -115,6 +115,14 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 2.6.0 =
+* Added the `data-integration` attribute to the widget reporting its version together
+  with the library version used.
+* Added User Agent reports library and integration versions used.
+* Updated [uploadcare/uploadcare-php](https://github.com/uploadcare/uploadcare-php)
+  to the version 2.2.1.
+* User Agent reporting now uses a new default format.
+
 = 2.5.3 =
 * Fixed file duplication on upload
 * Fixed widget effects tab settings
@@ -130,7 +138,7 @@ Access all files in your Uploadcare account via Media Library.
 * Test up to Wordpress 4.9.1
 * Uploadcare widget updated to version 3.x
 * Added In-browser image editing and filters
-* Added storing Uploadcare images localy on your WordPress host
+* Added storing Uploadcare images locally on your WordPress host
 
 = 2.4.1 =
 * Minor bug fix for usage jQuery.
@@ -179,7 +187,7 @@ Access all files in your Uploadcare account via Media Library.
 * Uploadcare media library tab now shows all files from your Uploadcare account (project)
 * Allow cropping when inserting images via Uploadcare media library tab
 * Make Wordpress attachment when uploading file via "Add Media" button
-  This should impove Uploadcare integration with Wordpress and 3rd party plugins
+  This should improve Uploadcare integration with Wordpress and 3rd party plugins
 
 = 2.0.8 =
 * Fix pagination in media tab
@@ -187,13 +195,13 @@ Access all files in your Uploadcare account via Media Library.
 = 2.0.7 =
 * Support featured images via Uploadcare
 * New setting "Use Uploadcare for featured images".
-* Bugfixes
+* Bug fixes
 
 = 2.0.6 =
 * New setting "Allow multiupload".
 * New setting "Uploadcare widget fine tuning".
 * Uploadcare widget updated to version 0.12
-* Bugfixes
+* Bug fixes
 
 = 2.0.5 =
 * New setting "Insert image with url to the original image".
@@ -202,13 +210,13 @@ Access all files in your Uploadcare account via Media Library.
 * Uploadcare widget updated to version 0.8.1.2
 
 = 2.0.3 =
-* Bugfixes
+* Bug fixes
 
 = 2.0.2 =
-* Bugfixes
+* Bug fixes
 
 = 2.0.1 =
-* Bugfixes
+* Bug fixes
 
 = 2.0 =
 * New widget version, plugin refactored and ready to go.
