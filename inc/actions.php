@@ -12,7 +12,7 @@ function uploadcare_plugin_init() {
     $api = uploadcare_api();
     $widget = new Uploadcare\Widget($api);
     $widget_url = $widget->getScriptSrc(UPLOADCARE_WIDGET_VERSION);
-    wp_register_script('uploadcare-widget', $widget_url);
+    wp_register_script('uploadcare-widget', $widget_url, array('jquery'));
     $widget_tab_effects_url = 'https://ucarecdn.com/libs/widget-tab-effects/'.UPLOADCARE_TAB_EFFECTS_VERSION.'/uploadcare.tab-effects.min.js';
     wp_register_script('uploadcare-tab-effects', $widget_tab_effects_url);
 
