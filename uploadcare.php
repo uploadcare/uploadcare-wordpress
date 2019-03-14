@@ -1,26 +1,24 @@
 <?php
-/*
-Plugin Name: Uploadcare
-Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
-Description: Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
-Version: 2.6.0
-Author: Uploadcare
-Author URI: https://uploadcare.com/
-License: GPL2
-*/
-
+/**
+ * Plugin Name: Uploadcare
+ * Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
+ * Description: Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
+ * Version: 2.6.1
+ * Author: Uploadcare
+ * Author URI: https://uploadcare.com/
+ * License: GPL2
+ */
 
 if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
     exit("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>");
 }
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.6.0');
+define('UPLOADCARE_PLUGIN_VERSION', '2.6.1');
 define('UPLOADCARE_WIDGET_VERSION', '3.x');
 define('UPLOADCARE_TAB_EFFECTS_VERSION', '1.x');
 
 define('UPLOADCARE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__));
-
 
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'inc/filters.php';
@@ -29,11 +27,13 @@ require_once UPLOADCARE_PLUGIN_PATH . 'inc/shortcodes.php';
 
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Api.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/File.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/PagedDataIterator.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/FileIterator.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Group.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/GroupIterator.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Helper.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Uploader.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Widget.php';
-
 
 // TODO: delete table on upgrade
 register_activation_hook(__FILE__, 'uploadcare_install');
