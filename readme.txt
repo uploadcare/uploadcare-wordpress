@@ -4,7 +4,7 @@ Contributors: grayhound1, dmitry-mukhin, bautrukevich
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
 Tested up to: 5.1.0
-Stable tag: 2.6.0
+Stable tag: 2.6.1
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -115,6 +115,9 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+
+= 2.6.1 =
+* Fixed error with plugin initialization.
 
 = 2.6.0 =
 * Added the `data-integration` attribute to the widget reporting its version together
