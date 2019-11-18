@@ -8,7 +8,8 @@ function uploadcare_api() {
     global $wp_version;
     $api = new Uploadcare\Api(
         get_option('uploadcare_public'),
-        get_option('uploadcare_secret')
+        get_option('uploadcare_secret'),
+        get_option('uploadcare_cdn_base')
     );
     $api->setFramework('Wordpress', $wp_version);
     $api->setExtension('PHPUploadcare-Wordpress', UPLOADCARE_PLUGIN_VERSION);
@@ -190,5 +191,6 @@ function _uploadcare_get_js_cfg() {
         'effects' => implode(',', $effects),
         'ajaxurl' => admin_url('admin-ajax.php'),
         'tabs' => $tabs,
+        'cdnBase' => 'https://' . get_option('uploadcare_cdn_base', 'ucarecdn.com')
     );
 }
