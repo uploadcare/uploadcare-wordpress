@@ -51,6 +51,8 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_public', $uploadcare_public);
     $uploadcare_secret = $_POST['uploadcare_secret'];
     update_option('uploadcare_secret', $uploadcare_secret);
+    $uploadcare_cdn_base = $_POST['uploadcare_cdn_base'];
+    update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
     $uploadcare_original = $_POST['uploadcare_original'];
     update_option('uploadcare_original', $uploadcare_original);
     $uploadcare_multiupload = $_POST['uploadcare_multiupload'];
@@ -67,6 +69,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
 } else {
     $uploadcare_public = get_option('uploadcare_public');
     $uploadcare_secret = get_option('uploadcare_secret');
+    $uploadcare_cdn_base = get_option('uploadcare_cdn_base', 'ucarecdn.com');
     $uploadcare_original = get_option('uploadcare_original');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
     $uploadcare_download_to_server = get_option('uploadcare_download_to_server');
@@ -95,6 +98,10 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
             <input type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
         </p>
         <h3>Options</h3>
+        <p>
+            <?php _e("CDN Host: " ); ?>
+            <input type="text" name="uploadcare_cdn_base" value="<?php echo $uploadcare_cdn_base; ?>" size="20">
+        </p>
         <p>
             <input type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?>
             />&nbsp;<?php _e('Insert image with URL to the original image'); ?>
