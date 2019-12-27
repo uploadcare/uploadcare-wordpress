@@ -19,7 +19,7 @@ function uploadcare_image_downsize($value = false, $id, $size = 'medium') {
     if($sz) {
         // chop filename part
         $url = preg_replace('/[^\/]*$/', '', $uc_url);
-        $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
+		$url .= '-/stretch/off/-/preview/' . $sz . '/';
     } else {
         $url = $uc_url;
     }
@@ -51,7 +51,7 @@ function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $si
     $url = $meta[0];
     $sz = uc_thumbnail_size($size);
     if($sz) {
-        $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
+        $src = "{$url}-/stretch/off/-/preview/$sz/";
     } else {
         $src = $url;
     }
