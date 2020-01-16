@@ -59,6 +59,8 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_multiupload', $uploadcare_multiupload);
     $uploadcare_download_to_server = $_POST['uploadcare_download_to_server'];
     update_option('uploadcare_download_to_server', $uploadcare_download_to_server);
+    $uploadcare_scale_crop = isset($_POST['uploadcare_scale_crop']) ? $_POST['uploadcare_scale_crop'] : null;
+    update_option('uploadcare_scale_crop', $uploadcare_scale_crop);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
@@ -73,6 +75,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     $uploadcare_original = get_option('uploadcare_original');
     $uploadcare_multiupload = get_option('uploadcare_multiupload');
     $uploadcare_download_to_server = get_option('uploadcare_download_to_server');
+    $uploadcare_scale_crop = get_option('uploadcare_scale_crop');
     $uploadcare_finetuning = get_option('uploadcare_finetuning');
     $uploadcare_source_tabs = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_tab_effects = get_option('uploadcare_tab_effects', $effects_defaults);
@@ -113,6 +116,11 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
         <p>
             <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
                 />&nbsp;<?php _e('Download images to server from Uploadcare before publish'); ?>
+        </p>
+        <p>
+            <input type="checkbox" name="uploadcare_scale_crop" <?php if ($uploadcare_scale_crop):
+            ?>checked="checked"<?php endif; ?>
+            />&nbsp;<?php _e('Don\'t add `scale_crop` param after uploading'); ?>
         </p>
         <h3>Tab effects</h3>
         <select name="uploadcare_tab_effects[]" multiple="" size="12" style="width: 120px;">
