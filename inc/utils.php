@@ -201,7 +201,7 @@ function _uploadcare_get_js_cfg() {
     $api = uploadcare_api();
     $secureSignature = $api->widget->getSecureSignature();
 
-    if (!is_null($secureSignature)) {
+    if (!is_null($secureSignature) && get_option('uploadcare_lifetime') > 0) {
         return array_merge($baseParams, array(
             'secureSignature' => $secureSignature->getSignature(),
             'secureExpire' => $secureSignature->getExpire(),
