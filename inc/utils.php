@@ -13,7 +13,7 @@ function uploadcare_api() {
         get_option('uploadcare_cdn_base'),
         null,
         null,
-        get_option('uploadcare_lifetime', '0')
+        get_option('uploadcare_upload_lifetime', '0')
     );
     $api->setFramework('Wordpress', $wp_version);
     $api->setExtension('PHPUploadcare-Wordpress', UPLOADCARE_PLUGIN_VERSION);
@@ -201,7 +201,7 @@ function _uploadcare_get_js_cfg() {
     $api = uploadcare_api();
     $secureSignature = $api->widget->getSecureSignature();
 
-    if (!is_null($secureSignature) && get_option('uploadcare_lifetime') > 0) {
+    if (!is_null($secureSignature) && get_option('uploadcare_upload_lifetime') > 0) {
         return array_merge($baseParams, array(
             'secureSignature' => $secureSignature->getSignature(),
             'secureExpire' => $secureSignature->getExpire(),
