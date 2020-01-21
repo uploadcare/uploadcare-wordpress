@@ -6,8 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-* CDN Base option added.
-* Signed uploads added.
+### Added
+
+* CDN Base option
+* Signed uploads option
 
 ## [2.6.1] — 2019-03-14
 
