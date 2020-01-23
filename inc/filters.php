@@ -57,12 +57,12 @@ function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $si
     $url = $meta[0];
     $sz = uc_thumbnail_size($size);
     if($sz) {
+        $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
+
         $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
         if ($uploadcare_dont_scale_crop) {
             $src = "{$url}-/stretch/off/-/preview/{$sz}";
         }
-
-        $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
     } else {
         $src = $url;
     }
