@@ -22,7 +22,7 @@ function uploadcare_image_downsize($value = false, $id, $size = 'medium') {
 
         $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
         if ($uploadcare_dont_scale_crop) {
-            $url .= '-/stretch/off/-/preview/' . $sz;
+            $url .= '-/stretch/off/-/preview/' . $sz . '/';
         } else {
             $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
         }
@@ -61,7 +61,7 @@ function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $si
 
         $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
         if ($uploadcare_dont_scale_crop) {
-            $src = "{$url}-/stretch/off/-/preview/{$sz}";
+            $src = "{$url}-/stretch/off/-/preview/{$sz}/";
         }
     } else {
         $src = $url;
