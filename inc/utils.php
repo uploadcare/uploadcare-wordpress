@@ -198,10 +198,10 @@ function _uploadcare_get_js_cfg() {
         'cdnBase' => 'https://' . get_option('uploadcare_cdn_base', 'ucarecdn.com'),
     );
 
-    $api = uploadcare_api();
-    $secureSignature = $api->widget->getSecureSignature();
+    if (get_option('uploadcare_upload_lifetime') > 0) {
+        $api = uploadcare_api();
+        $secureSignature = $api->widget->getSecureSignature();
 
-    if (!is_null($secureSignature) && get_option('uploadcare_upload_lifetime') > 0) {
         return array_merge($baseParams, array(
             'secureSignature' => $secureSignature->getSignature(),
             'secureExpire' => $secureSignature->getExpire(),
