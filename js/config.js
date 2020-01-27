@@ -12,6 +12,11 @@ UPLOADCARE_CONF = {
     ajaxurl: WP_UC_PARAMS.ajaxurl,
 };
 
+if(WP_UC_PARAMS.secureSignature && WP_UC_PARAMS.secureExpire) {
+    UPLOADCARE_SECURE_SIGNATURE = WP_UC_PARAMS.secureSignature
+    UPLOADCARE_SECURE_EXPIRE = WP_UC_PARAMS.secureExpire
+}
+
 if(WP_UC_PARAMS.effects) {
     uploadcare.start({
         effects: WP_UC_PARAMS.effects,

@@ -53,11 +53,13 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     update_option('uploadcare_secret', $uploadcare_secret);
     $uploadcare_cdn_base = $_POST['uploadcare_cdn_base'];
     update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
-    $uploadcare_original = $_POST['uploadcare_original'];
+    $uploadcare_upload_lifetime = $_POST['uploadcare_upload_lifetime'];
+    update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
+    $uploadcare_original = isset($_POST['uploadcare_original']) ? $_POST['uploadcare_original'] : false;
     update_option('uploadcare_original', $uploadcare_original);
-    $uploadcare_multiupload = $_POST['uploadcare_multiupload'];
+    $uploadcare_multiupload = isset($_POST['uploadcare_multiupload']) ? $_POST['uploadcare_multiupload'] : false;
     update_option('uploadcare_multiupload', $uploadcare_multiupload);
-    $uploadcare_download_to_server = $_POST['uploadcare_download_to_server'];
+    $uploadcare_download_to_server = isset($_POST['uploadcare_download_to_server']) ? $_POST['uploadcare_download_to_server'] : false;
     update_option('uploadcare_download_to_server', $uploadcare_download_to_server);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
@@ -76,6 +78,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
     $uploadcare_finetuning = get_option('uploadcare_finetuning');
     $uploadcare_source_tabs = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_tab_effects = get_option('uploadcare_tab_effects', $effects_defaults);
+    $uploadcare_upload_lifetime = get_option('uploadcare_upload_lifetime', '0');
 }
 ?>
 
@@ -113,6 +116,10 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
         <p>
             <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
                 />&nbsp;<?php _e('Download images to server from Uploadcare before publish'); ?>
+        </p>
+        <p>
+            <?php _e("Signed uploads lifetime in seconds (0 - disabled): " ); ?>
+            <input type="text" name="uploadcare_upload_lifetime" value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
         </p>
         <h3>Tab effects</h3>
         <select name="uploadcare_tab_effects[]" multiple="" size="12" style="width: 120px;">

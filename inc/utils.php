@@ -9,7 +9,11 @@ function uploadcare_api() {
     $api = new Uploadcare\Api(
         get_option('uploadcare_public'),
         get_option('uploadcare_secret'),
-        get_option('uploadcare_cdn_base')
+        null,
+        get_option('uploadcare_cdn_base'),
+        null,
+        null,
+        get_option('uploadcare_upload_lifetime', '0')
     );
     $api->setFramework('Wordpress', $wp_version);
     $api->setExtension('PHPUploadcare-Wordpress', UPLOADCARE_PLUGIN_VERSION);
@@ -183,7 +187,7 @@ function _uploadcare_get_js_cfg() {
         }
     }
 
-    return array(
+    $baseParams = array(
         'public_key' => get_option('uploadcare_public'),
         'original' => get_option('uploadcare_original') ? "true" : "false",
         'multiple' => get_option('uploadcare_multiupload') ? "true" : "false",
@@ -191,6 +195,18 @@ function _uploadcare_get_js_cfg() {
         'effects' => implode(',', $effects),
         'ajaxurl' => admin_url('admin-ajax.php'),
         'tabs' => $tabs,
-        'cdnBase' => 'https://' . get_option('uploadcare_cdn_base', 'ucarecdn.com')
+        'cdnBase' => 'https://' . get_option('uploadcare_cdn_base', 'ucarecdn.com'),
     );
+
+    if (get_option('uploadcare_upload_lifetime') > 0) {
+        $api = uploadcare_api();
+        $secureSignature = $api->widget->getSecureSignature();
+
+        return array_merge($baseParams, array(
+            'secureSignature' => $secureSignature->getSignature(),
+            'secureExpire' => $secureSignature->getExpire(),
+        ));
+    }
+
+    return $baseParams;
 }
