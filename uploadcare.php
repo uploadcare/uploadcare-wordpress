@@ -34,6 +34,8 @@ require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/GroupIterat
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Helper.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Uploader.php';
 require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Widget.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Signature/SignatureInterface.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Signature/SecureSignature.php';
 
 // TODO: delete table on upgrade
 register_activation_hook(__FILE__, 'uploadcare_install');
