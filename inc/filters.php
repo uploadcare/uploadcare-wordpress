@@ -19,7 +19,13 @@ function uploadcare_image_downsize($value = false, $id, $size = 'medium') {
     if($sz) {
         // chop filename part
         $url = preg_replace('/[^\/]*$/', '', $uc_url);
-        $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
+
+        $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
+        if ($uploadcare_dont_scale_crop) {
+            $url .= '-/stretch/off/-/preview/' . $sz . '/';
+        } else {
+            $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
+        }
     } else {
         $url = $uc_url;
     }
@@ -52,6 +58,11 @@ function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $si
     $sz = uc_thumbnail_size($size);
     if($sz) {
         $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
+
+        $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
+        if ($uploadcare_dont_scale_crop) {
+            $src = "{$url}-/stretch/off/-/preview/{$sz}/";
+        }
     } else {
         $src = $url;
     }
