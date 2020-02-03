@@ -1,0 +1,17 @@
+name: deploy to wordpress.org
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  tag:
+    name: new tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: wordpress plugin deploy
+        uses: 10up/action-wordpress-plugin-deploy@master
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: uploadcare
