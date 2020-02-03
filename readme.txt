@@ -115,6 +115,9 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+= 2.7.0 =
+* Added CDN Base option
+* Added signed uploads option
 
 = 2.6.1 =
 * Fixed error with plugin initialization.
