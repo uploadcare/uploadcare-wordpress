@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## [2.7.0] — 2020-02-03
+
 ### Added
 
 * CDN Base option
