@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50">
-    <desc iVinci="yes" version="4.5" gridStep="20" showGrid="no" snapToGrid="no" codePlatform="0"/>
-    <g id="Layer1" opacity="1">
-        <g id="Shape1">
-            <desc shapeID="1" type="0" basicInfo-basicType="0" basicInfo-roundedRectRadius="12" basicInfo-polygonSides="6" basicInfo-starPoints="5" bounding="rect(-23.571,-23.573,47.142,47.146)" text="" font-familyName="" font-pixelSize="20" font-bold="0" font-underline="0" font-alignment="1" strokeStyle="0" markerStart="0" markerEnd="0" shadowEnabled="0" shadowOffsetX="0" shadowOffsetY="2" shadowBlur="4" shadowOpacity="160" blurEnabled="0" blurRadius="4" transform="matrix(1.06058,0,0,1.06058,24.9989,25.0011)" pers-center="0,0" pers-size="0,0" pers-start="0,0" pers-end="0,0" locked="0" mesh="" flag=""/>
-            <path id="shapePath1" d="M25.0011,-1.52588e-05 C11.1902,-1.52588e-05 5.72205e-06,11.1955 5.72205e-06,25.0011 C5.72205e-06,38.8066 11.1902,50.0021 25.0011,50.0021 C38.8024,50.0021 49.9979,38.8066 49.9979,25.0011 C49.9979,11.1955 38.8024,-1.52588e-05 25.0011,-1.52588e-05 M25.0011,27.5242 C23.6075,27.5242 22.479,26.3968 22.479,25.0011 C22.479,23.6106 23.6075,22.4779 25.0011,22.4779 C26.3915,22.4779 27.5199,23.6117 27.5199,25.0011 C27.5199,26.3968 26.3904,27.5242 25.0011,27.5242 Z" style="stroke:none;fill-rule:nonzero;fill:#fec142;fill-opacity:1;"/>
-        </g>
-    </g>
+<svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="25" cy="25" r="25" fill="url(#paint0_radial)"/>
+<defs>
+<radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(58.9286 25) rotate(149.216) scale(48.8467 56.2477)">
+<stop stop-color="#FFC700"/>
+<stop offset="1" stop-color="#FFEDAB"/>
+</radialGradient>
+</defs>
 </svg>
