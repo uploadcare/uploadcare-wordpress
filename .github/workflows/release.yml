@@ -1,13 +1,11 @@
 name: Deploy to WordPress.org
 on:
   push:
-    branches:
-      - fix-deploy-action
     tags:
       - "*"
 jobs:
   tag:
-    name: New tag
+    name: Upload Plugin to WP SVN
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -18,13 +16,14 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      - name: Upload Action Artifact
       - uses: actions/upload-artifact@v1
         with:
           name: uploadcare-wp
           path: .
-#       - name: WordPress Plugin Deploy
-#         uses: 10up/action-wordpress-plugin-deploy@9892395
-#         env:
-#           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-#           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-#           SLUG: uploadcare
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@9892395
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: uploadcare
