@@ -15,9 +15,9 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: WordPress Plugin Deploy
-        uses: 10up/action-wordpress-plugin-deploy@9892395
-        env:
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: uploadcare
+#       - name: WordPress Plugin Deploy
+#         uses: 10up/action-wordpress-plugin-deploy@9892395
+#         env:
+#           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+#           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+#           SLUG: uploadcare
