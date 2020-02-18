@@ -3,7 +3,7 @@
  * Plugin Name: Uploadcare
  * Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
  * Description: Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
- * Version: 2.6.1
+ * Version: 2.7.0
  * Author: Uploadcare
  * Author URI: https://uploadcare.com/
  * License: GPL2
