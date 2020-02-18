@@ -50,10 +50,10 @@ Send us your feedback, <feedback@uploadcare.com>
 ### Fastest way ###
 
 1. In plugin manager, click "Add New"
-1. Search for "uploadcare"
-1. Click "install"
-1. Activate the plugin once it is installed
-1. Go to "Settings" -> "Uploadcare" and enter the public and secret keys for your account.
+2. Search for "uploadcare"
+3. Click "install"
+4. Activate the plugin once it is installed
+5. Go to "Settings" -> "Uploadcare" and enter the public and secret keys for your account.
 
 To receive your keys, create your FREE account at [Uploadcare](https://uploadcare.com/accounts/create/)
 
