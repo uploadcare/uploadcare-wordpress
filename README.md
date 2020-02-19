@@ -41,10 +41,12 @@ from their devices, social media, cloud storage, and more, check out this [artic
 
 ### Manual installation
 
-1. Download the [latest release][github-releases]. The download is a ZIP archive holding the plugin together with all of its dependencies.
-2. Unzip the archive to your `wp-content/plugins` directory.
-3. Activate the plugin on your "Plugins" page in a WordPress admin area.
-4. Go to "Settings" -> "Uploadcare" and set your public and secret API.
+1. Download the [latest release][github-releases]. The download is a ZIP archive holding the plugin.
+2. Download the [Uploadcare PHP library][github-php]. WordPress library is build around it.
+3. Unzip the first archive to your `wp-content/plugins` directory.
+4. Unzip the second archive to your `wp-content/plugins/uploadcare/uploadcare-php` directory.
+5. Activate the plugin on your "Plugins" page in a WordPress admin area.
+6. Go to "Settings" -> "Uploadcare" and set your public and secret API.
    The keys are used to identify an Uploadcare project your uploaded media will
    go to. Please note, you can use `demopublickey` and `demoprivatekey` for
    testing purposes. The keys point to the demo Uploadcare account where all the
@@ -52,7 +54,7 @@ from their devices, social media, cloud storage, and more, check out this [artic
    To acquire your own keys, you will need to create
    an [Uploadcare account][uc-account]. The
    provided link will navigate you to creating a FREE one.
-5. That is it!
+7. That is it!
 
 ## Usage
 
@@ -127,6 +129,7 @@ request at [hello@uploadcare.com][uc-email-hello].
 [uc-email-hello]: mailto:hello@uploadcare.com
 
 [github-releases]: https://github.com/uploadcare/uploadcare-wordpress/releases
+[github-php]: https://github.com/uploadcare/uploadcare-php/releases
 [github-contributors]: https://github.com/uploadcare/uploadcare-wordpress/graphs/contributors
 
 [badge-stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
