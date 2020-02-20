@@ -107,6 +107,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
         <p>
             <?php _e("CDN Host: " ); ?>
             <input type="text" name="uploadcare_cdn_base" value="<?php echo $uploadcare_cdn_base; ?>" size="20">
+            <a href="https://uploadcare.com/community/t/how-to-set-up-custom-cdn-cname/40">[?]</a>
         </p>
         <p>
             <input type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?>
@@ -128,6 +129,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
         <p>
             <?php _e("Signed uploads lifetime in seconds (0 - disabled): " ); ?>
             <input type="text" name="uploadcare_upload_lifetime" value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
+            <a href="https://uploadcare.com/docs/api_reference/upload/signed_uploads/">[?]</a>
         </p>
         <h3>Tab effects</h3>
         <select name="uploadcare_tab_effects[]" multiple="" size="12" style="width: 120px;">
