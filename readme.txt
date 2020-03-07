@@ -3,7 +3,7 @@
 Contributors: grayhound1, dmitry-mukhin, bautrukevich
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
-Tested up to: 5.1.0
+Tested up to: 5.3.2
 Stable tag: 2.7.1
 Requires PHP: 5.3
 License: GPLv2 or later
