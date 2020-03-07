@@ -24,7 +24,7 @@ Uploadcare provides media uploading, processing and CDN for your blog. You can u
 * Upload documents and archives
 * Use Signed Uploads to control who and when can upload files
 * Deliver your media through CDN, it's up to 5x times faster
-* Setup custom CDN CNAME
+* Use custom CDN domain
 
 ### Languages ###
 
