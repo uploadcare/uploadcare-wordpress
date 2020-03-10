@@ -10,7 +10,7 @@ function uploadcare_api() {
         get_option('uploadcare_public'),
         get_option('uploadcare_secret'),
         null,
-        get_option('uploadcare_cdn_base'),
+        get_option('uploadcare_cdn_base', 'ucarecdn.com'),
         null,
         null,
         get_option('uploadcare_upload_lifetime', '0')
