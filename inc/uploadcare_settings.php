@@ -119,7 +119,7 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
         </p>
         <p>
             <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
-                />&nbsp;<?php _e('Download images to server from Uploadcare before publish'); ?>
+                />&nbsp;<?php _e('Download images to the server from Uploadcare before publishing'); ?>
         </p>
         <p>
             <input type="checkbox" name="uploadcare_dont_scale_crop" <?php if ($uploadcare_dont_scale_crop):
