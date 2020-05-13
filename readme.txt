@@ -4,7 +4,7 @@ Contributors: grayhound1, dmitry-mukhin, bautrukevich
 Tags: media upload, file handling, cdn, storage, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 3.5+
 Tested up to: 5.3.2
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -117,6 +117,12 @@ Access all files in your Uploadcare account via Media Library.
 
 
 == Changelog ==
+= 2.7.2 =
+* Default CDN base was empty, now it points to an existing host.
+
+= 2.7.1 =
+* Fix botched release
+
 = 2.7.0 =
 * Added CDN Base option
 * Added signed uploads option

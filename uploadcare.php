@@ -3,7 +3,7 @@
  * Plugin Name: Uploadcare
  * Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
  * Description: Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
- * Version: 2.7.1
+ * Version: 2.7.2
  * Author: Uploadcare
  * Author URI: https://uploadcare.com/
  * License: GPL2
@@ -13,7 +13,7 @@ if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
     exit("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>");
 }
 
-define('UPLOADCARE_PLUGIN_VERSION', '2.7.1');
+define('UPLOADCARE_PLUGIN_VERSION', '2.7.2');
 define('UPLOADCARE_WIDGET_VERSION', '3.x');
 define('UPLOADCARE_TAB_EFFECTS_VERSION', '1.x');
 
