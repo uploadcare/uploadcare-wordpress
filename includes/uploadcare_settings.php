@@ -46,7 +46,7 @@ $effects_defaults = array (
 
 
 $saved = false;
-if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
+if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_public = $_POST['uploadcare_public'];
     update_option('uploadcare_public', $uploadcare_public);
     $uploadcare_secret = $_POST['uploadcare_secret'];
@@ -96,39 +96,40 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] == 'Y') {
         <input type="hidden" name="uploadcare_hidden" value="Y">
         <h3>API Keys <a href="https://uploadcare.com/documentation/keys/">[?]</a></h3>
         <p>
-            <?php _e('Public key: '); ?>
-            <input type="text" name="uploadcare_public" value="<?php echo $uploadcare_public; ?>" size="20">
+            <label for="uc_uploadcare_public"><?php _e('Public key: '); ?></label>
+            <input id="uc_uploadcare_public" type="text" name="uploadcare_public" value="<?php echo $uploadcare_public; ?>" size="20">
         </p>
         <p>
-            <?php _e("Secret key: " ); ?>
-            <input type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
+            <label for="uc_uploadcare_secret"><?php _e("Secret key: "); ?></label>
+            <input id="uc_uploadcare_secret" type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
         </p>
         <h3>Options</h3>
         <p>
-            <?php _e("CDN Host: " ); ?>
-            <input type="text" name="uploadcare_cdn_base" value="<?php echo $uploadcare_cdn_base; ?>" size="20">
+            <label for="uc_uploadcare_cdn_base"><?php _e("CDN Host: "); ?></label>
+            <input id="uc_uploadcare_cdn_base" type="text" name="uploadcare_cdn_base" value="<?php echo $uploadcare_cdn_base; ?>" size="20">
             <a href="https://uploadcare.com/community/t/how-to-set-up-custom-cdn-cname/40">[?]</a>
         </p>
         <p>
-            <input type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e('Insert image with URL to the original image'); ?>
+            <input id="uc_uploadcare_original" type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?> />&nbsp;
+            <label for="uc_uploadcare_original"><?php _e('Insert image with URL to the original image'); ?></label>
         </p>
         <p>
-            <input type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e('Allow multiupload in Uploadcare widget'); ?>
+            <input id="uc_uploadcare_multiupload" type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?> />
+            <label for="uc_uploadcare_multiupload"><?php _e('Allow multiupload in Uploadcare widget'); ?></label>
         </p>
         <p>
-            <input type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?>
-                />&nbsp;<?php _e('Download images to the server from Uploadcare before publishing'); ?>
+            <input id="uc_uploadcare_download_to_server" type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?> />
+            <label for="uc_uploadcare_download_to_server"><?php _e('Download images to the server from Uploadcare before publishing'); ?></label>
         </p>
         <p>
-            <input type="checkbox" name="uploadcare_dont_scale_crop" <?php if ($uploadcare_dont_scale_crop):
+            <input id="uc_uploadcare_dont_scale_crop" type="checkbox" name="uploadcare_dont_scale_crop" <?php if ($uploadcare_dont_scale_crop):
             ?>checked="checked"<?php endif; ?>
-            />&nbsp;<?php _e('Don\'t add `scale_crop` param after uploading'); ?>
+            />
+            <label for="uc_uploadcare_dont_scale_crop"><?php _e('Don\'t add `scale_crop` param after uploading'); ?></label>
         </p>
         <p>
-            <?php _e("Signed uploads lifetime in seconds (0 - disabled): " ); ?>
-            <input type="text" name="uploadcare_upload_lifetime" value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
+            <label for="uc_uploadcare_upload_lifetime"><?php _e("Signed uploads lifetime in seconds (0 - disabled): "); ?></label>
+            <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime" value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
             <a href="https://uploadcare.com/docs/api_reference/upload/signed_uploads/">[?]</a>
         </p>
         <h3>Tab effects</h3>

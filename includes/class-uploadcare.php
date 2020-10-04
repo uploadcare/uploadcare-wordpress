@@ -49,14 +49,17 @@ class Uploadcare
     {
         $plugin_admin = new Uploadcare_Admin($this->get_plugin_name(), $this->get_version());
 
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
-        $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
-        $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
-
         $this->loader->add_filter('plugin_action_links_uploadcare/uploadcare.php', $plugin_admin, 'plugin_action_links');
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 10);
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts', 20);
+        $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init', 30);
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin', 40);
+
+        $this->loader->add_action('media_buttons', $plugin_admin, 'uploadcare_add_media', 50);
+        $this->loader->add_filter('media_upload_tabs', $plugin_admin, 'uploadcare_media_menu');
+        $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions', 60);
+
+        $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url');
     }
 
     /**

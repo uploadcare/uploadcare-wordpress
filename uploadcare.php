@@ -47,4 +47,12 @@ function run_uploadcare() {
     $plugin->run();
 }
 
+function dd($any) {
+    print '<pre>';
+    var_dump($any);
+    print '</pre>';
+
+    die();
+}
+
 run_uploadcare();
