@@ -56,9 +56,12 @@ class Uploadcare
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin', 40);
 
         $this->loader->add_action('media_buttons', $plugin_admin, 'uploadcare_add_media', 50);
-        $this->loader->add_filter('media_upload_tabs', $plugin_admin, 'uploadcare_media_menu');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions', 60);
+        $this->loader->add_action('media_upload_uploadcare_files', $plugin_admin, 'uploadcare_media_files_menu_handle', 70);
+        $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
 
+        $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
+        $this->loader->add_filter('media_upload_tabs', $plugin_admin, 'uploadcare_media_menu');
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url');
     }
 

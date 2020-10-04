@@ -15,15 +15,23 @@ class Uploadcare_Admin
      */
     private $version;
 
+    /**
+     * @var \Uploadcare\Api
+     */
+    private $api;
+
     public function __construct($plugin_name, $version)
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+        $config = \Uploadcare\Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'));
+        $this->api = new \Uploadcare\Api($config);
+
     }
 
     public function enqueue_styles()
     {
-        \wp_enqueue_style($this->plugin_name, \plugin_dir_url(__FILE__) . 'css/uploadcare.css', [], $this->version, 'all');
+        \wp_enqueue_style('uploadcare-style', \plugin_dir_url(__FILE__) . 'css/uploadcare.css', [], $this->version, 'all');
     }
 
     public function enqueue_scripts()
@@ -35,8 +43,9 @@ class Uploadcare_Admin
         \wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], UPLOADCARE_VERSION, false);
         \wp_register_script('uploadcare-tab-effects', self::TAB_EFFECTS_URL, [], UPLOADCARE_VERSION, false);
         \wp_register_script('uploadcare-config', \plugin_dir_url(__FILE__) . 'js/config.js', ['uploadcare-widget', 'uploadcare-tab-effects'], UPLOADCARE_VERSION, false);
+        \wp_register_script('uploadcare-shortcodes', \plugin_dir_url(__FILE__) . 'js/shortcodes.js', ['uploadcare-config'], UPLOADCARE_VERSION, false);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
-//        $this->register_user_images();
+        $this->register_user_images();
     }
 
     public function uploadcare_settings_actions()
@@ -76,15 +85,32 @@ class Uploadcare_Admin
         \wp_enqueue_script('uploadcare-widget');
         \wp_enqueue_script('uploadcare-tab-effects');
         \wp_enqueue_script('uploadcare-config');
-        \wp_enqueue_script($this->plugin_name, \plugin_dir_url(__FILE__) . 'js/uploadcare.js', [], $this->version, false);
+        \wp_enqueue_script('uploadcare-main', \plugin_dir_url(__FILE__) . 'js/uploadcare.js', [], $this->version, false);
     }
 
     /**
-     * @return void
+     * @return string
      */
     public function uploadcare_add_media()
     {
+        $img = plugins_url('media/logo.png', __DIR__);
+        $finetuning = stripcslashes(get_option('uploadcare_finetuning', ''));
 
+        $context = <<<HTML
+<div style="float: left">
+  <a class="button" style="padding-left: .4em;" href="javascript: uploadcareMediaButton();">
+    <span class="wp-media-buttons-icon" style="padding-right: 2px; vertical-align: text-bottom; background: url('{$img}') no-repeat 0px 0px;">
+    </span>Add Media</a>
+</div>
+<div style="float: left">
+  <a href="#" class="button insert-media add_media" data-editor="content" title="Wordpress Media Library">
+    <span class="wp-media-buttons-icon"></span>Wordpress Media Library
+  </a>
+</div>
+<style type="text/css">#wp-content-media-buttons>a:first-child { display: none }</style>
+<script type="text/javascript">{$finetuning}</script>
+HTML;
+        return $context;
     }
 
     /**
@@ -93,8 +119,12 @@ class Uploadcare_Admin
      */
     public function uc_get_attachment_url($url)
     {
-        $post_id = \get_post()->ID;
-        if (!($uc_url = (string) \get_post_meta($post_id, 'uploadcare_url', true))) {
+        $post = \get_post();
+        if (!$post instanceof WP_Post) {
+            return $url;
+        }
+
+        if (!($uc_url = (string) \get_post_meta($post->ID, 'uploadcare_url', true))) {
             return $url;
         }
 
@@ -103,9 +133,116 @@ class Uploadcare_Admin
 
     public function uploadcare_media_menu(array $tabs)
     {
-        return \array_merge([
-            'uploadcare_files' => __('Uploadcare', $this->plugin_name),
-        ], $tabs);
+        $tabs['uploadcare_files'] = __('Uploadcare', $this->plugin_name);
+
+        return $tabs;
+    }
+
+    public function uploadcare_media_files_menu_handle()
+    {
+        return \wp_iframe(require \dirname(__DIR__) . '/includes/uploadcare_media_files_menu_handle.php');
+    }
+
+    public function uploadcare_handle()
+    {
+        $file_url = $_POST['file_url'];
+        $file = $this->api->file()->fileInfo($file_url);
+
+        $attachment_id = $this->attach($file);
+        $fileUrl = \get_post_meta($attachment_id, '_wp_attached_file', true);
+        $isLocal = false;
+        if(\get_post_meta($attachment_id, '_uc_is_local_file', true)) {
+            $isLocal = true;
+            $uploadBaseUrl = \wp_upload_dir(false, false, false)["baseurl"];
+            $fileUrl = "$uploadBaseUrl/$fileUrl";
+        }
+
+        $result = [
+            'attach_id' => $attachment_id,
+            'fileUrl' => $fileUrl,
+            'isLocal' => $isLocal,
+        ];
+
+        return \json_encode($result);
+    }
+
+    public function uploadcare_media_upload()
+    {
+        $fineTuning = stripcslashes(get_option('uploadcare_finetuning', ''));
+
+        $html = <<<HTML
+<p class="uploadcare-picker">
+      <a  id="uploadcare-post-upload-ui-btn"
+          class="button button-hero"
+          style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
+          href="javascript:ucPostUploadUiBtn();">
+        Upload via Uploadcare
+      </a>
+    </p>
+    <p class="max-upload-size">Maximum upload file size: 100MB (or more).</p>
+    <script type="text/javascript">$fineTuning</script>
+HTML;
+
+        return $html;
+    }
+
+    private function attach(\Uploadcare\Interfaces\File\FileInfoInterface $file)
+    {
+        $user = \get_current_user();
+        $fileName = $file->getOriginalFilename();
+        $title = $fileName;
+
+        $attachment = [
+            'post_author'    => $user,
+            'post_date'      => date('Y-m-d H:i:s'),
+            'post_type'      => 'attachment',
+            'post_title'     => $title,
+            'post_parent'    => (!empty($_REQUEST['post_id']) ? $_REQUEST['post_id'] : null),
+            'post_status'    => 'inherit',
+            'post_mime_type' => $file->getMimeType(),
+        ];
+
+        $isImage = $file->isImage();
+        $attachment_id = \wp_insert_post($attachment, true);
+        $meta = $isImage ? $this->get_final_dim($file) : ['width' => null, 'height' => null];
+
+        if (get_option('uploadcare_download_to_server')) {
+            $attached_file = $this->download($file);
+            \add_post_meta($attachment_id, '_uc_is_local_file', true, true);
+        } else {
+            $attached_file = $file->getUrl();
+            \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
+        }
+
+        \add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
+        \add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
+
+        return $attachment_id;
+    }
+
+    private function get_final_dim(\Uploadcare\Interfaces\File\FileInfoInterface $file)
+    {
+        $imageInfo = $file->getImageInfo();
+        if (!$imageInfo instanceof \Uploadcare\Interfaces\File\ImageInfoInterface)
+            return ['width' => null, 'height' => null];
+
+        return [
+            'width' => $imageInfo->getWidth(),
+            'height' => $imageInfo->getHeight(),
+        ];
+    }
+
+    private function download(\Uploadcare\Interfaces\File\FileInfoInterface $file)
+    {
+        $contents = \wp_remote_get($file->getUrl());
+        $dir = \wp_upload_dir();
+
+        $localFilename = 'uploadcare' . $dir['subdir'] . '/' . $file->getUuid() . '.' . $file->getOriginalFilename();
+        \wp_mkdir_p($dir['basedir'] . \dirname($localFilename));
+
+        \file_put_contents($dir['basedir'] . '/' . $localFilename, $contents['body']);
+
+        return $localFilename;
     }
 
     private function getJsConfig()
