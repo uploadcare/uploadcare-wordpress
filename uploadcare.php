@@ -27,15 +27,15 @@ if (PHP_VERSION_ID < 50600) {
 
 define('UPLOADCARE_VERSION', '3.0.0');
 
-require_once __DIR__ . '/lib/v3-uploadcare-php/vendor/autoload.php';
+require_once __DIR__ . '/uploadcare-php/vendor/autoload.php';
 
 function activate_uploadcare() {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-uploadcare-activator.php';
+    require_once __DIR__ . '/includes/class-uploadcare-activator.php';
     Uploadcare_Activator::activate();
 }
 
 function deactivate_uploadcare() {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-uploadcare-deactivator.php';
+    require_once __DIR__ . '/includes/class-uploadcare-deactivator.php';
     Uploadcare_Deactivator::deactivate();
 }
 

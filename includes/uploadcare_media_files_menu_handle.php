@@ -76,7 +76,7 @@
                 $file = $files[$i];
             ?>
                 <div style="float: left; width: 110px; height: 110px; margin-left: 10px; margin-bottom: 10px; text-align: center;">
-                    <a href="javascript: win.ucEditFile('<?php echo $file->getFileId() ?>');">
+                    <a href="javascript: ucEditFile('<?php echo $file->getFileId() ?>');">
                         <?php if ($file->is_file): ?>
                             <div style="width: 110px; height: 100px;line-height: 100px;">
                                 <img src="https://ucarecdn.com/assets/images/logo.png" />
