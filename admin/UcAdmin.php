@@ -44,6 +44,7 @@ class UcAdmin
      *
      * @param array $links
      * @return array
+     * @noinspection HtmlUnknownTarget
      */
     public function plugin_action_links(array $links)
     {
@@ -70,7 +71,7 @@ class UcAdmin
 
         wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
 
-        $this->registerUserImages();
+//        $this->registerUserImages();
     }
 
     /**
@@ -89,21 +90,19 @@ class UcAdmin
 
     public function uploadcare_handle()
     {
-        // store file
-        $file_url = \str_replace(\get_option('uploadcare_cdn_base'), '', $_POST['file_url']);
         $id = \str_replace([
             'https://',
             \get_option('uploadcare_cdn_base')
-        ], '', $file_url);
+        ], '', $_POST['file_url']);
 
         $file = $this->api->file()->fileInfo(\trim($id, '/'));
         $file->store();
         $attachment_id = $this->attach($file);
         $fileUrl = get_post_meta($attachment_id, '_wp_attached_file', true);
         $isLocal = false;
-        if (get_post_meta($attachment_id, '_uc_is_local_file', true)) {
+        if (\get_post_meta($attachment_id, '_uc_is_local_file', true)) {
             $isLocal = true;
-            $uploadBaseUrl = wp_upload_dir(false, false, false)["baseurl"];
+            $uploadBaseUrl = \wp_upload_dir(false, false, false)["baseurl"];
             $fileUrl = "$uploadBaseUrl/$fileUrl";
         }
 
@@ -114,7 +113,7 @@ class UcAdmin
         ];
 
         echo \json_encode($result);
-        die();
+        \wp_die();
     }
 
     public function uploadcare_shortcode_handle()
@@ -129,6 +128,7 @@ class UcAdmin
         $this->attachUserImage($file, $post_id);
     }
 
+    /*
     public function uploadcare_media_files_menu_handle()
     {
         global $wpdb;
@@ -140,13 +140,15 @@ class UcAdmin
         global $wpdb;
         require_once \dirname(__DIR__) . '/includes/uploadcare_media_files_menu_handle.php';
     }
+    */
 
     public function uploadcare_media_upload()
     {
-        $tuning = stripcslashes(get_option('uploadcare_finetuning', ''));
+        $sign = __('Upload file size 100MB or more', $this->plugin_name);
 
         print <<<HTML
-<p class="uploadcare-picker">
+<div class="uc-picker-wrapper">
+    <p class="uploadcare-picker">
         <a id="uploadcare-post-upload-ui-btn"
            class="button button-hero"
            style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
@@ -154,8 +156,8 @@ class UcAdmin
             Upload via Uploadcare
         </a>
     </p>
-    <p class="max-upload-size">Maximum upload file size: 100MB (or more).</p>
-    <script type="text/javascript">$tuning</script>
+    <p class="max-upload-size">$sign</p>
+</div>
 HTML;
     }
 
@@ -208,12 +210,12 @@ HTML;
         } else {
             $url = $uc_url;
         }
-        return array(
+        return [
             $url,
             0, // width
             0, // height
             true,
-        );
+        ];
     }
 
     public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
@@ -231,21 +233,19 @@ HTML;
         if ($sz) {
             $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
 
-            $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
+            $uploadcare_dont_scale_crop = \get_option('uploadcare_dont_scale_crop');
             if ($uploadcare_dont_scale_crop) {
                 $src = "{$url}-/stretch/off/-/preview/{$sz}/";
             }
         } else {
             $src = $url;
         }
-        $html = <<<HTML
-<img src="{$src}"
-     alt=""
-/>
-HTML;
-        return $html;
+
+        /** @noinspection HtmlUnknownTarget */
+        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
     }
 
+    /*
     public function uploadcare_media_menu($tabs)
     {
         $newtab = array(
@@ -253,10 +253,11 @@ HTML;
         );
         return array_merge($newtab, $tabs);
     }
+    */
 
     public function uploadcare_add_uc_user_image_thumbnail_column(array $cols)
     {
-        $cols['uploadcare_post_thumb'] = __('Thumb');
+        $cols['uploadcare_post_thumb'] = __('Thumb', $this->plugin_name);
 
         return $cols;
     }
@@ -295,15 +296,15 @@ HTML;
     private function getSizes()
     {
         global $_wp_additional_image_sizes;
-        $sizes = array();
+        $sizes = [];
         foreach (get_intermediate_image_sizes() as $s) {
             $sizes[$s] = array(0, 0);
-            if (in_array($s, array('thumbnail', 'medium', 'large'))) {
+            if (in_array($s, ['thumbnail', 'medium', 'large'])) {
                 $sizes[$s][0] = get_option($s . '_size_w');
                 $sizes[$s][1] = get_option($s . '_size_h');
             } else {
-                if (isset($_wp_additional_image_sizes) && isset($_wp_additional_image_sizes[$s])) {
-                    $sizes[$s] = array($_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height'],);
+                if (isset($_wp_additional_image_sizes[$s])) {
+                    $sizes[$s] = [$_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height'],];
                 }
             }
         }
@@ -455,6 +456,7 @@ HTML;
         return $baseParams;
     }
 
+    /*
     private function registerUserImages()
     {
         $image_type_labels = array(
@@ -513,4 +515,5 @@ HTML;
 
         register_taxonomy('uploadcare_user_image_category', array('uc_user_image'), $image_category_args);
     }
+    */
 }

@@ -42,7 +42,7 @@ class UploadcareMain
 
     private function set_locale()
     {
-        $this->loader->add_action('plugins_loaded', new UcI18n(), 'load_plugin_textdomain');
+        $this->loader->add_action('plugins_loaded', new UcI18n($this->plugin_name), 'load_plugin_textdomain');
     }
 
     private function define_admin_hooks()
@@ -53,9 +53,9 @@ class UploadcareMain
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
-        $this->loader->add_action('wp_ajax_uploadcare_shortcode_handle', $plugin_admin, 'uploadcare_shortcode_handle');
-        $this->loader->add_action('wp_ajax_nopriv_uploadcare_shortcode_handle', $plugin_admin, 'uploadcare_shortcode_handle');
-        $this->loader->add_action('media_upload_uploadcare_files', $plugin_admin, 'uploadcare_media_files_menu_handle');
+//        $this->loader->add_action('wp_ajax_uploadcare_shortcode_handle', $plugin_admin, 'uploadcare_shortcode_handle');
+//        $this->loader->add_action('wp_ajax_nopriv_uploadcare_shortcode_handle', $plugin_admin, 'uploadcare_shortcode_handle');
+//        $this->loader->add_action('media_upload_uploadcare_files', $plugin_admin, 'uploadcare_media_files_menu_handle');
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('manage_uc_user_image_posts_custom_column', $plugin_admin, 'uploadcare_display_thumbnail_column');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
@@ -63,7 +63,7 @@ class UploadcareMain
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uploadcare_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html');
-        $this->loader->add_filter('media_upload_tabs', $plugin_admin, 'uploadcare_media_menu');
+//        $this->loader->add_filter('media_upload_tabs', $plugin_admin, 'uploadcare_media_menu');
         $this->loader->add_filter('manage_edit-uc_user_image_column', $plugin_admin, 'uploadcare_add_uc_user_image_thumbnail_column');
     }
 
