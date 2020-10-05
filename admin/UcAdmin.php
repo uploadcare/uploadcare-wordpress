@@ -5,7 +5,7 @@ use Uploadcare\Configuration;
 use Uploadcare\Interfaces\File\FileInfoInterface;
 use Uploadcare\Interfaces\File\ImageInfoInterface;
 
-class Uploadcare_Admin
+class UcAdmin
 {
     const WIDGET_URL = 'https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js';
     const TAB_EFFECTS_URL = 'https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.min.js';

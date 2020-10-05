@@ -30,22 +30,22 @@ define('UPLOADCARE_VERSION', '3.0.0');
 require_once __DIR__ . '/uploadcare-php/vendor/autoload.php';
 
 function activate_uploadcare() {
-    require_once __DIR__ . '/includes/class-uploadcare-activator.php';
-    Uploadcare_Activator::activate();
+    require_once __DIR__ . '/includes/UcActivator.php';
+    UcActivator::activate();
 }
 
 function deactivate_uploadcare() {
-    require_once __DIR__ . '/includes/class-uploadcare-deactivator.php';
-    Uploadcare_Deactivator::deactivate();
+    require_once __DIR__ . '/includes/UcDeactivator.php';
+    UcDeactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'activate_uploadcare');
 register_deactivation_hook(__FILE__, 'deactivate_uploadcare');
 
-require __DIR__ . '/includes/class-uploadcare.php';
+require __DIR__ . '/includes/UploadcareMain.php';
 
 function run_uploadcare() {
-    $plugin = new Uploadcare();
+    $plugin = new UploadcareMain();
     $plugin->run();
 }
 

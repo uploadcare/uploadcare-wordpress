@@ -16,7 +16,7 @@
 /**
  * Define the internationalization functionality.
  */
-class Uploadcare_i18n
+class UcI18n
 {
 
 

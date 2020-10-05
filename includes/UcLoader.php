@@ -1,6 +1,10 @@
 <?php
 
-class Uploadcare_Loader
+/**
+ * Class UcLoader
+ * Service class for load actions and filters
+ */
+class UcLoader
 {
     /**
      * @var array

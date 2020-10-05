@@ -1,9 +1,9 @@
 <?php
 
-class Uploadcare
+class UploadcareMain
 {
     /**
-     * @var Uploadcare_Loader
+     * @var UcLoader
      */
     protected $loader;
 
@@ -33,21 +33,21 @@ class Uploadcare
 
     private function load_dependencies()
     {
-        require_once __DIR__ . '/class-uploadcare-loader.php';
-        require_once __DIR__ . '/class-uploadcare-i18n.php';
-        require_once \dirname(__DIR__) . '/admin/class-uploadcare-admin.php';
+        require_once __DIR__ . '/UcLoader.php';
+        require_once __DIR__ . '/UcI18n.php';
+        require_once \dirname(__DIR__) . '/admin/UcAdmin.php';
 
-        $this->loader = new Uploadcare_Loader();
+        $this->loader = new UcLoader();
     }
 
     private function set_locale()
     {
-        $this->loader->add_action('plugins_loaded', new Uploadcare_i18n(), 'load_plugin_textdomain');
+        $this->loader->add_action('plugins_loaded', new UcI18n(), 'load_plugin_textdomain');
     }
 
     private function define_admin_hooks()
     {
-        $plugin_admin = new Uploadcare_Admin($this->get_plugin_name(), $this->get_version());
+        $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_filter('plugin_action_links_uploadcare/uploadcare.php', $plugin_admin, 'plugin_action_links');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
@@ -92,7 +92,7 @@ class Uploadcare
     }
 
     /**
-     * @return Uploadcare_Loader
+     * @return UcLoader
      */
     public function get_loader()
     {

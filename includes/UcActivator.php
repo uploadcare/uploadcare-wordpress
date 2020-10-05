@@ -1,6 +1,6 @@
 <?php
 
-class Uploadcare_Activator
+class UcActivator
 {
     public static function activate() {
         if (!\function_exists('curl_init')) {

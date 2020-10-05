@@ -1,6 +1,6 @@
 <?php
 
-class Uploadcare_Deactivator
+class UcDeactivator
 {
     public static function deactivate() {
 
