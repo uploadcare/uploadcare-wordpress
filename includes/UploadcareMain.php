@@ -62,9 +62,9 @@ class UploadcareMain
 
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uploadcare_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
-        $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html');
+        $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
 //        $this->loader->add_filter('media_upload_tabs', $plugin_admin, 'uploadcare_media_menu');
-        $this->loader->add_filter('manage_edit-uc_user_image_column', $plugin_admin, 'uploadcare_add_uc_user_image_thumbnail_column');
+//        $this->loader->add_filter('manage_edit-uc_user_image_column', $plugin_admin, 'uploadcare_add_uc_user_image_thumbnail_column');
     }
 
     /**

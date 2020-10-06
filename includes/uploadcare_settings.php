@@ -36,7 +36,7 @@ $effects = array(
     'grayscale',
 );
 
-$effects_defaults = array (
+$effects_defaults = array(
     'crop',
     'rotate',
     'sharp',
@@ -46,7 +46,7 @@ $effects_defaults = array (
 
 
 $saved = false;
-if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
+if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_public = $_POST['uploadcare_public'];
     update_option('uploadcare_public', $uploadcare_public);
     $uploadcare_secret = $_POST['uploadcare_secret'];
@@ -55,118 +55,82 @@ if(isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
     $uploadcare_upload_lifetime = $_POST['uploadcare_upload_lifetime'];
     update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
-    $uploadcare_original = isset($_POST['uploadcare_original']) ? $_POST['uploadcare_original'] : false;
-    update_option('uploadcare_original', $uploadcare_original);
-    $uploadcare_multiupload = isset($_POST['uploadcare_multiupload']) ? $_POST['uploadcare_multiupload'] : false;
-    update_option('uploadcare_multiupload', $uploadcare_multiupload);
-    $uploadcare_download_to_server = isset($_POST['uploadcare_download_to_server']) ? $_POST['uploadcare_download_to_server'] : false;
-    update_option('uploadcare_download_to_server', $uploadcare_download_to_server);
-    $uploadcare_dont_scale_crop = isset($_POST['uploadcare_dont_scale_crop']) ? $_POST['uploadcare_dont_scale_crop'] : null;
-    update_option('uploadcare_dont_scale_crop', $uploadcare_dont_scale_crop);
-    $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
-    update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
     update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
-    $uploadcare_tab_effects = $_POST['uploadcare_tab_effects'];
-    update_option('uploadcare_tab_effects', $uploadcare_tab_effects);
     $saved = true;
 } else {
     $uploadcare_public = get_option('uploadcare_public');
     $uploadcare_secret = get_option('uploadcare_secret');
     $uploadcare_cdn_base = get_option('uploadcare_cdn_base', 'ucarecdn.com');
-    $uploadcare_original = get_option('uploadcare_original');
-    $uploadcare_multiupload = get_option('uploadcare_multiupload');
-    $uploadcare_download_to_server = get_option('uploadcare_download_to_server');
-    $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
-    $uploadcare_finetuning = get_option('uploadcare_finetuning');
     $uploadcare_source_tabs = get_option('uploadcare_source_tabs', $tab_defaults);
-    $uploadcare_tab_effects = get_option('uploadcare_tab_effects', $effects_defaults);
     $uploadcare_upload_lifetime = get_option('uploadcare_upload_lifetime', '0');
 }
 ?>
 
 <?php if ($saved): ?>
-<div class="updated"><p><strong><?php _e('Options saved.' ); ?></strong></p></div>
+    <div class="updated"><p><strong><?php _e('Options saved.'); ?></strong></p></div>
 <?php endif; ?>
 
 <div class="wrap">
-<div id="icon-options-general" class="icon32"><br></div>
-    <?php echo "<h2>" . __( 'Uploadcare', 'uploadcare_settings' ) . "</h2>"; ?>
+    <div id="icon-options-general" class="icon32"><br></div>
+    <?php echo "<h2>" . __('Uploadcare', 'uploadcare_settings') . "</h2>"; ?>
     <form name="oscimp_form" method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
         <input type="hidden" name="uploadcare_hidden" value="Y">
         <h3>API Keys <a href="https://uploadcare.com/documentation/keys/">[?]</a></h3>
         <p>
             <label for="uc_uploadcare_public"><?php _e('Public key: '); ?></label>
-            <input id="uc_uploadcare_public" type="text" name="uploadcare_public" value="<?php echo $uploadcare_public; ?>" size="20">
+            <input id="uc_uploadcare_public" type="text" name="uploadcare_public"
+                   value="<?php echo $uploadcare_public; ?>" size="20">
         </p>
         <p>
             <label for="uc_uploadcare_secret"><?php _e("Secret key: "); ?></label>
-            <input id="uc_uploadcare_secret" type="text" name="uploadcare_secret" value="<?php echo $uploadcare_secret; ?>" size="20">
+            <input id="uc_uploadcare_secret" type="text" name="uploadcare_secret"
+                   value="<?php echo $uploadcare_secret; ?>" size="20">
         </p>
         <h3>Options</h3>
         <p>
             <label for="uc_uploadcare_cdn_base"><?php _e("CDN Host: "); ?></label>
-            <input id="uc_uploadcare_cdn_base" type="text" name="uploadcare_cdn_base" value="<?php echo $uploadcare_cdn_base; ?>" size="20">
+            <input id="uc_uploadcare_cdn_base" type="text" name="uploadcare_cdn_base"
+                   value="<?php echo $uploadcare_cdn_base; ?>" size="20">
             <a href="https://uploadcare.com/community/t/how-to-set-up-custom-cdn-cname/40">[?]</a>
         </p>
         <p>
-            <input id="uc_uploadcare_original" type="checkbox" name="uploadcare_original" <?php if ($uploadcare_original): ?>checked="checked"<?php endif; ?> />&nbsp;
-            <label for="uc_uploadcare_original"><?php _e('Insert image with URL to the original image'); ?></label>
-        </p>
-        <p>
-            <input id="uc_uploadcare_multiupload" type="checkbox" name="uploadcare_multiupload" <?php if ($uploadcare_multiupload): ?>checked="checked"<?php endif; ?> />
-            <label for="uc_uploadcare_multiupload"><?php _e('Allow multiupload in Uploadcare widget'); ?></label>
-        </p>
-        <p>
-            <input id="uc_uploadcare_download_to_server" type="checkbox" name="uploadcare_download_to_server" <?php if ($uploadcare_download_to_server): ?>checked="checked"<?php endif; ?> />
-            <label for="uc_uploadcare_download_to_server"><?php _e('Download images to the server from Uploadcare before publishing'); ?></label>
-        </p>
-        <p>
-            <input id="uc_uploadcare_dont_scale_crop" type="checkbox" name="uploadcare_dont_scale_crop" <?php if ($uploadcare_dont_scale_crop):
-            ?>checked="checked"<?php endif; ?>
-            />
-            <label for="uc_uploadcare_dont_scale_crop"><?php _e('Don\'t add `scale_crop` param after uploading'); ?></label>
-        </p>
-        <p>
             <label for="uc_uploadcare_upload_lifetime"><?php _e("Signed uploads lifetime in seconds (0 - disabled): "); ?></label>
-            <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime" value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
+            <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
+                   value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
             <a href="https://uploadcare.com/docs/api_reference/upload/signed_uploads/">[?]</a>
         </p>
-        <h3>Tab effects</h3>
-        <select name="uploadcare_tab_effects[]" multiple="" size="12" style="width: 120px;">
-        <?php
-            $selected = in_array('none', $uploadcare_tab_effects) ? 'selected="selected"' : '';
-            echo '<option ' . $selected . ' value="none">none</option>';
-            foreach ($effects as $effect) {
-                $selected = in_array($effect, $uploadcare_tab_effects) ? 'selected="selected"' : '';
-                echo '<option ' . $selected . ' value="' . $effect . '">' . $effect . '</option>';
-            }
-        ?>
-        </select>
-        <h3>Upload Sources</h3>
-        <select name="uploadcare_source_tabs[]" multiple="" size="12" style="width: 120px;">
-            <?php
-                $selected = in_array('all', $uploadcare_source_tabs) ? 'selected="selected"' : '';
-                echo '<option ' . $selected . ' value="all">All tabs</option>';
-                foreach ($tabs as $tab) {
-                    $selected = in_array($tab, $uploadcare_source_tabs) ? 'selected="selected"' : '';
-                    echo '<option ' . $selected . ' value="' . $tab . '">' . $tab . '</option>';
-                }
-            ?>
-        </select>
 
-        <h3>Widget fine tuning <a href="https://uploadcare.com/documentation/widget/#advanced-configuration">[?]</a></h3>
-        <p>
-            <textarea name="uploadcare_finetuning" rows="10" cols="50"><?php echo stripcslashes($uploadcare_finetuning); ?></textarea>
-        </p>
-        <p class="submit">
-        <?php submit_button(); ?>
+        <h3>Upload Sources</h3>
+        <?php
+        foreach ($tabs as $tn => $tab) {
+            ?>
+                <p>
+                    <input name="uploadcare_source_tabs[]" id="st_<?= $tn?>" type="checkbox" value="<?= $tab?>" <?= \in_array($tab, $uploadcare_source_tabs, true) ? 'checked' : null ?> />
+                    <label for="st_<?= $tn?>"><?= $tab?></label>
+                </p>
+            <?php
+        }
+        ?>
+
+<!--        <select name="uploadcare_source_tabs[]" multiple="" size="12" style="width: 120px;">
+            <?php
+/*            $selected = in_array('all', $uploadcare_source_tabs) ? 'selected="selected"' : '';
+            echo '<option ' . $selected . ' value="all">All tabs</option>';
+            foreach ($tabs as $tab) {
+                $selected = in_array($tab, $uploadcare_source_tabs) ? 'selected="selected"' : '';
+                echo '<option ' . $selected . ' value="' . $tab . '">' . $tab . '</option>';
+            }
+            */?>
+        </select>
+-->        <p class="submit">
+            <?php submit_button(); ?>
         </p>
     </form>
     <div>
-    <ul>
-        <li>Files uploaded to demo account (demopublickey) are deleted after some time.</li>
-        <li>You can get your own account <a href="https://uploadcare.com/pricing/">here</a>.</li>
-    </ul>
+        <ul>
+            <li>Files uploaded to demo account (demopublickey) are deleted after some time.</li>
+            <li>You can get your own account <a href="https://uploadcare.com/pricing/">here</a>.</li>
+        </ul>
     </div>
 </div>

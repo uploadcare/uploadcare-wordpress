@@ -184,9 +184,10 @@ HTML;
     // filters
    public function uploadcare_get_attachment_url($url, $post_id)
    {
-       if (!$uc_url = get_post_meta($post_id, 'uploadcare_url', true)) {
+       if (!($uc_url = get_post_meta($post_id, 'uploadcare_url', true))) {
            return $url;
        }
+
        return $uc_url;
    }
 
@@ -245,7 +246,7 @@ HTML;
         return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
     }
 
-    /*
+//    /*
     public function uploadcare_media_menu($tabs)
     {
         $newtab = array(
@@ -253,7 +254,7 @@ HTML;
         );
         return array_merge($newtab, $tabs);
     }
-    */
+//    */
 
     public function uploadcare_add_uc_user_image_thumbnail_column(array $cols)
     {
@@ -352,13 +353,13 @@ HTML;
         $attachment_id = wp_insert_post($attachment, true);
         $meta = $isImage ? $this->getFinalDim($file) : array('width' => null, 'height' => null);
 
-        if (get_option('uploadcare_download_to_server')) {
-            $attached_file = $this->download($file);
-            add_post_meta($attachment_id, '_uc_is_local_file', true, true);
-        } else {
+//        if (get_option('uploadcare_download_to_server')) {
+//            $attached_file = $this->download($file);
+//            add_post_meta($attachment_id, '_uc_is_local_file', true, true);
+//        } else {
             $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
             add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
-        }
+//        }
 
         add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
         add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
@@ -415,30 +416,9 @@ HTML;
             $tabs = implode(' ', $tab_options);
         }
 
-        $effects = \get_option('uploadcare_tab_effects', [
-            'crop',
-            'rotate',
-            'sharp',
-            'enhance',
-            'grayscale',
-        ]);
-        if (count($effects) === 1 && in_array('none', $effects, true)) {
-            $previewStep = "false";
-            $effects = array();
-        } else {
-            $previewStep = "true";
-            $noneInd = array_search('none', $effects, true);
-            if ($noneInd) {
-                unset($effects[$noneInd]);
-            }
-        }
-
         $baseParams = array(
             'public_key' => get_option('uploadcare_public'),
-            'original' => get_option('uploadcare_original') ? "true" : "false",
-            'multiple' => get_option('uploadcare_multiupload') ? "true" : "false",
-            'previewStep' => $previewStep,
-            'effects' => \implode(',', $effects),
+            'previewStep' => false,
             'ajaxurl' => \admin_url('admin-ajax.php'),
             'tabs' => $tabs,
             'cdnBase' => 'https://' . \get_option('uploadcare_cdn_base', 'ucarecdn.com'),
