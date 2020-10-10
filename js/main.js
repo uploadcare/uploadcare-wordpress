@@ -59,8 +59,7 @@ function ucFileDone (data) {
       uploadcare.jQuery('#content').prop('disabled', false)
     })
   } else {
-    var file = data
-    file.done(ucAddImg)
+    data.done(ucAddImg)
       .always(function () {
         uploadcare.jQuery('#content').prop('disabled', false)
         uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden')
@@ -113,7 +112,7 @@ function ucPostUploadUiBtn () {
               }
             }
             stored++
-            if (stored == files.length) {
+            if (stored === files.length) {
               // TODO: disable everything until now
 
               if (wp.media) {
@@ -125,7 +124,7 @@ function ucPostUploadUiBtn () {
                   updateAttachments()
                 } catch (ex) {}
                 uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden')
-              } else if (adminpage == 'media-new-php') {
+              } else if (adminpage === 'media-new-php') {
                 location = 'upload.php'
               }
 
@@ -166,11 +165,11 @@ uploadcare.jQuery(function () {
   })
 
   // featured image stuff
-  var addLink = uploadcare.jQuery('#uc-set-featured-img')
-  var removeLink = uploadcare.jQuery('#uc-remove-featured-img')
+  const addLink = uploadcare.jQuery('#uc-set-featured-img')
+  const removeLink = uploadcare.jQuery('#uc-remove-featured-img')
 
   function setImg () {
-    var url = addLink.data('uc-url')
+    const url = addLink.data('uc-url')
     if (url) {
       addLink.html('<img src="' + url + '-/resize/255x/' + '">')
       removeLink.removeClass('hidden')

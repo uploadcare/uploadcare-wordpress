@@ -8,7 +8,6 @@ use Uploadcare\Interfaces\File\ImageInfoInterface;
 class UcAdmin
 {
     const WIDGET_URL = 'https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js';
-    const TAB_EFFECTS_URL = 'https://ucarecdn.com/libs/widget-tab-effects/1.x/uploadcare.tab-effects.min.js';
 
     /**
      * @var string
@@ -36,7 +35,6 @@ class UcAdmin
         $this->version = $version;
         $this->ucConfig = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'));
         $this->api = new Api($this->ucConfig);
-
     }
 
     /**
@@ -59,19 +57,16 @@ class UcAdmin
     public function uploadcare_plugin_init()
     {
         wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
-        wp_register_script('uploadcare-tab-effects', self::TAB_EFFECTS_URL, [], $this->version);
 
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
 
-        wp_register_script('uploadcare-config',$pluginDirUrl . 'js/config.js',['uploadcare-widget', 'uploadcare-tab-effects'], $this->version);
+        wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
         wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
 
         wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
         wp_register_script('uploadcare-shortcodes', $pluginDirUrl . 'js/shortcodes.js', ['uploadcare-config'], $this->version);
 
         wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
-
-//        $this->registerUserImages();
     }
 
     /**
@@ -90,15 +85,12 @@ class UcAdmin
 
     public function uploadcare_handle()
     {
-        $id = \str_replace([
-            'https://',
-            \get_option('uploadcare_cdn_base')
-        ], '', $_POST['file_url']);
+        $id = $this->fileId($_POST['file_url']);
 
         $file = $this->api->file()->fileInfo(\trim($id, '/'));
         $file->store();
         $attachment_id = $this->attach($file);
-        $fileUrl = get_post_meta($attachment_id, '_wp_attached_file', true);
+        $fileUrl = \get_post_meta($attachment_id, '_wp_attached_file', true);
         $isLocal = false;
         if (\get_post_meta($attachment_id, '_uc_is_local_file', true)) {
             $isLocal = true;
@@ -116,35 +108,11 @@ class UcAdmin
         \wp_die();
     }
 
-    public function uploadcare_shortcode_handle()
-    {
-        // store file
-        $file_id = $_POST['file_id'];
-        $post_id = $_POST['post_id'];
-        $file = $this->api->file()->fileInfo($file_id);
-        $file->store();
-
-        // create user image
-        $this->attachUserImage($file, $post_id);
-    }
-
-    /*
-    public function uploadcare_media_files_menu_handle()
-    {
-        global $wpdb;
-        wp_iframe([$this, 'uploadcare_media_files']);
-    }
-
-    public function uploadcare_media_files()
-    {
-        global $wpdb;
-        require_once \dirname(__DIR__) . '/includes/uploadcare_media_files_menu_handle.php';
-    }
-    */
 
     public function uploadcare_media_upload()
     {
         $sign = __('Upload file size 100MB or more', $this->plugin_name);
+        $btn = __('Upload via Uploadcare', $this->plugin_name);
 
         print <<<HTML
 <div class="uc-picker-wrapper">
@@ -153,22 +121,12 @@ class UcAdmin
            class="button button-hero"
            style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
            href="javascript:ucPostUploadUiBtn();">
-            Upload via Uploadcare
+            $btn
         </a>
     </p>
     <p class="max-upload-size">$sign</p>
 </div>
 HTML;
-    }
-
-    public function uploadcare_display_thumbnail_column($col)
-    {
-        if (!\function_exists('the_post_thumbnail'))
-            echo '-';
-
-        if ($col === 'uploadcare_post_thumb') {
-            the_post_thumbnail('thumbnail');
-        }
     }
 
     public function uploadcare_settings_actions()
@@ -182,14 +140,95 @@ HTML;
     }
 
     // filters
-   public function uploadcare_get_attachment_url($url, $post_id)
-   {
-       if (!($uc_url = get_post_meta($post_id, 'uploadcare_url', true))) {
-           return $url;
-       }
 
-       return $uc_url;
-   }
+    /**
+     * Calls by `wp_get_attachment_url` filter
+     *
+     * @param string $url
+     * @param int $post_id
+     * @return string
+     */
+    public function uc_get_attachment_url($url, $post_id)
+    {
+        if (!($uc_url = get_post_meta($post_id, 'uploadcare_url', true))) {
+            return $url;
+        }
+
+        return $uc_url;
+    }
+
+    /**
+     * Calls by `load_image_to_edit_attachmenturl` filter
+     *
+     * @param string $url
+     * @param int $id
+     * @return string
+     */
+    public function uc_load($url, $id)
+    {
+        if (!get_post_meta($id, 'uploadcare_url', true)) {
+            return $url;
+        }
+
+        $file = $this->api->file()->fileInfo($this->fileId($url));
+        $fileName = $file->getOriginalFilename();
+
+        return $url . \urlencode($fileName);
+    }
+
+    /**
+     * Calls by `wp_save_image_editor_file` filter
+     *
+     * @param bool|null $override
+     * @param string $filename
+     * @param WP_Image_Editor $image
+     * @param string $mime_type
+     * @param int $post_id
+     * @return mixed
+     * @throws Exception
+     */
+    public function uc_save_image_editor_file($override, $filename, $image, $mime_type, $post_id)
+    {
+        if (!$image instanceof WP_Image_Editor) {
+            return $override;
+        }
+        if (!\get_post_meta($post_id, 'uploadcare_url', true)) {
+            return $override;
+        }
+
+        $cdn = \sprintf('https://%s', \get_option('uploadcare_cdn_base'));
+        $start = \strpos($filename, $cdn);
+        $url = \substr($filename, $start, 36 + \strlen($cdn) + 1); // UUID length is 36
+
+        $id = $this->fileId($url);
+        $info = $this->api->file()->fileInfo($id);
+        $tempFile = $this->storeTempFile($image, $info);
+        $this->api->file()->deleteFile($id);
+        $newFile = $this->api->uploader()->fromPath($tempFile);
+        \update_post_meta($post_id, 'uploadcare_url', \sprintf('%s/%s/', $cdn, $newFile->getUuid()));
+
+        return true;
+    }
+
+    /**
+     * @param WP_Image_Editor $editor
+     * @param FileInfoInterface $info
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function storeTempFile($editor, FileInfoInterface $info)
+    {
+        $filename = $info->getOriginalFilename();
+        $path = sprintf('%s/%s', \sys_get_temp_dir(), $filename);
+        $save = $editor->save($path);
+
+        if (!$save) {
+            throw new \Exception('Cannot save file');
+        }
+
+        return $path;
+    }
 
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
@@ -201,13 +240,7 @@ HTML;
         if ($sz) {
             // chop filename part
             $url = preg_replace('/[^\/]*$/', '', $uc_url);
-
-            $uploadcare_dont_scale_crop = get_option('uploadcare_dont_scale_crop');
-            if ($uploadcare_dont_scale_crop) {
-                $url .= '-/stretch/off/-/preview/' . $sz . '/';
-            } else {
-                $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
-            }
+            $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
         } else {
             $url = $uc_url;
         }
@@ -233,34 +266,17 @@ HTML;
         $sz = $this->thumbnailSize($size);
         if ($sz) {
             $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
-
-            $uploadcare_dont_scale_crop = \get_option('uploadcare_dont_scale_crop');
-            if ($uploadcare_dont_scale_crop) {
-                $src = "{$url}-/stretch/off/-/preview/{$sz}/";
-            }
         } else {
             $src = $url;
         }
 
         /** @noinspection HtmlUnknownTarget */
-        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
+        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview')));
     }
 
-//    /*
-    public function uploadcare_media_menu($tabs)
+    private function fileId($url)
     {
-        $newtab = array(
-            'uploadcare_files' => __('Uploadcare', 'uploadcare_files')
-        );
-        return array_merge($newtab, $tabs);
-    }
-//    */
-
-    public function uploadcare_add_uc_user_image_thumbnail_column(array $cols)
-    {
-        $cols['uploadcare_post_thumb'] = __('Thumb', $this->plugin_name);
-
-        return $cols;
+        return \trim(\str_replace(['https://', \get_option('uploadcare_cdn_base')], '', $url), '/');
     }
 
     private function thumbnailSize($size = 'thumbnail')
@@ -274,12 +290,12 @@ HTML;
 
     private function getSizeArray($size)
     {
-        if (is_array($size)) {
+        if (\is_array($size)) {
             return $size;
         }
 
         $sizes = $this->getSizes();
-        if (array_key_exists($size, $sizes)) {
+        if (\array_key_exists($size, $sizes)) {
             $arr = $sizes[$size];
 
             // handle "unlimited" width
@@ -312,28 +328,6 @@ HTML;
         return $sizes;
     }
 
-    private function attachUserImage(FileInfoInterface $file, $post_id)
-    {
-        $attachment_id = $this->attach($file);
-        $user = \get_current_user_id();
-
-        $filename = $file->getOriginalFilename();
-        $title = $filename;
-
-        $user_image = array(
-            'post_author' => $user,
-            'post_date' => date('Y-m-d H:i:s'),
-            'post_type' => 'uc_user_image',
-            'post_title' => $title,
-            'post_parent' => $post_id,
-            'post_status' => 'private',
-            'post_mime_type' => $file->getMimeType(),
-        );
-
-        $user_image_id = \wp_insert_post($user_image, true);
-        \set_post_thumbnail($user_image_id, $attachment_id);
-    }
-
     private function attach(FileInfoInterface $file)
     {
         $userId = get_current_user_id();
@@ -353,43 +347,21 @@ HTML;
         $attachment_id = wp_insert_post($attachment, true);
         $meta = $isImage ? $this->getFinalDim($file) : array('width' => null, 'height' => null);
 
-//        if (get_option('uploadcare_download_to_server')) {
-//            $attached_file = $this->download($file);
-//            add_post_meta($attachment_id, '_uc_is_local_file', true, true);
-//        } else {
-            $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
-            add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
-//        }
+        $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
+        \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
 
-        add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
-        add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
+        \add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
+        \add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
 
         return $attachment_id;
-    }
-
-    private function download(FileInfoInterface $file)
-    {
-        // downloading contents of image
-        $contents = \wp_remote_get($file->getUrl());
-
-        $dirInfo = \wp_upload_dir();
-        $absPath = $dirInfo['basedir'] . '/';
-        $localFilename = sprintf('uploadcare-%s/%s.%s', $dirInfo['subdir'], $file->getUuid(), $file->getOriginalFilename());
-
-        // creating folders tree
-        \wp_mkdir_p($absPath . \dirname($localFilename));
-
-        // saving image
-        \file_put_contents($absPath . $localFilename, $contents['body']);
-
-        return $localFilename;
     }
 
     private function getFinalDim(FileInfoInterface $file)
     {
         $imageInfo = $file->getImageInfo();
-        if (!$imageInfo instanceof ImageInfoInterface)
+        if (!$imageInfo instanceof ImageInfoInterface) {
             return ['width' => null, 'height' => null];
+        }
 
         return [
             'width' => $imageInfo->getWidth(),
@@ -435,65 +407,4 @@ HTML;
 
         return $baseParams;
     }
-
-    /*
-    private function registerUserImages()
-    {
-        $image_type_labels = array(
-            'name' => _x('User images', 'post type general name'),
-            'singular_name' => _x('Uploadcare User Image', 'post type singular name'),
-            'add_new' => _x('Add New User Image', 'image'),
-            'add_new_item' => __('Add New User Image'),
-            'edit_item' => __('Edit User Image'),
-            'new_item' => __('Add New User Image'),
-            'all_items' => __('View User Images'),
-            'view_item' => __('View User Image'),
-            'search_items' => __('Search User Images'),
-            'not_found' => __('No User Images found'),
-            'not_found_in_trash' => __('No User Images found in Trash'),
-            'parent_item_colon' => '',
-            'menu_name' => 'User Images'
-        );
-
-        $image_type_args = array(
-            'labels' => $image_type_labels,
-            'public' => true,
-            'query_var' => true,
-            'rewrite' => true,
-            'capability_type' => 'post',
-            'has_archive' => true,
-            'hierarchical' => false,
-            'map_meta_cap' => true,
-            'menu_position' => null,
-            'menu_icon' => 'dashicons-art',
-            'supports' => array('title', 'author', 'thumbnail')
-        );
-
-        $type = register_post_type('uc_user_image', $image_type_args);
-
-        $image_category_labels = array(
-            'name' => _x('User Image Categories', 'taxonomy general name'),
-            'singular_name' => _x('User Image', 'taxonomy singular name'),
-            'search_items' => __('Search User Image Categories'),
-            'all_items' => __('All User Image Categories'),
-            'parent_item' => __('Parent User Image Category'),
-            'parent_item_colon' => __('Parent User Image Category:'),
-            'edit_item' => __('Edit User Image Category'),
-            'update_item' => __('Update User Image Category'),
-            'add_new_item' => __('Add New User Image Category'),
-            'new_item_name' => __('New User Image Name'),
-            'menu_name' => __('User Image Categories'),
-        );
-
-        $image_category_args = array(
-            'hierarchical' => true,
-            'labels' => $image_category_labels,
-            'show_ui' => true,
-            'query_var' => true,
-            'rewrite' => array('slug' => 'uploadcare_user_image_category'),
-        );
-
-        register_taxonomy('uploadcare_user_image_category', array('uc_user_image'), $image_category_args);
-    }
-    */
 }

@@ -57,4 +57,8 @@ function dd($any) {
     die();
 }
 
+function ULog($any) {
+    \error_log("\n[LOG::Ulog]\t" . \var_export($any, true) . "\n\n");
+}
+
 run_uploadcare();
