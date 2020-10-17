@@ -59,9 +59,9 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
     $saved = true;
 } else {
-    $uploadcare_public          = get_option('uploadcare_public');
-    $uploadcare_secret          = get_option('uploadcare_secret');
-    $uploadcare_cdn_base        = get_option('uploadcare_cdn_base', 'ucarecdn.com');
+    $uploadcare_public          = \trim(get_option('uploadcare_public'));
+    $uploadcare_secret          = \trim(get_option('uploadcare_secret'));
+    $uploadcare_cdn_base        = \trim(get_option('uploadcare_cdn_base', 'ucarecdn.com'));
     $uploadcare_source_tabs     = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_upload_lifetime = get_option('uploadcare_upload_lifetime', '0');
 }
