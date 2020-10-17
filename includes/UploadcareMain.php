@@ -29,12 +29,14 @@ class UploadcareMain
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
+        $this->defineFrontHooks();
     }
 
     private function load_dependencies()
     {
         require_once __DIR__ . '/UcLoader.php';
         require_once __DIR__ . '/UcI18n.php';
+        require_once __DIR__ . '/UcFront.php';
         require_once \dirname(__DIR__) . '/admin/UcAdmin.php';
 
         $this->loader = new UcLoader();
@@ -45,6 +47,23 @@ class UploadcareMain
         $this->loader->add_action('plugins_loaded', new UcI18n($this->plugin_name), 'load_plugin_textdomain');
     }
 
+    /**
+     * Add hooks and actions for frontend.
+     * @return void
+     */
+    private function defineFrontHooks()
+    {
+        $ucFront = new UcFront($this->get_plugin_name(), $this->get_version());
+
+        $this->loader->add_action('wp_enqueue_scripts', $ucFront, 'frontendScripts');
+        $this->loader->add_filter('render_block', $ucFront, 'renderBlock', 0, 2);
+        $this->loader->add_filter('post_thumbnail_html', $ucFront, 'postFeaturedImage', 10, 5);
+    }
+
+    /**
+     * Add hooks and actions for backend.
+     * @return void
+     */
     private function define_admin_hooks()
     {
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());

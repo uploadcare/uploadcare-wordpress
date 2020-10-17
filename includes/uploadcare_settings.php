@@ -96,7 +96,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
         </p>
         <p>
             <label for="uc_uploadcare_upload_lifetime">
-                <?= __('Signed uploads lifetime in seconds (0 - disabled)','uploadcare'); ?>:
+                <?= __('Signed uploads lifetime in seconds (0 - disabled)', 'uploadcare'); ?>:
             </label>
             <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
                    value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">

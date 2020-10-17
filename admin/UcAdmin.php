@@ -29,6 +29,12 @@ class UcAdmin
      */
     private $ucConfig;
 
+    /**
+     * UcAdmin constructor.
+     *
+     * @param $plugin_name
+     * @param $version
+     */
     public function __construct($plugin_name, $version)
     {
         $this->plugin_name = $plugin_name;
@@ -38,7 +44,7 @@ class UcAdmin
     }
 
     /**
-     * Link from plugins list to settings
+     * Link from plugins list to settings.
      *
      * @param array $links
      * @return array
@@ -54,17 +60,23 @@ class UcAdmin
         return $links;
     }
 
+    /**
+     * Admin-part initialization.
+     * Calls on `init` hook.
+     * @see UploadcareMain::define_admin_hooks()
+     */
     public function uploadcare_plugin_init()
     {
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
         \wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
         \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
-        wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
+        \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
         \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
     }
 
     /**
+     * Calls on `admin_enqueue_scripts`
      * @param string $hook
      */
     public function add_uploadcare_js_to_admin($hook)
@@ -78,6 +90,10 @@ class UcAdmin
         wp_enqueue_style('uploadcare-style');
     }
 
+    /**
+     * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_handle`)
+     * @see https://developer.wordpress.org/reference/hooks/wp_ajax_action/
+     */
     public function uploadcare_handle()
     {
         $id = $this->fileId($_POST['file_url']);
@@ -102,7 +118,9 @@ class UcAdmin
         \wp_die();
     }
 
-
+    /**
+     * Calls on `post-upload-ui`, adds uploadcare button to media library.
+     */
     public function uploadcare_media_upload()
     {
         $sign = __('Upload file size 100MB or more', $this->plugin_name);
@@ -123,6 +141,10 @@ class UcAdmin
 HTML;
     }
 
+    /**
+     * Render the plugin settings menu.
+     * Calls on `admin_menu` hook.
+     */
     public function uploadcare_settings_actions()
     {
         \add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', [$this, 'uploadcare_settings']);
@@ -216,7 +238,6 @@ HTML;
         $query = \sprintf('SELECT post_id, meta_key, meta_value FROM `%s` WHERE meta_value LIKE \'%%%s%%\'', \sprintf('%spostmeta', $wpdb->prefix), $oldFile->getUuid());
         $result = $wpdb->get_results($query, ARRAY_A);
         foreach ($result as $value) {
-
             $postId = isset($value['post_id']) ? $value['post_id'] : null;
             $metaKey = isset($value['meta_key']) ? $value['meta_key'] : null;
             $metaValue = isset($value['meta_value']) ? $value['meta_value'] : null;
@@ -258,7 +279,9 @@ HTML;
 
             $blocks = $this->modifyBlocks($blocksArray, $oldFile->getUuid(), $newFile->getUuid());
 
-            $post->post_content = \serialize_blocks(\array_map(function (WP_Block_Parser_Block $block) { return $this->blockClassToArray($block); }, $blocks));
+            $post->post_content = \serialize_blocks(\array_map(function (WP_Block_Parser_Block $block) {
+                return $this->blockClassToArray($block);
+            }, $blocks));
 
             \wp_update_post($post, true);
         }
@@ -280,7 +303,6 @@ HTML;
             }
             $block->innerContent = \array_values($innerContent);
             $blocks[$n] = $block;
-
         }
 
         return \array_values($blocks);
