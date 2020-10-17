@@ -27,7 +27,7 @@ if (PHP_VERSION_ID < 50600) {
 
 define('UPLOADCARE_VERSION', '3.0.0');
 
-require_once __DIR__ . '/uploadcare-php/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 function activate_uploadcare()
 {

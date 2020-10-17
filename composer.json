@@ -1,0 +1,9 @@
+{
+  "name": "uploadcare/uploadcare-wordpress",
+  "require": {
+    "php": ">=5.6",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "uploadcare/uploadcare-php": "^3.0"
+  }
+}
