@@ -1,0 +1,29 @@
+name: Deploy to WordPress.org
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  tag:
+    name: Upload Plugin to WP SVN
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Checkout Submodule
+        shell: bash
+        run:
+          - apt update && apt install -y php-cli curl
+          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          - composer install
+      - name: Upload Action Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: uploadcare-wp
+          path: .
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@9892395
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: uploadcare
