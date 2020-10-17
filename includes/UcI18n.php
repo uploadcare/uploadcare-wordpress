@@ -21,11 +21,10 @@ class UcI18n
      */
     public function load_plugin_textdomain()
     {
-
-        load_plugin_textdomain(
+        $l = \load_plugin_textdomain(
             $this->pluginName,
             false,
-            dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
+            \basename(\dirname(__DIR__)) . '/languages/'
         );
     }
 }

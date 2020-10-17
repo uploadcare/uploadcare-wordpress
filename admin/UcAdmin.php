@@ -47,7 +47,7 @@ class UcAdmin
     public function plugin_action_links(array $links)
     {
         $url = \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php'));
-        $settings_link = \sprintf('<a href=\'%s\'>%s</a>', $url, __('Settings'));
+        $settings_link = \sprintf('<a href=\'%s\'>%s</a>', $url, __('Settings', $this->plugin_name));
 
         $links[] = $settings_link;
 
@@ -380,7 +380,7 @@ HTML;
         }
 
         /** @noinspection HtmlUnknownTarget */
-        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview')));
+        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
     }
 
     private function fileId($url)

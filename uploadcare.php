@@ -45,6 +45,7 @@ register_deactivation_hook(__FILE__, 'deactivate_uploadcare');
 require __DIR__ . '/includes/UploadcareMain.php';
 
 function run_uploadcare() {
+    $pluginRelativePath = basename(__DIR__) . '/languages';
     $plugin = new UploadcareMain();
     $plugin->run();
 }
