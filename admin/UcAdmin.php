@@ -56,17 +56,12 @@ class UcAdmin
 
     public function uploadcare_plugin_init()
     {
-        wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
-
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
-
-        wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
+        \wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
+        \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
         wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
-
-        wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
-        wp_register_script('uploadcare-shortcodes', $pluginDirUrl . 'js/shortcodes.js', ['uploadcare-config'], $this->version);
-
-        wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
+        \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
+        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
     }
 
     /**
@@ -88,7 +83,6 @@ class UcAdmin
         $id = $this->fileId($_POST['file_url']);
 
         $file = $this->api->file()->fileInfo(\trim($id, '/'));
-        $file->store();
         $attachment_id = $this->attach($file);
         $fileUrl = \get_post_meta($attachment_id, '_wp_attached_file', true);
         $isLocal = false;
@@ -131,7 +125,7 @@ HTML;
 
     public function uploadcare_settings_actions()
     {
-        add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', [$this, 'uploadcare_settings']);
+        \add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', [$this, 'uploadcare_settings']);
     }
 
     public function uploadcare_settings()
@@ -189,25 +183,140 @@ HTML;
      */
     public function uc_save_image_editor_file($override, $filename, $image, $mime_type, $post_id)
     {
-        if (!$image instanceof WP_Image_Editor) {
-            return $override;
-        }
-        if (!\get_post_meta($post_id, 'uploadcare_url', true)) {
+        if (!$image instanceof WP_Image_Editor || !\get_post_meta($post_id, 'uploadcare_url', true)) {
             return $override;
         }
 
-        $cdn = \sprintf('https://%s', \get_option('uploadcare_cdn_base'));
-        $start = \strpos($filename, $cdn);
-        $url = \substr($filename, $start, 36 + \strlen($cdn) + 1); // UUID length is 36
+        $id = $this->fileId(\get_post_meta($post_id, 'uploadcare_url', true));
+        $oldFile = $this->api->file()->deleteFile($id);
 
-        $id = $this->fileId($url);
-        $info = $this->api->file()->fileInfo($id);
-        $tempFile = $this->storeTempFile($image, $info);
-        $this->api->file()->deleteFile($id);
+        $tempFile = $this->storeTempFile($image, $oldFile);
         $newFile = $this->api->uploader()->fromPath($tempFile);
-        \update_post_meta($post_id, 'uploadcare_url', \sprintf('%s/%s/', $cdn, $newFile->getUuid()));
+        $this->api->file()->storeFile($newFile);
+
+        $updatedUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $newFile->getUuid());
+
+        \update_post_meta($post_id, 'uploadcare_url', $updatedUrl);
+        \update_post_meta($post_id, '_wp_attached_file', $updatedUrl);
+        \unlink($tempFile);
+
+        $this->changeImageInPosts($oldFile, $newFile);
+        $this->changePostMeta($oldFile, $newFile);
 
         return true;
+    }
+
+    /**
+     * @param FileInfoInterface $oldFile
+     * @param FileInfoInterface $newFile
+     */
+    private function changePostMeta(FileInfoInterface $oldFile, FileInfoInterface $newFile)
+    {
+        global $wpdb;
+        $query = \sprintf('SELECT post_id, meta_key, meta_value FROM `%s` WHERE meta_value LIKE \'%%%s%%\'', \sprintf('%spostmeta', $wpdb->prefix), $oldFile->getUuid());
+        $result = $wpdb->get_results($query, ARRAY_A);
+        foreach ($result as $value) {
+
+            $postId = isset($value['post_id']) ? $value['post_id'] : null;
+            $metaKey = isset($value['meta_key']) ? $value['meta_key'] : null;
+            $metaValue = isset($value['meta_value']) ? $value['meta_value'] : null;
+
+            if ($postId === null || $metaKey === null || $metaValue === null) {
+                continue;
+            }
+
+            $metaValue = \str_replace($oldFile->getUuid(), $newFile->getUuid(), $metaValue);
+            \update_post_meta($postId, $metaKey, $metaValue);
+        }
+    }
+
+    /**
+     * @see https://wordpress.stackexchange.com/questions/310301/check-what-gutenberg-blocks-are-in-post-content
+     *
+     * @param FileInfoInterface $oldFile   Old file UUID
+     * @param FileInfoInterface $newFile new file
+     */
+    private function changeImageInPosts(FileInfoInterface $oldFile, FileInfoInterface $newFile)
+    {
+        global $wpdb;
+        $query = \sprintf('SELECT ID FROM `%s` WHERE post_content LIKE \'%%%s%%\'', \sprintf('%sposts', $wpdb->prefix), $oldFile->getUuid());
+        $result = $wpdb->get_col($query);
+        if (!\is_array($result) || empty($result)) {
+            return;
+        }
+        foreach ($result as $postId) {
+            $post = \get_post((int) $postId);
+            if (!$post instanceof WP_Post || !\has_blocks($post)) {
+                continue;
+            }
+
+            $blocksArray = \parse_blocks($post->post_content);
+            $blocksArray = \array_map(function (array $block) {
+                return $this->blockArrayToClass($block);
+            }, $blocksArray);
+            $blocksArray = \array_values(\array_filter($blocksArray));
+
+            $blocks = $this->modifyBlocks($blocksArray, $oldFile->getUuid(), $newFile->getUuid());
+
+            $post->post_content = \serialize_blocks(\array_map(function (WP_Block_Parser_Block $block) { return $this->blockClassToArray($block); }, $blocks));
+
+            \wp_update_post($post, true);
+        }
+    }
+
+    /**
+     * @param array|\WP_Block_Parser_Block[] $blocks
+     * @param string                         $from
+     * @param string                         $changeTo
+     * @return array|\WP_Block_Parser_Block[]
+     */
+    private function modifyBlocks(array $blocks, $from, $changeTo)
+    {
+        foreach ($blocks as $n => $block) {
+            $block->innerHTML = \str_replace($from, $changeTo, $block->innerHTML);
+            $innerContent = $block->innerContent;
+            foreach ($innerContent as $c => $contentItem) {
+                $innerContent[$c] = \str_replace($from, $changeTo, $contentItem);
+            }
+            $block->innerContent = \array_values($innerContent);
+            $blocks[$n] = $block;
+
+        }
+
+        return \array_values($blocks);
+    }
+
+    /**
+     * @param array $item
+     *
+     * @return WP_Block_Parser_Block|null
+     */
+    private function blockArrayToClass(array $item)
+    {
+        $attributes = [
+            'blockName' => 'string',
+            'attrs' => 'array',
+            'innerBlocks' => 'array',
+            'innerHTML' => 'string',
+            'innerContent' => 'array',
+        ];
+
+        foreach ($attributes as $name => $type) {
+            if (!isset($item[$name]) || \gettype($item[$name]) !== $type) {
+                return null;
+            }
+        }
+
+        return new \WP_Block_Parser_Block($item['blockName'], $item['attrs'], $item['innerBlocks'], $item['innerHTML'], $item['innerContent']);
+    }
+
+    /**
+     * @param WP_Block_Parser_Block $block
+     * @return array
+     */
+    private function blockClassToArray(WP_Block_Parser_Block $block)
+    {
+        return (array) $block;
     }
 
     /**
