@@ -72,6 +72,7 @@ class UcAdmin
         \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
+        \wp_register_script('image-block', $pluginDirUrl . '/js/imageBlock.js', [], $this->version, true);
         \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
     }
 
@@ -87,6 +88,7 @@ class UcAdmin
         }
 
         wp_enqueue_script('uploadcare-main');
+        wp_enqueue_script('image-block');
         wp_enqueue_style('uploadcare-style');
     }
 
