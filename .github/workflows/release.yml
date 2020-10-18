@@ -10,15 +10,16 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Checkout Submodule
+      - name: Install dependencies
         shell: bash
-        run:
-          - apt install software-properties-common
-          - add-apt-repository ppa:ondrej/php
-          - apt update
-          - apt install -y curl php5.6-cli
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          - composer install
+        run: |
+          sudo apt-get update
+          sudo apt-get install software-properties-common
+          sudo add-apt-repository ppa:ondrej/php
+          sudo apt-get update
+          sudo apt install -y curl php5.6-cli
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/tmp --filename=composer
+          /tmp/composer install --no-dev
       - name: Upload Action Artifact
         uses: actions/upload-artifact@v1
         with:

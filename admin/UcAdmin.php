@@ -387,15 +387,10 @@ HTML;
 
     public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
     {
-        if (!\get_option('uploadcare_replace_featured_image')) {
+        if (!$url = get_post_meta($post_id, 'uploadcare_url', true)) {
             return $html;
         }
 
-        $meta = get_post_meta($post_id, 'uploadcare_featured_image');
-        if (empty($meta)) {
-            return $html;
-        }
-        $url = $meta[0];
         $sz = $this->thumbnailSize($size);
         if ($sz) {
             $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
@@ -415,10 +410,10 @@ HTML;
     private function thumbnailSize($size = 'thumbnail')
     {
         $arr = $this->getSizeArray($size);
-        if (!empty($arr)) {
+        if (empty($arr)) {
             return false;
         }
-        return implode('x', $arr);
+        return \implode('x', $arr);
     }
 
     private function getSizeArray($size)
