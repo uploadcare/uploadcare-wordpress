@@ -72,8 +72,9 @@ class UcAdmin
         \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
-        \wp_register_script('image-block', $pluginDirUrl . '/js/imageBlock.js', [], $this->version, true);
-        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
+        \wp_register_script('image-block', $pluginDirUrl . '/compiled-js/blocks.js', [], $this->version, true);
+        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', [], $this->version);
+        \wp_register_style('uc-editor', $pluginDirUrl . '/compiled-js/blocks.css', [], $this->version);
     }
 
     /**
@@ -87,9 +88,14 @@ class UcAdmin
             return;
         }
 
-        wp_enqueue_script('uploadcare-main');
-        wp_enqueue_script('image-block');
-        wp_enqueue_style('uploadcare-style');
+        \wp_enqueue_script('uploadcare-main');
+        \wp_enqueue_style('uploadcare-style');
+
+        if ($hook === 'post.php') {
+            require_once \dirname(__DIR__) . '/compiled-js/blocks.asset.php';
+            \wp_enqueue_script('image-block');
+            \wp_enqueue_style('uc-editor');
+        }
     }
 
     /**

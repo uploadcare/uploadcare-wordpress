@@ -1,0 +1,12 @@
+.uploadcare-picker {
+
+  &__button {
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    background-size: 23px;
+    background-image: url('https://ucarecdn.com/assets/images/logo.png');
+    padding-left: 32px !important;
+    border: solid 1px #007cba;
+    margin-left: 6px;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "uploadcare-wordpress",
+  "version": "3.0.0",
+  "devDependencies": {
+    "@wordpress/block-editor": "^5.0.2",
+    "@wordpress/components": "^11.0.1",
+    "@wordpress/scripts": "^12.3.0"
+  },
+  "scripts": {
+    "watch": "wp-scripts start jsx/blocks.js --output-path=compiled-js",
+    "build": "wp-scripts build jsx/blocks.js --output-path=compiled-js"
+  }
+}
