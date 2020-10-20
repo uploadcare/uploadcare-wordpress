@@ -75,7 +75,8 @@ class UcFront
         $q = \sprintf('SELECT meta_value FROM `%s` WHERE meta_key=\'uploadcare_url\' AND post_id=%d', \sprintf('%spostmeta', $wpdb->prefix), $post_thumbnail_id);
         $result = $wpdb->get_col($q);
         if (\array_key_exists(0, $result) && \strpos($result[0], \get_option('uploadcare_cdn_base')) !== false) {
-            return \sprintf('<img data-blink-src="%s" alt="post-%d">', $result[0], $post_id);
+            $uuid = \pathinfo($result[0], PATHINFO_BASENAME);
+            return \sprintf('<img data-blink-uuid="%s" alt="post-%d">', $uuid, $post_id);
         }
 
         return $html;
