@@ -73,6 +73,7 @@ class UcAdmin
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
         \wp_register_script('image-block', $pluginDirUrl . '/compiled-js/blocks.js', [], $this->version, true);
+        \wp_localize_script('uc-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', [], $this->version);
         \wp_register_style('uc-editor', $pluginDirUrl . '/compiled-js/blocks.css', [], $this->version);
     }
@@ -91,11 +92,10 @@ class UcAdmin
         \wp_enqueue_script('uploadcare-main');
         \wp_enqueue_style('uploadcare-style');
 
-        if ($hook === 'post.php') {
-            require_once \dirname(__DIR__) . '/compiled-js/blocks.asset.php';
-            \wp_enqueue_script('image-block');
-            \wp_enqueue_style('uc-editor');
-        }
+        require_once \dirname(__DIR__) . '/compiled-js/blocks.asset.php';
+        \wp_enqueue_script('uc-config');
+        \wp_enqueue_script('image-block');
+        \wp_enqueue_style('uc-editor');
     }
 
     /**
