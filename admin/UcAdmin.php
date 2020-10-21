@@ -92,9 +92,8 @@ class UcAdmin
         \wp_enqueue_script('uploadcare-main');
         \wp_enqueue_style('uploadcare-style');
 
-        require_once \dirname(__DIR__) . '/compiled-js/blocks.asset.php';
         \wp_enqueue_script('uc-config');
-        \wp_enqueue_script('image-block');
+        \wp_enqueue_script('image-block', null, require \dirname(__DIR__) . '/compiled-js/blocks.asset.php');
         \wp_enqueue_style('uc-editor');
     }
 
@@ -410,7 +409,7 @@ HTML;
 
     private function fileId($url)
     {
-        return \trim(\str_replace(['https://', \get_option('uploadcare_cdn_base')], '', $url), '/');
+        return \pathinfo($url, PATHINFO_BASENAME);
     }
 
     private function thumbnailSize($size = 'thumbnail')
