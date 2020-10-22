@@ -72,7 +72,10 @@ class UcAdmin
         \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
-        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', $this->version);
+        \wp_register_script('image-block', $pluginDirUrl . '/compiled-js/blocks.js', [], $this->version, true);
+        \wp_localize_script('uc-config', 'WP_UC_PARAMS', $this->getJsConfig());
+        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', [], $this->version);
+        \wp_register_style('uc-editor', $pluginDirUrl . '/compiled-js/blocks.css', [], $this->version);
     }
 
     /**
@@ -88,6 +91,10 @@ class UcAdmin
 
         \wp_enqueue_script('uploadcare-main');
         \wp_enqueue_style('uploadcare-style');
+
+        \wp_enqueue_script('uc-config');
+        \wp_enqueue_script('image-block', null, require \dirname(__DIR__) . '/compiled-js/blocks.asset.php');
+        \wp_enqueue_style('uc-editor');
     }
 
     /**
@@ -402,7 +409,7 @@ HTML;
 
     private function fileId($url)
     {
-        return \trim(\str_replace(['https://', \get_option('uploadcare_cdn_base')], '', $url), '/');
+        return \pathinfo($url, PATHINFO_BASENAME);
     }
 
     private function thumbnailSize($size = 'thumbnail')

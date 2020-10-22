@@ -5,5 +5,10 @@
     "ext-curl": "*",
     "ext-json": "*",
     "uploadcare/uploadcare-php": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Uploadcare\\": "vendor/uploadcare/uploadcare-php/"
+    }
   }
 }

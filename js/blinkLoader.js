@@ -3,7 +3,7 @@
     s.onload = cb; (document.head || document.body).appendChild(s);
 })('https://ucarecdn.com/libs/blinkloader/3.x/blinkloader.min.js', function() {
     window.Blinkloader.optimize({
-        pubkey: 'de2dfdecfecdb3bfa507',
+        pubkey: UC_PUBLIC_KEY,
         fadeIn: true,
     });
 })
