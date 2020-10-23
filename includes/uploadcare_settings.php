@@ -55,15 +55,21 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
     $uploadcare_upload_lifetime = $_POST['uploadcare_upload_lifetime'];
     update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
+    $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
+    update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
     update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
+    $uploadcare_adaptive_delivery = $_POST['uploadcare_adaptive_delivery'];
+    update_option('uploadcare_adaptive_delivery', $uploadcare_adaptive_delivery);
     $saved = true;
 } else {
-    $uploadcare_public          = \trim(get_option('uploadcare_public'));
-    $uploadcare_secret          = \trim(get_option('uploadcare_secret'));
-    $uploadcare_cdn_base        = \trim(get_option('uploadcare_cdn_base', 'ucarecdn.com'));
-    $uploadcare_source_tabs     = get_option('uploadcare_source_tabs', $tab_defaults);
-    $uploadcare_upload_lifetime = get_option('uploadcare_upload_lifetime', '0');
+    $uploadcare_public            = \trim(get_option('uploadcare_public'));
+    $uploadcare_secret            = \trim(get_option('uploadcare_secret'));
+    $uploadcare_cdn_base          = \trim(get_option('uploadcare_cdn_base', 'ucarecdn.com'));
+    $uploadcare_finetuning        = get_option('uploadcare_finetuning');
+    $uploadcare_source_tabs       = get_option('uploadcare_source_tabs', $tab_defaults);
+    $uploadcare_upload_lifetime   = get_option('uploadcare_upload_lifetime', '0');
+    $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
 }
 ?>
 
@@ -80,12 +86,12 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
         <p>
             <label for="uc_uploadcare_public"><?= __('Public key', 'uploadcare'); ?>:</label>
             <input id="uc_uploadcare_public" type="text" name="uploadcare_public"
-                   value="<?php echo $uploadcare_public; ?>" size="20">
+                   value="<?php echo $uploadcare_public; ?>" size="50">
         </p>
         <p>
             <label for="uc_uploadcare_secret"><?= __('Secret key', 'uploadcare'); ?>:</label>
             <input id="uc_uploadcare_secret" type="text" name="uploadcare_secret"
-                   value="<?php echo $uploadcare_secret; ?>" size="20">
+                   value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
         <h3><?= __('Options', 'uploadcare')?></h3>
         <p>
@@ -103,6 +109,16 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
             <a href="https://uploadcare.com/docs/api_reference/upload/signed_uploads/">[?]</a>
         </p>
 
+        <p>
+            <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
+                   value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
+            >
+            <label for="uc_uploadcare_adaptive_delivery">
+                <?= __('Enable adaptive delivery') ?>
+            </label>
+            <span><a href="https://uploadcare.com/docs/delivery/adaptive_delivery/"><?= __('About adaptive delivery')?></a></span>
+        </p>
+
         <h3><?= __('Upload Sources', 'uploadcare')?></h3>
         <?php
         foreach ($tabs as $tn => $tab) {
@@ -115,6 +131,19 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
             <?php
         }
         ?>
+
+        <p>
+            <label for="uc_uploadcare_finetuning">
+                <?= __('Widget fine tuning'); ?>
+            </label>
+        </p>
+        <p>
+            <textarea name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75">
+                <?= \stripslashes($uploadcare_finetuning) ?>
+            </textarea>
+            <br>
+            <span><a href="https://uploadcare.com/docs/uploads/file_uploader_options/"><?= __('About fine tuning')?></a></span>
+        </p>
 
         <?php submit_button(); ?>
     </form>

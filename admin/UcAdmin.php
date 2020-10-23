@@ -368,6 +368,15 @@ HTML;
         return $path;
     }
 
+    /**
+     * Calls on `image_downsize` hook
+     *
+     * @param $value
+     * @param $id
+     * @param string $size
+     *
+     * @return array|false
+     */
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
         if (!$uc_url = get_post_meta($id, 'uploadcare_url', true)) {
@@ -378,7 +387,7 @@ HTML;
         if ($sz) {
             // chop filename part
             $url = preg_replace('/[^\/]*$/', '', $uc_url);
-            $url .= '-/stretch/off/-/scale_crop/' . $sz . '/center/';
+            $url = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $url, $sz);
         } else {
             $url = $uc_url;
         }
@@ -390,6 +399,17 @@ HTML;
         ];
     }
 
+    /**
+     * Calls on `post_thumbnail_html`
+     *
+     * @param $html
+     * @param $post_id
+     * @param $post_thumbnail_id
+     * @param $size
+     * @param $attr
+     *
+     * @return string
+     */
     public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
     {
         if (!$url = get_post_meta($post_id, 'uploadcare_url', true)) {
@@ -398,7 +418,7 @@ HTML;
 
         $sz = $this->thumbnailSize($size);
         if ($sz) {
-            $src = "{$url}-/stretch/off/-/scale_crop/$sz/center/";
+            $src = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $url, $sz);
         } else {
             $src = $url;
         }
@@ -448,7 +468,7 @@ HTML;
         global $_wp_additional_image_sizes;
         $sizes = [];
         foreach (get_intermediate_image_sizes() as $s) {
-            $sizes[$s] = array(0, 0);
+            $sizes[$s] = [0, 0];
             if (in_array($s, ['thumbnail', 'medium', 'large'])) {
                 $sizes[$s][0] = get_option($s . '_size_w');
                 $sizes[$s][1] = get_option($s . '_size_h');
