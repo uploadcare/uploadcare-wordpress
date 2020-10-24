@@ -59,14 +59,14 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
     $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
     update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
-    $uploadcare_adaptive_delivery = $_POST['uploadcare_adaptive_delivery'];
+    $uploadcare_adaptive_delivery = isset($_POST['uploadcare_adaptive_delivery']) ? 1 : 0;
     update_option('uploadcare_adaptive_delivery', $uploadcare_adaptive_delivery);
     $saved = true;
 } else {
     $uploadcare_public            = \trim(get_option('uploadcare_public'));
     $uploadcare_secret            = \trim(get_option('uploadcare_secret'));
     $uploadcare_cdn_base          = \trim(get_option('uploadcare_cdn_base', 'ucarecdn.com'));
-    $uploadcare_finetuning        = get_option('uploadcare_finetuning');
+    $uploadcare_finetuning        = \trim(get_option('uploadcare_finetuning'));
     $uploadcare_source_tabs       = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_upload_lifetime   = get_option('uploadcare_upload_lifetime', '0');
     $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
@@ -138,11 +138,12 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
             </label>
         </p>
         <p>
-            <textarea name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75">
-                <?= \stripslashes($uploadcare_finetuning) ?>
-            </textarea>
+            <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
             <br>
-            <span><a href="https://uploadcare.com/docs/uploads/file_uploader_options/"><?= __('About fine tuning')?></a></span>
+            <span>
+                <a href="https://uploadcare.com/docs/uploads/file_uploader_options/"><?= __('About fine tuning')?></a>
+                <span><?= __('Please remember that this must be a valid JSON object with upload widget parameters')?></span>
+            </span>
         </p>
 
         <?php submit_button(); ?>

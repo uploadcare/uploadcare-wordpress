@@ -538,7 +538,7 @@ HTML;
         if (in_array('all', $tab_options, true)) {
             $tabs = 'all';
         } else {
-            $tabs = implode(' ', $tab_options);
+            $tabs = \implode(' ', $tab_options);
         }
 
         $baseParams = array(
@@ -548,14 +548,20 @@ HTML;
             'tabs' => $tabs,
             'cdnBase' => 'https://' . \get_option('uploadcare_cdn_base', 'ucarecdn.com'),
         );
+        if (\get_option('uploadcare_finetuning', null) !== null) {
+            $fineTuning = \json_decode(\stripcslashes(\get_option('uploadcare_finetuning')), true);
+            if (\json_last_error() === JSON_ERROR_NONE) {
+                $baseParams = \array_merge($fineTuning, $baseParams);
+            }
+        }
 
         if (get_option('uploadcare_upload_lifetime') > 0) {
             $secureSignature = $this->ucConfig->getSecureSignature();
 
-            return array_merge($baseParams, array(
-                'secureSignature' => $secureSignature->getSignature(),
-                'secureExpire' => $secureSignature->getExpire()->getTimestamp(),
-            ));
+            return \array_merge($baseParams, [
+                    'secureSignature' => $secureSignature->getSignature(),
+                    'secureExpire'    => $secureSignature->getExpire()->getTimestamp(),
+                ]);
         }
 
         return $baseParams;
