@@ -48,11 +48,9 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
 }
 
-$process = new UcSyncProcess();
+$loader = new LocalMediaLoader();
+$syncMessage = $loader->loadMedia();
 if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
-    $loader = new LocalMediaLoader();
-    $syncMessage = $loader->loadMedia();
-
     echo \sprintf('<div class="updated"><p><strong>%s</strong></p><p>%s</p></div>', $syncMessage, __('Sync process started'));
 }
 ?>
@@ -89,7 +87,15 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         <h4><?= __('3. Transfer your existing Media Library to Uploadcare', 'uploadcare')?></h4>
         <p><?= __('This is required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work.', 'uploadcare')?></p>
         <p>
-<!--            <button class="button" type="submit" value="sync" name="uc_sync_data">--><?//= __('Sync all Wordpress images with Uploadcare')?><!--</button>-->
+            <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
+                <?= __('Synchronization in progress')?>
+            <?php else: ?>
+                <?php if ($loader->getHasLocalMedia() === false): ?>
+                    <strong><?= __('All your media files are synced with Uploadcare') ?></strong>
+                <?php else: ?>
+                    <button class="button" type="submit" value="sync" name="uc_sync_data"><?= \sprintf(__('Sync %d Wordpress images with Uploadcare'), $loader->getLocalMediaCount())?></button>
+                <?php endif; ?>
+            <?php endif; ?>
         </p>
         <p><?= __("It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud, which saves you money for you WordPress hosting and ensures that whatever happens with your WordPress installation, your files will be safe and secure. Only AFTER syncronization process is completely finished, files will be removed from your WordPress hosting. You're secure all way through.", 'uploadcare')?></p>
         <p><?= __("If you accidentally upload new files with regular uploader, we'll suggest you to repeat the sync to move new files to the cloud.", 'uploadcare')?></p>
