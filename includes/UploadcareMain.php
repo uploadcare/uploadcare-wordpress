@@ -3,7 +3,7 @@
 class UploadcareMain
 {
     const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
-    const RESIZE_TEMPLATE = '%s-/stretch/off/-/resize/%s/';
+    const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
 
     /**
      * @var UcLoader
