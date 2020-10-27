@@ -61,7 +61,8 @@ export default class UcUploader {
         document.body.append(this.loadingScreen);
         this.loadingScreen.classList.remove('uploadcare-hidden')
 
-        return uploadcare.openDialog([], null, {multiple: false}).done(data => {
+        return uploadcare.openDialog([], null, {multiple: false})
+            .done(data => {
                 this.loadingScreen.classList.remove('uploadcare-hidden');
                 return data.promise().done((fileInfo: FileInfoResponse) => {
                         this.storeImage(fileInfo).then(json => {
@@ -73,6 +74,9 @@ export default class UcUploader {
                             this.loadingScreen.classList.add('uploadcare-hidden')
                         });
                     })
+            })
+            .fail(() => {
+                this.loadingScreen.classList.add('uploadcare-hidden')
             });
     }
 
