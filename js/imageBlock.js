@@ -1,0 +1,3 @@
+(() => {
+  // wp.hooks.addFilter('blocks.')
+})();
