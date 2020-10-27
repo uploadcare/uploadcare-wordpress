@@ -1,4 +1,2 @@
-composer.lock
-vendor
-node_modules
-compiled-js/*
+.vscode
+.idea
