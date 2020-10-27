@@ -71,6 +71,7 @@ class UploadcareMain
     {
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
+        $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
         $this->loader->add_filter('plugin_action_links_uploadcare/uploadcare.php', $plugin_admin, 'plugin_action_links');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
