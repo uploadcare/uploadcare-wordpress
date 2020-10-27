@@ -503,7 +503,7 @@ HTML;
         );
         $isImage = $file->isImage();
         $attachment_id = wp_insert_post($attachment, true);
-        $meta = $isImage ? $this->getFinalDim($file) : array('width' => null, 'height' => null);
+        $meta = $isImage ? $this->getFinalDim($file) : ['width' => null, 'height' => null];
 
         $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
         \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
