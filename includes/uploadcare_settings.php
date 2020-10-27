@@ -94,7 +94,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
             <p>
                 <input name="uploadcare_source_tabs[]" id="st_<?= $tn ?>" type="checkbox"
                        value="<?= $tab ?>" <?= \in_array($tab, $uploadcare_source_tabs, true) ? 'checked' : null ?> />
-                <label for="st_<?= $tn ?>"><?= $tab ?></label>
+                <label for="st_<?= $tn ?>"><?= __($tab, 'uploadcare') ?></label>
             </p>
             <?php
         }
@@ -148,7 +148,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
 
 <script>
     (() => {
-        document.getElementById('uc-collapse-toggle').addEventListener('click', ev => {
+        document.getElementById('uc-collapse-toggle').addEventListener('click', () => {
             const tagret = document.getElementById('uc-advanced-options');
             if (tagret.classList.contains('hide'))
                 tagret.classList.remove('hide')
