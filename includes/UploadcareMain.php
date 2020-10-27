@@ -3,7 +3,7 @@
 class UploadcareMain
 {
     const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
-    const RESIZE_TEMPLATE = '%s-/stretch/off/-/resize/%s/';
+    const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
 
     /**
      * @var UcLoader
@@ -73,6 +73,7 @@ class UploadcareMain
     {
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
+        $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
         $this->loader->add_action('plugins_loaded', $this, 'runBackgroundTask');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');

@@ -3,6 +3,8 @@
 
 class UcFront
 {
+    const IMAGE_REGEX = '/(<img\s?.+)(src=\")(.[^\"]+)(.+)/m';
+
     /**
      * @var string
      */
@@ -62,8 +64,11 @@ class UcFront
         if (!$this->adaptiveDelivery) {
             return $this->replaceImageUrl($content);
         }
+        return (string) \preg_replace_callback(self::IMAGE_REGEX, static function (array $data) {
+            $uuid = \pathinfo($data[3], PATHINFO_BASENAME);
 
-        return \str_replace('<img src', '<img data-blink-src', $content);
+            return $data[1] . 'data-blink-uuid="' . $uuid . $data[4];
+        }, $content);
     }
 
     /**
@@ -81,9 +86,9 @@ class UcFront
     public function postFeaturedImage($html, $post_id, $post_thumbnail_id, $size, $attr)
     {
         global $wpdb;
-        $resizeParam = '1024x';
+        $resizeParam = '2048x2048';
         if (\in_array($size, get_intermediate_image_sizes(), true)) {
-            $resizeParam = \get_option(\sprintf('%s_size_w', $size), $resizeParam);
+            $resizeParam = \get_option(\sprintf('%s_size_w', $size), '2048') . 'x' . \get_option(\sprintf('%s_size_h', $size), '2048');
         }
 
         $q = \sprintf('SELECT meta_value FROM `%s` WHERE meta_key=\'uploadcare_url\' AND post_id=%d', \sprintf('%spostmeta', $wpdb->prefix), $post_thumbnail_id);
@@ -94,6 +99,7 @@ class UcFront
                 return $this->replaceImageUrl(\sprintf('<img src="%s" />', $result[0]), $resizeParam);
             }
             $uuid = \pathinfo($result[0], PATHINFO_BASENAME);
+
             return \sprintf('<img data-blink-uuid="%s" alt="post-%d">', $uuid, $post_id);
         }
 
@@ -105,10 +111,9 @@ class UcFront
      * @param string $size
      * @return string
      */
-    private function replaceImageUrl($html, $size = '1024x')
+    private function replaceImageUrl($html, $size = '2048x2048')
     {
-        $regex = '/(<img\s?.+)(src=\")(.[^\"]+)(.+)/m';
-        return \preg_replace_callback($regex, static function (array $data) use ($size) {
+        return \preg_replace_callback(self::IMAGE_REGEX, static function (array $data) use ($size) {
             if (\strpos($data[3], 'scale_crop') === false) {
                 $data[3] = \sprintf(UploadcareMain::RESIZE_TEMPLATE, $data[3], $size);
             }

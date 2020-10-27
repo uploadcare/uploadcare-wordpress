@@ -18,32 +18,8 @@ $tab_defaults = [
     'url',
     'facebook',
     'instagram',
-    'flickr',
     'gdrive',
-    'evernote',
-    'box',
-    'skydrive',
 ];
-
-$effects = [
-    'crop',
-    'rotate',
-    'mirror',
-    'flip',
-    'blur',
-    'sharp',
-    'enhance',
-    'grayscale',
-];
-
-$effects_defaults = [
-    'crop',
-    'rotate',
-    'sharp',
-    'enhance',
-    'grayscale',
-];
-
 
 $saved = false;
 if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
@@ -90,74 +66,102 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
     <?php echo "<h2>".__('Uploadcare', 'uploadcare')."</h2>"; ?>
     <form name="oscimp_form" method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
         <input type="hidden" name="uploadcare_hidden" value="Y">
-        <h3><?= __('API Keys', 'uploadcare') ?> <a href="https://uploadcare.com/documentation/keys/">[?]</a></h3>
+
+        <h3><?= __('Set up Uploadcare plugin', 'uploadcare')?></h3>
+        <p><?= __('VIDEO TUTORIAL', 'uploadcare')?></p>
+
+        <h4><?= __('1. Get an Uploadcare account', 'uploadcare')?></h4>
+        <p><?= \sprintf(__('Sign up <a href="https://uploadcare.com/pricing/" target="_blank">here</a>.', 'uploadcare')) ?></p>
+
+        <h4><?= __('2. Set up your Uploadcare Project API keys', 'uploadcare') ?> <a href="https://uploadcare.com/documentation/keys/" target="_blank">[?]</a></h4>
+        <p><?= \sprintf(__('Find API keys for your Uploadcare Project in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>:', 'uploadcare')) ?></p>
         <p>
-            <label for="uc_uploadcare_public"><?= __('Public key', 'uploadcare'); ?>:</label>
+            <label for="uc_uploadcare_public"><?= __('Public Key', 'uploadcare'); ?>:</label>
             <input id="uc_uploadcare_public" type="text" name="uploadcare_public"
-                   value="<?php echo $uploadcare_public; ?>" size="50">
+                value="<?php echo $uploadcare_public; ?>" size="50">
         </p>
         <p>
-            <label for="uc_uploadcare_secret"><?= __('Secret key', 'uploadcare'); ?>:</label>
+            <label for="uc_uploadcare_secret"><?= __('Secret Key', 'uploadcare'); ?>:</label>
             <input id="uc_uploadcare_secret" type="text" name="uploadcare_secret"
-                   value="<?php echo $uploadcare_secret; ?>" size="50">
-        </p>
-        <h3><?= __('Options', 'uploadcare')?></h3>
-        <p>
-            <label for="uc_uploadcare_cdn_base"><?= __('CDN Host', 'uploadcare'); ?>:</label>
-            <input id="uc_uploadcare_cdn_base" type="text" name="uploadcare_cdn_base"
-                   value="<?php echo $uploadcare_cdn_base; ?>" size="20">
-            <a href="https://uploadcare.com/community/t/how-to-set-up-custom-cdn-cname/40">[?]</a>
-        </p>
-        <p>
-            <label for="uc_uploadcare_upload_lifetime">
-                <?= __('Signed uploads lifetime in seconds (0 - disabled)', 'uploadcare'); ?>:
-            </label>
-            <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
-                   value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
-            <a href="https://uploadcare.com/docs/api_reference/upload/signed_uploads/">[?]</a>
+                value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
 
+        <h4><?= __('3. Transfer your existing Media Library to Uploadcare', 'uploadcare')?></h4>
+        <p><?= __('This is required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work.', 'uploadcare')?></p>
         <p>
-            <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
-                   value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
-            >
-            <label for="uc_uploadcare_adaptive_delivery">
-                <?= __('Enable adaptive delivery') ?>
-            </label>
-            <span><a href="https://uploadcare.com/docs/delivery/adaptive_delivery/"><?= __('About adaptive delivery')?></a></span>
+<!--            <button class="button" type="submit" value="sync" name="uc_sync_data">--><?//= __('Sync all Wordpress images with Uploadcare')?><!--</button>-->
         </p>
+        <p><?= __("It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud, which saves you money for you WordPress hosting and ensures that whatever happens with your WordPress installation, your files will be safe and secure. Only AFTER syncronization process is completely finished, files will be removed from your WordPress hosting. You're secure all way through.", 'uploadcare')?></p>
+        <p><?= __("If you accidentally upload new files with regular uploader, we'll suggest you to repeat the sync to move new files to the cloud.", 'uploadcare')?></p>
+        <p><?= __("In case you want to uninstall Uploadcare plugin, this process is reversable: we'll download all files from Uploadcare cloud to your WordPress installation.", 'uploadcare')?></p>
 
-        <h3><?= __('Upload Sources', 'uploadcare')?></h3>
+        <h4><?= __('4. Choose Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
         <?php
         foreach ($tabs as $tn => $tab) {
             ?>
             <p>
                 <input name="uploadcare_source_tabs[]" id="st_<?= $tn ?>" type="checkbox"
                        value="<?= $tab ?>" <?= \in_array($tab, $uploadcare_source_tabs, true) ? 'checked' : null ?> />
-                <label for="st_<?= $tn ?>"><?= $tab ?></label>
+                <label for="st_<?= $tn ?>"><?= __($tab, 'uploadcare') ?></label>
             </p>
             <?php
         }
         ?>
 
-        <p>
-            <label for="uc_uploadcare_finetuning">
-                <?= __('Widget fine tuning'); ?>
-            </label>
-        </p>
-        <p>
-            <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
-            <br>
-            <span>
-                <a href="https://uploadcare.com/docs/uploads/file_uploader_options/"><?= __('About fine tuning')?></a>
-                <span><?= __('Please remember that this must be a valid JSON object with upload widget parameters')?></span>
-            </span>
-        </p>
-        <button class="button" type="submit" value="sync" name="uc_sync_data"><?= __('Sync all Wordpress images with Uploadcare')?></button>
+        <h3 id="uc-collapse-toggle" class="uc-show-hide"><?= __('Advanced options', 'uploadcare')?></h3>
+        <div id="uc-advanced-options" class="uc-collapsed hide">
+            <h4><?= __('Backup', 'uploadcare')?> <a href="https://uploadcare.com/docs/start/settings/#project-settings-advanced-backup" target="_blank">[?]</a></h4>
+            <p><?= __('Uploadcare files are backed up automatically, but you can always configure your personal backup to a custom S3 Bucket (or Selected Storage). Connect the storage once, and the system will do backups on a timely basis. Set up backup in Uploadcare <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a> in Uploading section of your Project settings.', 'uploadcare')?></p>
+
+            <h4><?= __('Custom CDN CNAME', 'uploadcare')?> <a href="https://uploadcare.com/community/t/how-to-set-up-custom-cdn-cname/40" target="_blank">[?]</a></h4>
+            <p>
+                <label for="uc_uploadcare_cdn_base"><?= __('Host', 'uploadcare'); ?>:</label>
+                <input id="uc_uploadcare_cdn_base" type="text" name="uploadcare_cdn_base"
+                       value="<?php echo $uploadcare_cdn_base; ?>" size="20">
+            </p>
+
+            <h4><?= __('Secure Uploads', 'uploadcare')?> <a href="https://uploadcare.com/docs/security/secure_uploads/" target="_blank">[?]</a></h4>
+            <p>
+                <label for="uc_uploadcare_upload_lifetime">
+                    <?= __('Set lifetime in seconds (0 — disabled)', 'uploadcare'); ?>:
+                </label>
+                <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
+                       value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
+            </p>
+
+            <h4><?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
+            <p>
+                <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
+                       value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
+                >
+                <label for="uc_uploadcare_adaptive_delivery">
+                    <?= __("Turn off only if you explicitly want to disable it (if you plan doesn't allow it, it falls back to the regular delivery automatically).") ?>
+                </label>
+            </p>
+
+            <h4><?= __('Widget fine tuning', 'uploadcare')?> <a href="https://uploadcare.com/docs/uploads/file_uploader_options/" target="_blank">[?]</a></h4>
+            <p>
+                <label for="uc_uploadcare_finetuning">
+                    <?= __('Please remember that it must be a valid JSON object with upload widget parameters.'); ?>
+                </label>
+            </p>
+            <p>
+                <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
+            </p>
+        </div>
 
         <?php submit_button(); ?>
     </form>
-    <p><?= __('Files uploaded to demo account (demopublickey) are deleted after some time.', 'uploadcare') ?></p>
-    <p><?= \sprintf(__('You can get your own account <a href="%s">here</a>.', 'uploadcare'), 'https://uploadcare.com/pricing/') ?></p>
-    <p><?= \sprintf(__('<a href="%s">Uploadcare dashboard</a>', 'uploadcare'), 'https://uploadcare.com/dashboard/') ?></p>
 </div>
+
+<script>
+    (() => {
+        document.getElementById('uc-collapse-toggle').addEventListener('click', () => {
+            const target = document.getElementById('uc-advanced-options');
+            if (target.classList.contains('hide'))
+                target.classList.remove('hide')
+            else
+                target.classList.add('hide')
+        });
+    })()
+</script>

@@ -43,6 +43,11 @@ class UcAdmin
         $this->api = new Api($this->ucConfig);
     }
 
+    public function loadAdminCss()
+    {
+        \wp_enqueue_style('uc-editor');
+    }
+
     /**
      * Link from plugins list to settings.
      *
