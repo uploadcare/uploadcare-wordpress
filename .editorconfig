@@ -7,12 +7,3 @@ indent_size = 4
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
-
-[*.{js,json}]
-indent_size = 2
-
-[*.{yaml,yml}]
-indent_size = 2
-
-[*.{css,scss}]
-indent_size = 2

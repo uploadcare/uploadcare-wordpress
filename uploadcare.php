@@ -1,73 +1,70 @@
 <?php
 /**
- * @link              https://uploadcare.com
- * @since             3.0.0
- * @package           Uploadcare
- *
- * @wordpress-plugin
- * Plugin Name:       Uploadcare WordPress Plugin
- * Plugin URI:        https://github.com/uploadcare/uploadcare-wordpress
- * Description:       Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
- * Version:           3.0.0
- * Author:            Uploadcare
- * Author URI:        https://uploadcare.com/
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       uploadcare
- * Domain Path:       /languages
+ * Plugin Name: Uploadcare
+ * Plugin URI: http://github.com/uploadcare/uploadcare-wordpress
+ * Description: Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
+ * Version: 2.7.2
+ * Author: Uploadcare
+ * Author URI: https://uploadcare.com/
+ * License: GPL2
  */
 
-if (!defined('WPINC')) {
-    die();
+if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+    exit("Uploadcare plugin requires PHP version <b>5.3+</b>, you've got <b>" . PHP_VERSION . "</b>");
 }
 
-if (PHP_VERSION_ID < 50600) {
-    exit("Uploadcare plugin requires PHP version <b>5.6+</b>, you've got <b>" . PHP_VERSION . "</b>");
+define('UPLOADCARE_PLUGIN_VERSION', '2.7.2');
+define('UPLOADCARE_WIDGET_VERSION', '3.x');
+define('UPLOADCARE_TAB_EFFECTS_VERSION', '1.x');
+
+define('UPLOADCARE_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('UPLOADCARE_PLUGIN_PATH', plugin_dir_path(__FILE__));
+
+require_once UPLOADCARE_PLUGIN_PATH . 'inc/utils.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'inc/filters.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'inc/actions.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'inc/shortcodes.php';
+
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Api.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/File.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/PagedDataIterator.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/FileIterator.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Group.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/GroupIterator.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Helper.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Uploader.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Widget.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Signature/SignatureInterface.php';
+require_once UPLOADCARE_PLUGIN_PATH . 'uploadcare-php/src/Uploadcare/Signature/SecureSignature.php';
+
+// TODO: delete table on upgrade
+register_activation_hook(__FILE__, 'uploadcare_install');
+function uploadcare_install() {
+    if ( ! function_exists("curl_init") ) {
+        exit("Uploadcare plugin requires <b>php-curl</b> to function");
+    }
+    /*
+    global $wpdb;
+    $table_name = $wpdb->prefix . "uploadcare";
+    $sql = "CREATE TABLE $table_name (
+    id mediumint(9) NOT NULL AUTO_INCREMENT,
+    file_id varchar(200) DEFAULT '' NOT NULL,
+    is_file tinyint(1) DEFAULT 0 NOT NULL,
+    filename varchar(200) DEFAULT '' NOT NULL,
+    UNIQUE KEY id (id)
+    );";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+    */
 }
 
-define('UPLOADCARE_VERSION', '3.0.0');
 
-require_once __DIR__ . '/vendor/autoload.php';
-
-function activate_uploadcare()
-{
-    require_once __DIR__ . '/includes/UcActivator.php';
-    UcActivator::activate();
+register_deactivation_hook(__FILE__, 'uploadcare_uninstall');
+function uploadcare_uninstall() {
+    /*
+    global $wpdb;
+    $thetable = $wpdb->prefix."uploadcare";
+    $wpdb->query("DROP TABLE IF EXISTS $thetable");
+    */
 }
-
-function deactivate_uploadcare()
-{
-    require_once __DIR__ . '/includes/UcDeactivator.php';
-    UcDeactivator::deactivate();
-}
-
-register_activation_hook(__FILE__, 'activate_uploadcare');
-register_deactivation_hook(__FILE__, 'deactivate_uploadcare');
-
-require __DIR__ . '/includes/UploadcareMain.php';
-
-function run_uploadcare()
-{
-    $plugin = new UploadcareMain();
-    $plugin->run();
-}
-
-/*
-function dd($any)
-{
-    print '<pre>';
-    var_dump($any);
-    print '</pre>';
-
-    die();
-}
-*/
-
-/*
-function ULog($any)
-{
-    \error_log("\n[LOG::Ulog]\t" . \var_export($any, true) . "\n\n");
-}
-//*/
-
-run_uploadcare();
