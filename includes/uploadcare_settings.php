@@ -149,11 +149,11 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
 <script>
     (() => {
         document.getElementById('uc-collapse-toggle').addEventListener('click', () => {
-            const tagret = document.getElementById('uc-advanced-options');
-            if (tagret.classList.contains('hide'))
-                tagret.classList.remove('hide')
+            const target = document.getElementById('uc-advanced-options');
+            if (target.classList.contains('hide'))
+                target.classList.remove('hide')
             else
-                tagret.classList.add('hide')
+                target.classList.add('hide')
         });
     })()
 </script>
