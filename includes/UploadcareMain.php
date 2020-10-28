@@ -80,6 +80,7 @@ class UploadcareMain
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
+        $this->loader->add_action('delete_attachment', $plugin_admin, 'attachmentDelete', 10, 2);
 
         $this->loader->add_filter('plugin_action_links_uploadcare/uploadcare.php', $plugin_admin, 'plugin_action_links');
         $this->loader->add_filter('load_image_to_edit_attachmenturl', $plugin_admin, 'uc_load', 10, 2);

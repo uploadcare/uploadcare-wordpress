@@ -167,6 +167,22 @@ HTML;
         include \dirname(__DIR__) . '/includes/uploadcare_settings.php';
     }
 
+    /**
+     * Calls on `delete_attachment` hook, deletes the image from Uploadcare.
+     *
+     * @param int $postId
+     * @param \WP_Post $post
+     */
+    public function attachmentDelete($postId, $post)
+    {
+        if (!$post instanceof \WP_Post || !($url = \get_post_meta($postId, 'uploadcare_url', true))) {
+            return;
+        }
+
+        $uuid = $this->fileId($url);
+        $this->api->file()->deleteFile($uuid);
+    }
+
     // filters
 
     /**
@@ -432,9 +448,14 @@ HTML;
         return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
     }
 
+    /**
+     * @param $url
+     *
+     * @return string
+     */
     private function fileId($url)
     {
-        return \pathinfo($url, PATHINFO_BASENAME);
+        return (string) \pathinfo($url, PATHINFO_BASENAME);
     }
 
     private function thumbnailSize($size = 'thumbnail')
