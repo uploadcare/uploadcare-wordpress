@@ -85,7 +85,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         </p>
 
         <h4><?= __('3. Transfer your existing Media Library to Uploadcare', 'uploadcare')?></h4>
-        <p><?= __('This is required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work.', 'uploadcare')?></p>
+        <p><?= __('This is required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work. It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud.', 'uploadcare')?></p>
         <p>
             <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
                 <?= __('Synchronization in progress')?>
@@ -97,7 +97,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 <?php endif; ?>
             <?php endif; ?>
         </p>
-        <p><?= __("It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud, which saves you money for you WordPress hosting and ensures that whatever happens with your WordPress installation, your files will be safe and secure. Only AFTER syncronization process is completely finished, files will be removed from your WordPress hosting. You're secure all way through.", 'uploadcare')?></p>
+        <p><?= __("This saves you money for you WordPress hosting and ensures that whatever happens with your WordPress installation, your files will be safe and secure. Only AFTER syncronization process is completely finished, files will be removed from your WordPress hosting. You're secure all way through.", 'uploadcare')?></p>
         <p><?= __("If you accidentally upload new files with regular uploader, we'll suggest you to repeat the sync to move new files to the cloud.", 'uploadcare')?></p>
         <p><?= __("In case you want to uninstall Uploadcare plugin, this process is reversable: we'll download all files from Uploadcare cloud to your WordPress installation.", 'uploadcare')?></p>
 
