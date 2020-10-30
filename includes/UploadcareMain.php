@@ -77,6 +77,7 @@ class UploadcareMain
 
         $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
         $this->loader->add_action('plugins_loaded', $this, 'runUploadTask');
+        $this->loader->add_action('plugins_loaded', $this, 'runDownloadTask');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
@@ -101,8 +102,8 @@ class UploadcareMain
             foreach ($loader->getPosts() as $post) {
                 $process->push_to_queue($post->ID);
             }
+            $process->save()->dispatch();
         }
-        $process->save()->dispatch();
     }
 
     public function runDownloadTask()
@@ -114,8 +115,8 @@ class UploadcareMain
             foreach ($loader->getFiles() as $file) {
                 $process->push_to_queue($file);
             }
+            $process->save()->dispatch();
         }
-        $process->save()->dispatch();
     }
 
     /**

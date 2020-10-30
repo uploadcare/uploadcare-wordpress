@@ -63,10 +63,13 @@ function dd($any)
 }
 */
 
-/*
-function ULog($any)
+///*
+/** @noinspection ForgottenDebugOutputInspection */
+function ULog(...$args)
 {
-    \error_log("\n[LOG::Ulog]\t" . \var_export($any, true) . "\n\n");
+    foreach ($args as $arg) {
+        \error_log("\t[LOG::Ulog]\n".\var_export($arg, true)."\n");
+    }
 }
 //*/
 

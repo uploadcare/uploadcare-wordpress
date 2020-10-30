@@ -23,23 +23,24 @@ class UcDownloadProcess extends WP_Background_Process
     }
 
     /**
-     * @param string $item uploadcare CDN url
+     * @param string $item uploadcare file UUID
      *
      * @inheritDoc
      */
     protected function task($item)
     {
-        $uuid = \pathinfo($item, PATHINFO_BASENAME);
-        if (empty($uuid)) {
+        \ULog($item, __FILE__);
+        if (\in_array($item, self::$alreadySynced, true)) {
             return false;
         }
+        $url = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base', 'ucarecdn.com'), $item);
+        $data = \file_get_contents($url);
 
-        $data = \file_get_contents($item);
-        $post = $this->loadPost($item);
+        $post = $this->loadPost($url);
         if ($post !== null) {
-            $this->updatePost($post, $uuid, $data);
+            $this->updatePost($post, $item, $data);
         } else {
-            $this->createPost($uuid, $data);
+            $this->createPost($item, $data);
         }
 
         return false;
@@ -49,6 +50,7 @@ class UcDownloadProcess extends WP_Background_Process
      * @param WP_Post $post
      * @param string $uuid
      * @param string $data image file contents
+     * @todo not completed, files gets a wrong metadata
      */
     protected function updatePost(WP_Post $post, $uuid, $data)
     {
@@ -57,11 +59,16 @@ class UcDownloadProcess extends WP_Background_Process
 
         $upload = \wp_upload_bits($filename, null, $data);
         if (!empty($upload['error'])) {
+            \ULog('Upload error', $upload);
             return;
         }
+        \ULog($upload);
 
         $metadata = \wp_generate_attachment_metadata($post->ID, $upload['file']);
         \wp_update_attachment_metadata($post->ID, $metadata);
+        \delete_post_meta($post->ID, 'uploadcare_url');
+        $post->guid = $upload['url'];
+        self::$alreadySynced[] = $uuid;
     }
 
     /**
@@ -89,6 +96,7 @@ class UcDownloadProcess extends WP_Background_Process
         $attachment = \wp_insert_attachment($postInfo, $upload['file']);
         $metadata = \wp_generate_attachment_metadata($attachment, $upload['file']);
         \wp_update_attachment_metadata($attachment, $metadata);
+        self::$alreadySynced[] = $uuid;
     }
 
     /**

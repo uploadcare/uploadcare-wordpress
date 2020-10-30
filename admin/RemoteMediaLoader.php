@@ -7,11 +7,6 @@ use Uploadcare\Interfaces\Response\ListResponseInterface;
 class RemoteMediaLoader
 {
     /**
-     * @var string
-     */
-    private $cdnBase;
-
-    /**
      * @var array|string[] Array of Uploadcare CDN urls
      */
     private $files = [];
@@ -25,7 +20,6 @@ class RemoteMediaLoader
     {
         $configuration = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'));
         $this->api = new Api($configuration);
-        $this->cdnBase = \get_option('uploadcare_cdn_base', 'ucarecdn.com');
     }
 
     public function getFiles()
@@ -42,7 +36,7 @@ class RemoteMediaLoader
     private function loadFiles(ListResponseInterface $response)
     {
         foreach ($response->getResults() as $fileInfo) {
-            $this->files[] = \sprintf('https://%s/%s/', $this->cdnBase, $fileInfo->getUuid());
+            $this->files[] = $fileInfo->getUuid();
         }
 
         if (($next = $this->api->file()->nextPage($response)) !== null) {
