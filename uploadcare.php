@@ -52,18 +52,6 @@ function run_uploadcare()
     $plugin->run();
 }
 
-/*
-function dd($any)
-{
-    print '<pre>';
-    var_dump($any);
-    print '</pre>';
-
-    die();
-}
-*/
-
-///*
 /** @noinspection ForgottenDebugOutputInspection */
 function ULog(...$args)
 {
@@ -71,6 +59,5 @@ function ULog(...$args)
         \error_log("\t[LOG::Ulog]\n".\var_export($arg, true)."\n");
     }
 }
-//*/
 
 run_uploadcare();

@@ -29,7 +29,6 @@ class UcDownloadProcess extends WP_Background_Process
      */
     protected function task($item)
     {
-        \ULog($item, __FILE__);
         if (\in_array($item, self::$alreadySynced, true)) {
             return false;
         }
@@ -50,7 +49,6 @@ class UcDownloadProcess extends WP_Background_Process
      * @param WP_Post $post
      * @param string $uuid
      * @param string $data image file contents
-     * @todo not completed, files gets a wrong metadata
      */
     protected function updatePost(WP_Post $post, $uuid, $data)
     {
@@ -62,12 +60,14 @@ class UcDownloadProcess extends WP_Background_Process
             \ULog('Upload error', $upload);
             return;
         }
-        \ULog($upload);
 
-        $metadata = \wp_generate_attachment_metadata($post->ID, $upload['file']);
-        \wp_update_attachment_metadata($post->ID, $metadata);
+        \update_post_meta($post->ID, '_wp_attached_file', $upload['url']);
         \delete_post_meta($post->ID, 'uploadcare_url');
         $post->guid = $upload['url'];
+
+        \wp_generate_attachment_metadata($post->ID, $upload['file']);
+        \wp_update_post($post);
+
         self::$alreadySynced[] = $uuid;
     }
 
@@ -86,7 +86,9 @@ class UcDownloadProcess extends WP_Background_Process
         }
 
         $postInfo = [
-            'guid' => \wp_upload_dir()['url'] . '/' . $filename,
+            'post_author' => \get_current_user_id(),
+            'post_date' => date('Y-m-d H:i:s'),
+            'guid' => $upload['url'],
             'post_mime_type' => $fileInfo->getMimeType(),
             'post_title' => $filename,
             'post_content' => '',
@@ -94,8 +96,8 @@ class UcDownloadProcess extends WP_Background_Process
         ];
 
         $attachment = \wp_insert_attachment($postInfo, $upload['file']);
-        $metadata = \wp_generate_attachment_metadata($attachment, $upload['file']);
-        \wp_update_attachment_metadata($attachment, $metadata);
+        \wp_generate_attachment_metadata($attachment, $upload['file']);
+
         self::$alreadySynced[] = $uuid;
     }
 
@@ -125,8 +127,9 @@ class UcDownloadProcess extends WP_Background_Process
             ],
         ];
         $query = new WP_Query($parameters);
-        if (!$query->have_posts())
+        if (!$query->have_posts()) {
             return null;
+        }
 
         return $query->post;
     }

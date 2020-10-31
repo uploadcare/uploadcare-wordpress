@@ -110,20 +110,14 @@ class UcAdmin
     {
         $id = $this->fileId($_POST['file_url']);
 
-        $file = $this->api->file()->fileInfo(\trim($id, '/'));
+        $file = $this->api->file()->fileInfo($id);
         $attachment_id = $this->attach($file);
         $fileUrl = \get_post_meta($attachment_id, '_wp_attached_file', true);
-        $isLocal = false;
-        if (\get_post_meta($attachment_id, '_uc_is_local_file', true)) {
-            $isLocal = true;
-            $uploadBaseUrl = \wp_upload_dir(false, false, false)["baseurl"];
-            $fileUrl = "$uploadBaseUrl/$fileUrl";
-        }
 
         $result = [
             'attach_id' => $attachment_id,
             'fileUrl' => $fileUrl,
-            'isLocal' => $isLocal,
+            'isLocal' => false,
         ];
 
         echo \json_encode($result);
