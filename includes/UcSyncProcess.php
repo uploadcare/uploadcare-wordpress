@@ -5,7 +5,7 @@ use Uploadcare\Configuration;
 
 class UcSyncProcess extends WP_Background_Process
 {
-    protected $action = 'uploadcare_process';
+    protected $action = 'uploadcare_upload_process';
 
     protected static $alreadySynced = [];
 

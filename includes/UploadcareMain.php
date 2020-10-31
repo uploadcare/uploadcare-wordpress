@@ -41,8 +41,10 @@ class UploadcareMain
         require_once __DIR__ . '/UcI18n.php';
         require_once __DIR__ . '/UcFront.php';
         require_once __DIR__ . '/UcSyncProcess.php';
+        require_once __DIR__ . '/UcDownloadProcess.php';
         require_once \dirname(__DIR__) . '/admin/UcAdmin.php';
         require_once \dirname(__DIR__) . '/admin/LocalMediaLoader.php';
+        require_once \dirname(__DIR__) . '/admin/RemoteMediaLoader.php';
 
         $this->loader = new UcLoader();
     }
@@ -74,7 +76,8 @@ class UploadcareMain
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
-        $this->loader->add_action('plugins_loaded', $this, 'runBackgroundTask');
+        $this->loader->add_action('plugins_loaded', $this, 'runUploadTask');
+        $this->loader->add_action('plugins_loaded', $this, 'runDownloadTask');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
@@ -90,7 +93,7 @@ class UploadcareMain
         $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
     }
 
-    public function runBackgroundTask()
+    public function runUploadTask()
     {
         $loader = new LocalMediaLoader();
         $process = new UcSyncProcess();
@@ -99,8 +102,21 @@ class UploadcareMain
             foreach ($loader->getPosts() as $post) {
                 $process->push_to_queue($post->ID);
             }
+            $process->save()->dispatch();
         }
-        $process->save()->dispatch();
+    }
+
+    public function runDownloadTask()
+    {
+        $loader = new RemoteMediaLoader();
+        $process = new UcDownloadProcess();
+        if (isset($_POST['uc_download_data']) && $_POST['uc_download_data'] === 'sync') {
+            $loader->loadMedia();
+            foreach ($loader->getFiles() as $file) {
+                $process->push_to_queue($file);
+            }
+            $process->save()->dispatch();
+        }
     }
 
     /**

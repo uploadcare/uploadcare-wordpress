@@ -52,22 +52,12 @@ function run_uploadcare()
     $plugin->run();
 }
 
-/*
-function dd($any)
+/** @noinspection ForgottenDebugOutputInspection */
+function ULog(...$args)
 {
-    print '<pre>';
-    var_dump($any);
-    print '</pre>';
-
-    die();
+    foreach ($args as $arg) {
+        \error_log("\t[LOG::Ulog]\n".\var_export($arg, true)."\n");
+    }
 }
-*/
-
-/*
-function ULog($any)
-{
-    \error_log("\n[LOG::Ulog]\t" . \var_export($any, true) . "\n\n");
-}
-//*/
 
 run_uploadcare();
