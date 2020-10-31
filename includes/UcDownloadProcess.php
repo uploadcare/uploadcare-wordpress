@@ -60,13 +60,13 @@ class UcDownloadProcess extends WP_Background_Process
             \ULog('Upload error', $upload);
             return;
         }
+        $postInfo = \get_object_vars($post);
+        $postInfo['guid'] = $upload['url'];
 
-        \update_post_meta($post->ID, '_wp_attached_file', $upload['url']);
-        \delete_post_meta($post->ID, 'uploadcare_url');
-        $post->guid = $upload['url'];
-
-        \wp_generate_attachment_metadata($post->ID, $upload['file']);
-        \wp_update_post($post);
+        $attachment = \wp_insert_attachment($postInfo, $upload['file']);
+        \add_post_meta($attachment, '_wp_attached_file', $upload['url'], true);
+        \delete_post_meta($attachment, 'uploadcare_url');
+        \wp_generate_attachment_metadata($attachment, $upload['file']);
 
         self::$alreadySynced[] = $uuid;
     }
@@ -96,6 +96,7 @@ class UcDownloadProcess extends WP_Background_Process
         ];
 
         $attachment = \wp_insert_attachment($postInfo, $upload['file']);
+        \add_post_meta($attachment, '_wp_attached_file', $upload['url'], true);
         \wp_generate_attachment_metadata($attachment, $upload['file']);
 
         self::$alreadySynced[] = $uuid;
