@@ -131,6 +131,12 @@ class UcAdmin
     {
         $sign = __('Upload file size 100MB or more', $this->plugin_name);
         $btn = __('Upload via Uploadcare', $this->plugin_name);
+        $href = 'javascript:ucPostUploadUiBtn();';
+
+        if(\get_current_screen()->action !== 'add') {
+            $href = \admin_url() . 'media-new.php';
+            $sign .= ' ' . __('from Wordpress upload page');
+        }
 
         print <<<HTML
 <div class="uc-picker-wrapper">
@@ -138,7 +144,7 @@ class UcAdmin
         <a id="uploadcare-post-upload-ui-btn"
            class="button button-hero"
            style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
-           href="javascript:ucPostUploadUiBtn();">
+           href="$href">
             $btn
         </a>
     </p>
