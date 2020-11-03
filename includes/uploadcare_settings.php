@@ -16,9 +16,6 @@ $tabs = [
 $tab_defaults = [
     'file',
     'url',
-    'facebook',
-    'instagram',
-    'gdrive',
 ];
 
 $saved = false;
