@@ -5,9 +5,9 @@
  * @package           Uploadcare
  *
  * @wordpress-plugin
- * Plugin Name:       Uploadcare WordPress Plugin
+ * Plugin Name:       Uploadcare File Uploader and Adaptive Delivery
  * Plugin URI:        https://github.com/uploadcare/uploadcare-wordpress
- * Description:       Uploadcare let's you upload anything from anywhere (Instagram, Facebook, Dropbox, etc.)
+ * Description:       Upload and store any file of any size from any device or cloud. No more slow downs when serving your images with automatic responsiviness and lazy loading. Improve your WP performance to boost Customer Experience and SEO.
  * Version:           3.0.0
  * Author:            Uploadcare
  * Author URI:        https://uploadcare.com/
