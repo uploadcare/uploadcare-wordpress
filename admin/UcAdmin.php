@@ -129,7 +129,7 @@ class UcAdmin
      */
     public function uploadcare_media_upload()
     {
-        $sign = __('Upload file size 100MB or more', $this->plugin_name);
+        $sign = __('Click to upload any file from anywhere', $this->plugin_name);
         $btn = __('Upload via Uploadcare', $this->plugin_name);
 
         print <<<HTML
