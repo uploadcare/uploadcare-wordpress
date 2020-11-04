@@ -40,9 +40,7 @@ class UcAdmin
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
-        global $wp_version;
-        $userAgent = ['Uploadcare-wordpress', \sprintf('%s,%s', $wp_version, $version)];
-        $this->ucConfig = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => $userAgent]);
+        $this->ucConfig = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => UploadcareUserAgent()]);
         $this->api = new Api($this->ucConfig);
     }
 

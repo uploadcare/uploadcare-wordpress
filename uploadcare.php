@@ -60,4 +60,10 @@ function ULog(...$args)
     }
 }
 
+function UploadcareUserAgent()
+{
+    global $wp_version;
+    return ['Uploadcare-wordpress', \sprintf('%s,%s', $wp_version, UPLOADCARE_VERSION)];
+}
+
 run_uploadcare();

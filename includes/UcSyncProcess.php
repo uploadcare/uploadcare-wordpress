@@ -17,7 +17,7 @@ class UcSyncProcess extends WP_Background_Process
     public function __construct()
     {
         parent::__construct();
-        $ucConfig = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'));
+        $ucConfig = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => UploadcareUserAgent()]);
         $this->api = new Api($ucConfig);
     }
 

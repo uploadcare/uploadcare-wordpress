@@ -18,7 +18,7 @@ class RemoteMediaLoader
 
     public function __construct()
     {
-        $configuration = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'));
+        $configuration = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => UploadcareUserAgent()]);
         $this->api = new Api($configuration);
     }
 

@@ -18,7 +18,7 @@ class UcDownloadProcess extends WP_Background_Process
     public function __construct()
     {
         parent::__construct();
-        $configuration = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'));
+        $configuration = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => UploadcareUserAgent()]);
         $this->api = new Api($configuration);
     }
 
