@@ -16,9 +16,6 @@ $tabs = [
 $tab_defaults = [
     'file',
     'url',
-    'facebook',
-    'instagram',
-    'gdrive',
 ];
 
 $saved = false;
@@ -51,7 +48,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
 $loader = new LocalMediaLoader();
 $syncMessage = $loader->loadMedia();
 if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
-    echo \sprintf('<div class="updated"><p><strong>%s</strong></p><p>%s</p></div>', $syncMessage, __('Sync process started'));
+    echo \sprintf('<div class="updated"><p><strong>%s</strong></p><p>%s</p></div>', $syncMessage, __('Transfer process is started. Refresh your screen to see if it is finished.'));
 }
 ?>
 
@@ -66,7 +63,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         <input type="hidden" name="uploadcare_hidden" value="Y">
 
         <h3><?= __('Set up Uploadcare plugin', 'uploadcare')?></h3>
-        <p><?= __('VIDEO TUTORIAL', 'uploadcare')?></p>
+        <!-- <p><?= __('VIDEO TUTORIAL', 'uploadcare')?></p> -->
 
         <h4><?= __('1. Get an Uploadcare account', 'uploadcare')?></h4>
         <p><?= \sprintf(__('Sign up <a href="https://uploadcare.com/pricing/" target="_blank">here</a>.', 'uploadcare')) ?></p>
@@ -85,33 +82,28 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         </p>
 
         <h4><?= __('3. Transfer your existing Media Library to Uploadcare', 'uploadcare')?></h4>
-        <p><?= __('This is required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work. It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud.', 'uploadcare')?></p>
+        <p><?= __('This is required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work. It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud and updates all articles with new image links.', 'uploadcare')?></p>
         <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
             <div style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
-                <strong><?= __('Synchronization in progress') ?></strong>
+                <strong><?= __('Transfer in progress') ?></strong>
             </div>
         <?php else: ?>
             <?php if ($loader->getHasLocalMedia() === false): ?>
                 <div
                     style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
-                    <strong style="color: #23A100"><?= __('All your media files are synced with Uploadcare') ?></strong>
+                    <strong style="color: #23A100"><?= __('All your media files are successfully transfered to Uploadcare') ?></strong>
                 </div>
             <?php else: ?>
                 <button class="button" type="submit" value="sync" name="uc_sync_data"><?= \sprintf(
-                        __('Sync %d Wordpress images with Uploadcare'),
+                        __('Transfer %d Wordpress images to Uploadcare'),
                         $loader->getLocalMediaCount()
                     ) ?></button>
             <?php endif; ?>
         <?php endif; ?>
-        <p>
-            <button class="button" style="color: #990000; border-color: #aa0000" type="submit" value="sync" name="uc_download_data">
-                <?= __('Download all your files back from Uploadcare') ?>
-            </button>
-        </p>
 
-        <p><?= __("This saves you money for you WordPress hosting and ensures that whatever happens with your WordPress installation, your files will be safe and secure. Only AFTER syncronization process is completely finished, files will be removed from your WordPress hosting. You're secure all way through.", 'uploadcare')?></p>
-        <p><?= __("If you accidentally upload new files with regular uploader, we'll suggest you to repeat the sync to move new files to the cloud.", 'uploadcare')?></p>
-        <p><?= __("In case you want to uninstall Uploadcare plugin, this process is reversable: we'll download all files from Uploadcare cloud to your WordPress installation.", 'uploadcare')?></p>
+        <p><?= __("You're secure all way through. Only after the transfer process is completely finished, files will be removed from your WordPress hosting.", 'uploadcare')?></p>
+        <p><?= __("If you accidentally upload new files with regular uploader, we'll suggest you to repeat the transfer to move new files to the cloud.", 'uploadcare')?></p>
+        <p><?= __("In case you want to stop using Uploadcare plugin, this process is reversable: we'll download all files from Uploadcare cloud to your WordPress installation. See Advanced options for details.", 'uploadcare')?></p>
 
         <h4><?= __('4. Choose Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
         <?php
@@ -166,6 +158,14 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             <p>
                 <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
             </p>
+
+            <h4><?= __('Move all your current images back to the local Media Library', 'uploadcare')?></h4>
+            <p><?= __('This downloads all files from your Uploadcare project to the local Media Library (<code>/wp-content/uploads/</code>) and updates all articles with the local image links. Refresh this page later to check that all files were downloaded. This process is reversable, you can always upload them back, see the green button above.', 'uploadcare')?></p>
+            <p>
+            <button class="button" style="color: #990000; border-color: #aa0000" type="submit" value="sync" name="uc_download_data">
+                <?= __('Download all your files back from Uploadcare') ?>
+            </button>
+        </p>
         </div>
 
         <?php submit_button(); ?>

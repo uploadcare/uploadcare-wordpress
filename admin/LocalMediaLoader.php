@@ -41,7 +41,7 @@ class LocalMediaLoader
 
         $query = new WP_Query($queryParams);
         if (!$query->have_posts()) {
-            $this->message = __('No not-synced images found in library');
+            $this->message = __('No not transfered images found in Media Library');
             return $this->message;
         }
 
@@ -51,7 +51,7 @@ class LocalMediaLoader
 
         $this->hasLocalMedia = true;
         $this->mediaCount = $query->post_count;
-        $this->message = \sprintf(__('Found %s images to sync'), $query->post_count);
+        $this->message = \sprintf(__('Found %s images to transfer'), $query->post_count);
 
         return $this->message;
     }
