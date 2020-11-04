@@ -76,6 +76,7 @@ class UploadcareMain
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
+        $this->loader->add_action('admin_bar_menu', $this, 'adminBar', 100, 1);
         $this->loader->add_action('plugins_loaded', $this, 'runUploadTask');
         $this->loader->add_action('plugins_loaded', $this, 'runDownloadTask');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
@@ -91,6 +92,29 @@ class UploadcareMain
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
         $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
+    }
+
+    /**
+     * @param \WP_Admin_Bar $adminBar
+     */
+    public function adminBar($adminBar)
+    {
+        if (!\current_user_can('manage_options')) {
+            return;
+        }
+
+        $loader = new LocalMediaLoader();
+        $loader->loadMedia();
+
+        if (!$loader->getHasLocalMedia()) {
+            return;
+        }
+
+        $adminBar->add_menu([
+            'id' => 'uploadcare',
+            'title' => \sprintf(__('Transfer %d Wordpress images to Uploadcare'), $loader->getLocalMediaCount()),
+            'href' => \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php')),
+        ]);
     }
 
     public function runUploadTask()
