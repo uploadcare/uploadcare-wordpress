@@ -94,10 +94,18 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                     <strong style="color: #23A100"><?= __('All your media files are successfully transfered to Uploadcare') ?></strong>
                 </div>
             <?php else: ?>
-                <button class="button" type="submit" value="sync" name="uc_sync_data"><?= \sprintf(
-                        __('Transfer %d Wordpress images to Uploadcare'),
-                        $loader->getLocalMediaCount()
-                    ) ?></button>
+                <button class="button" type="submit" value="sync" name="uc_sync_data">
+                    <?php $loaderMediaCount = $loader->getLocalMediaCount() ?>
+                    <?= \sprintf(
+                        _n(
+                            'Transfer %d Wordpress image to Uploadcare',
+                            'Transfer %d Wordpress images to Uploadcare',
+                            $loaderMediaCount,
+                            'uploadcare'
+                        ),
+                        \number_format_i18n($loaderMediaCount)
+                    ) ?>
+                </button>
             <?php endif; ?>
         <?php endif; ?>
 
