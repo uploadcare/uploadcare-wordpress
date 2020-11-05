@@ -46,6 +46,7 @@ class UcSyncProcess extends WP_Background_Process
 
         try {
             $fileInfo = $this->api->uploader()->fromPath($file);
+            $this->api->file()->storeFile($fileInfo);
         } catch (\Exception $e) {
             \error_log($e->getMessage());
             return false;
@@ -63,7 +64,6 @@ class UcSyncProcess extends WP_Background_Process
         \add_post_meta($item, 'uploadcare_url', $attachedFile, true);
         \add_post_meta($item, '_wp_attached_file', $attachedFile, true);
         \add_post_meta($item, '_wp_attachment_metadata', $meta, true);
-        \error_log(\sprintf('File uploaded, post metadata updated with new URL \'%s\'', $attachedFile));
 
         return false;
     }
