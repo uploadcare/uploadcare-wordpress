@@ -46,4 +46,4 @@ msgid "dropbox"
 msgstr "Dropbox"
 
 msgid "vk"
-msgstr "Vkontakte"
+msgstr "VK"
