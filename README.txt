@@ -80,10 +80,10 @@ Send us your feedback, <help@uploadcare.com>
 
 ### Manual ###
 
-1. Download the latest release. The zip file contains the Wordpress plugin itself and all its dependencies.
-2. Unzip file to your wp-content/plugins folder.
+1. Download the latest release. The zip file contains the Wordpress plugin itself.
+2. Unzip file to your `wp-content/plugins` folder.
 3. Run `composer install` (install [Composer](https://getcomposer.org/download/)).
-4. Run `yarn && yarn build` (install [Node](https://nodejs.org/en/download/) and [Yarn](https://classic.yarnpkg.com/en/docs/install/))
+4. Run `yarn && yarn build` (install [Node](https://nodejs.org/en/download/) and [Yarn](https://classic.yarnpkg.com/en/docs/install/)).
 5. Activate the plugin once it is installed.
 6. Go to "Settings" -> "Uploadcare" and follow instructions.
 
