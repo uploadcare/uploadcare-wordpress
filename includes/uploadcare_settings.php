@@ -19,6 +19,7 @@ $tab_defaults = [
 ];
 
 $saved = false;
+$errors = [];
 if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_public = $_POST['uploadcare_public'];
     update_option('uploadcare_public', $uploadcare_public);
@@ -30,7 +31,14 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
-    $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
+
+    if (!isset($_POST['uploadcare_source_tabs']) || empty($_POST['uploadcare_source_tabs'])) {
+        $uploadcare_source_tabs[0] = 'file';
+        $errors[] = __('You should select at least one source');
+    } else {
+        $uploadcare_source_tabs = $_POST['uploadcare_source_tabs'];
+    }
+
     update_option('uploadcare_source_tabs', $uploadcare_source_tabs);
     $uploadcare_adaptive_delivery = isset($_POST['uploadcare_adaptive_delivery']) ? 1 : 0;
     update_option('uploadcare_adaptive_delivery', $uploadcare_adaptive_delivery);
@@ -54,6 +62,13 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
 
 <?php if ($saved): ?>
     <div class="updated"><p><strong><?= __('Options saved.', 'uploadcare'); ?></strong></p></div>
+<?php endif; ?>
+<?php if (!empty($errors)): ?>
+<div class="error">
+    <?php foreach ($errors as $error): ?>
+    <p><strong><?= $error?></strong></p>
+    <?php endforeach; ?>
+</div>
 <?php endif; ?>
 
 <div class="wrap">
