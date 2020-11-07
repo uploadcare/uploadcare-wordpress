@@ -109,10 +109,19 @@ class UploadcareMain
         if (!$loader->getHasLocalMedia()) {
             return;
         }
+        $loaderMediaCount = $loader->getLocalMediaCount();
+
+        $title = \sprintf(
+            _n(
+                'Transfer %d Wordpress image to Uploadcare',
+                'Transfer %d Wordpress images to Uploadcare',
+                $loaderMediaCount, $this->get_plugin_name()
+            ),
+            \number_format_i18n($loaderMediaCount));
 
         $adminBar->add_menu([
             'id' => 'uploadcare',
-            'title' => \sprintf(__('Transfer %d Wordpress images to Uploadcare'), $loader->getLocalMediaCount()),
+            'title' => $title,
             'href' => \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php')),
         ]);
     }
