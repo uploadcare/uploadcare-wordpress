@@ -130,10 +130,18 @@ function ucPostUploadUiBtn () {
 
             }
           })
+        }).fail((error) => {
+          console.log(error)
+        }).always(() => {
+          uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden')
         })
       }
     })
-  })
+  }).always(() => {
+    uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden')
+  }).fail(() => {
+    uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden')
+  });
 }
 
 uploadcare.jQuery(function () {
@@ -160,6 +168,8 @@ uploadcare.jQuery(function () {
             preview()
           })
         })
+      }).always(() => {
+        uploadcare.jQuery('.uploadcare-loading-screen').removeClass('uploadcare-hidden')
       })
     }))
   })
