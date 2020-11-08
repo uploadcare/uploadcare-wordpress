@@ -32,10 +32,11 @@ class UcDownloadProcess extends WP_Background_Process
         if (\in_array($item, self::$alreadySynced, true)) {
             return false;
         }
+
         $url = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base', 'ucarecdn.com'), $item);
         $data = \file_get_contents($url);
 
-        $post = $this->loadPost($url);
+        $post = $this->loadPost($item);
         if ($post !== null) {
             $this->updatePost($post, $item, $data);
         } else {
@@ -65,6 +66,7 @@ class UcDownloadProcess extends WP_Background_Process
 
         $attachment = \wp_insert_attachment($postInfo, $upload['file']);
         \add_post_meta($attachment, '_wp_attached_file', $upload['url'], true);
+        \add_post_meta($attachment, 'uploadcare_uuid', $uuid, true);
         \delete_post_meta($attachment, 'uploadcare_url');
         \wp_generate_attachment_metadata($attachment, $upload['file']);
 
@@ -97,6 +99,7 @@ class UcDownloadProcess extends WP_Background_Process
 
         $attachment = \wp_insert_attachment($postInfo, $upload['file']);
         \add_post_meta($attachment, '_wp_attached_file', $upload['url'], true);
+        \add_post_meta($attachment, 'uploadcare_uuid', $uuid, true);
         \wp_generate_attachment_metadata($attachment, $upload['file']);
 
         self::$alreadySynced[] = $uuid;
@@ -112,7 +115,12 @@ class UcDownloadProcess extends WP_Background_Process
         return $this->api->file()->fileInfo($uuid);
     }
 
-    protected function loadPost($ucUrl)
+    /**
+     * @param string $uuid Uploadcare UUID
+     *
+     * @return WP_Post|null
+     */
+    protected function loadPost($uuid)
     {
         $parameters = [
             'post_type' => 'attachment',
@@ -121,9 +129,9 @@ class UcDownloadProcess extends WP_Background_Process
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key' => 'uploadcare_url',
+                    'key' => 'uploadcare_uuid',
                     'compare' => '=',
-                    'value' => $ucUrl,
+                    'value' => $uuid,
                 ],
             ],
         ];
@@ -133,5 +141,14 @@ class UcDownloadProcess extends WP_Background_Process
         }
 
         return $query->post;
+    }
+
+    /**
+     * @noinspection ForgottenDebugOutputInspection
+     */
+    protected function complete()
+    {
+        parent::complete();
+        \error_log(\sprintf('Task %s complete', $this->action));
     }
 }

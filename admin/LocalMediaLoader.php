@@ -41,7 +41,7 @@ class LocalMediaLoader
 
         $query = new WP_Query($queryParams);
         if (!$query->have_posts()) {
-            $this->message = __('No not transfered images found in Media Library');
+            $this->message = __('No not transferred images found in Media Library');
             return $this->message;
         }
 

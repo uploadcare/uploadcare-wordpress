@@ -40,7 +40,7 @@ class UploadcareMain
         require_once __DIR__ . '/UcLoader.php';
         require_once __DIR__ . '/UcI18n.php';
         require_once __DIR__ . '/UcFront.php';
-        require_once __DIR__ . '/UcSyncProcess.php';
+        require_once __DIR__ . '/UcUploadProcess.php';
         require_once __DIR__ . '/UcDownloadProcess.php';
         require_once \dirname(__DIR__) . '/admin/UcAdmin.php';
         require_once \dirname(__DIR__) . '/admin/LocalMediaLoader.php';
@@ -129,7 +129,7 @@ class UploadcareMain
     public function runUploadTask()
     {
         $loader = new LocalMediaLoader();
-        $process = new UcSyncProcess();
+        $process = new UcUploadProcess();
         if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             $loader->loadMedia();
             foreach ($loader->getPosts() as $post) {

@@ -508,7 +508,13 @@ HTML;
         return $sizes;
     }
 
-    private function attach(FileInfoInterface $file)
+    /**
+     * @param FileInfoInterface $file
+     * @param null|int $id existing Post ID
+     *
+     * @return int|WP_Error
+     */
+    public function attach(FileInfoInterface $file, $id = null)
     {
         $userId = get_current_user_id();
         $filename = $file->getOriginalFilename();
@@ -523,12 +529,17 @@ HTML;
             'post_status' => 'inherit',
             'post_mime_type' => $file->getMimeType(),
         );
+        if ($id !== null) {
+            $attachment['id'] = $id;
+        }
+
         $isImage = $file->isImage();
         $attachment_id = wp_insert_post($attachment, true);
         $meta = $isImage ? $this->getFinalDim($file) : ['width' => null, 'height' => null];
 
         $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
         \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
+        \add_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid(), true);
 
         \add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
         \add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
