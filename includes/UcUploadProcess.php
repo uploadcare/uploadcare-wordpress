@@ -6,6 +6,12 @@ use Uploadcare\Interfaces\File\FileInfoInterface;
 
 class UcUploadProcess extends WP_Background_Process
 {
+    /**
+     * https://regex101.com/r/FEKvy6/401
+     * In 4th group will be an image address.
+     */
+    const IMAGE_SEARCH_REGEX = '/(.*)(<img.+?(?=\"))(")(https?:\/\/.+?(?=\"))(")(.*)/mu';
+
     protected $action = 'uploadcare_upload_process';
 
     protected static $alreadySynced = [];
@@ -28,6 +34,52 @@ class UcUploadProcess extends WP_Background_Process
         $this->admin = new UcAdmin('uploadcare', UPLOADCARE_VERSION);
     }
 
+    protected static function rgxReplace($string, FileInfoInterface $fileInfo)
+    {
+        $url = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $fileInfo->getUuid());
+
+        return \preg_replace_callback(self::IMAGE_SEARCH_REGEX, static function (array $matches) use ($string, $url) {
+            if (!isset($matches[4])) {
+                return $string;
+            }
+            $result = null;
+            foreach ($matches as $i => $match) {
+                switch ($i) {
+                    case 0: break;
+                    case 4:
+                        $result .= $url;
+                        break;
+                    default:
+                        $result .= $match;
+                        break;
+                }
+            }
+
+            return $result;
+        }, $string);
+    }
+
+    /**
+     * @param array|\WP_Block_Parser_Block[] $blocks
+     * @param FileInfoInterface              $fileInfo
+     *
+     * @return array|\WP_Block_Parser_Block[]
+     */
+    public static function modifyBlocks(array $blocks, FileInfoInterface $fileInfo)
+    {
+        foreach ($blocks as $n => $block) {
+            $block->innerHTML = self::rgxReplace($block->innerHTML, $fileInfo);
+            $innerContent = $block->innerContent;
+            foreach ($innerContent as $c => $content) {
+                $innerContent[$c] = self::rgxReplace($content, $fileInfo);
+            }
+            $block->innerContent = \array_values($innerContent);
+            $blocks[$n] = $block;
+        }
+
+        return \array_values($blocks);
+    }
+
     /**
      * @param int $item Existing post ID
      * @noinspection ForgottenDebugOutputInspection
@@ -43,20 +95,27 @@ class UcUploadProcess extends WP_Background_Process
         $attachment = $this->getPost($item);
         if (!$attachment instanceof \WP_Post) {
             \error_log(\sprintf('Cannot load WP Post by %s id', $item));
+
             return false;
         }
-        $file = \get_attached_file($item);
+
+        $file = \get_attached_file($item, true);
+        $fullUrl = \wp_get_attachment_image_src($attachment->ID, 'full');
+        $path = \parse_url($fullUrl[0], PHP_URL_PATH);
+        $sourceFilename = \pathinfo($path, PATHINFO_FILENAME);
+
         if (!\is_file($file)) {
             \error_log(\sprintf('Cannot load file \'%s\'', $file));
+
             return false;
         }
 
         $fileInfo = $this->tryToGetExistingFile($attachment->ID);
-        if ($fileInfo === null) {
+        if (null === $fileInfo) {
             $this->tryToUploadFile($file);
         }
 
-        if ($fileInfo === null) {
+        if (null === $fileInfo) {
             return false;
         }
 
@@ -67,6 +126,7 @@ class UcUploadProcess extends WP_Background_Process
         if (isset($oldMeta['sizes'])) {
             $this->removeOldThumbnails($oldMeta['sizes']);
         }
+        $this->admin->changeImageInPosts($sourceFilename, $fileInfo, [self::class, 'modifyBlocks']);
 
         return false;
     }
@@ -86,6 +146,7 @@ class UcUploadProcess extends WP_Background_Process
             return $fileInfo;
         } catch (\Exception $e) {
             \error_log($e->getMessage());
+
             return null;
         }
     }
@@ -126,6 +187,7 @@ class UcUploadProcess extends WP_Background_Process
 
     /**
      * @param int $id
+     *
      * @return \WP_Post
      */
     private function getPost($id)

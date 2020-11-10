@@ -52,13 +52,12 @@ class UcAdmin
     /**
      * Link from plugins list to settings.
      *
-     * @param array $links
      * @return array
      * @noinspection HtmlUnknownTarget
      */
     public function plugin_action_links(array $links)
     {
-        $url = \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php'));
+        $url = \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url().'admin.php'));
         $settings_link = \sprintf('<a href=\'%s\'>%s</a>', $url, __('Settings', $this->plugin_name));
 
         $links[] = $settings_link;
@@ -69,23 +68,25 @@ class UcAdmin
     /**
      * Admin-part initialization.
      * Calls on `init` hook.
+     *
      * @see UploadcareMain::define_admin_hooks()
      */
     public function uploadcare_plugin_init()
     {
-        $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
+        $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__).'/uploadcare.php');
         \wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
-        \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
+        \wp_register_script('uploadcare-config', $pluginDirUrl.'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
-        \wp_register_script('uploadcare-main', $pluginDirUrl . 'js/main.js', ['uploadcare-config'], $this->version);
-        \wp_register_script('image-block', $pluginDirUrl . '/compiled-js/blocks.js', [], $this->version, true);
+        \wp_register_script('uploadcare-main', $pluginDirUrl.'js/main.js', ['uploadcare-config'], $this->version);
+        \wp_register_script('image-block', $pluginDirUrl.'/compiled-js/blocks.js', [], $this->version, true);
         \wp_localize_script('uc-config', 'WP_UC_PARAMS', $this->getJsConfig());
-        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', [], $this->version);
-        \wp_register_style('uc-editor', $pluginDirUrl . '/compiled-js/blocks.css', [], $this->version);
+        \wp_register_style('uploadcare-style', $pluginDirUrl.'css/uploadcare.css', [], $this->version);
+        \wp_register_style('uc-editor', $pluginDirUrl.'/compiled-js/blocks.css', [], $this->version);
     }
 
     /**
-     * Calls on `admin_enqueue_scripts`
+     * Calls on `admin_enqueue_scripts`.
+     *
      * @param string $hook
      */
     public function add_uploadcare_js_to_admin($hook)
@@ -99,12 +100,13 @@ class UcAdmin
         \wp_enqueue_style('uploadcare-style');
 
         \wp_enqueue_script('uc-config');
-        \wp_enqueue_script('image-block', null, require \dirname(__DIR__) . '/compiled-js/blocks.asset.php');
+        \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
         \wp_enqueue_style('uc-editor');
     }
 
     /**
-     * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_handle`)
+     * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_handle`).
+     *
      * @see https://developer.wordpress.org/reference/hooks/wp_ajax_action/
      */
     public function uploadcare_handle()
@@ -134,12 +136,12 @@ class UcAdmin
         $btn = __('Upload via Uploadcare', $this->plugin_name);
         $href = 'javascript:ucPostUploadUiBtn();';
 
-        if(\get_current_screen()->action !== 'add') {
-            $href = \admin_url() . 'media-new.php';
-            $sign .= ' ' . __('from Wordpress upload page');
+        if ('add' !== \get_current_screen()->action) {
+            $href = \admin_url().'media-new.php';
+            $sign .= ' '.__('from Wordpress upload page');
         }
 
-        print <<<HTML
+        echo <<<HTML
 <div class="uc-picker-wrapper">
     <p class="uploadcare-picker">
         <a id="uploadcare-post-upload-ui-btn"
@@ -165,13 +167,13 @@ HTML;
 
     public function uploadcare_settings()
     {
-        include \dirname(__DIR__) . '/includes/uploadcare_settings.php';
+        include \dirname(__DIR__).'/includes/uploadcare_settings.php';
     }
 
     /**
      * Calls on `delete_attachment` hook, deletes the image from Uploadcare.
      *
-     * @param int $postId
+     * @param int      $postId
      * @param \WP_Post $post
      */
     public function attachmentDelete($postId, $post)
@@ -187,10 +189,11 @@ HTML;
     // filters
 
     /**
-     * Calls by `wp_get_attachment_url` filter
+     * Calls by `wp_get_attachment_url` filter.
      *
      * @param string $url
-     * @param int $post_id
+     * @param int    $post_id
+     *
      * @return string
      */
     public function uc_get_attachment_url($url, $post_id)
@@ -203,10 +206,11 @@ HTML;
     }
 
     /**
-     * Calls by `load_image_to_edit_attachmenturl` filter
+     * Calls by `load_image_to_edit_attachmenturl` filter.
      *
      * @param string $url
-     * @param int $id
+     * @param int    $id
+     *
      * @return string
      */
     public function uc_load($url, $id)
@@ -218,18 +222,20 @@ HTML;
         $file = $this->api->file()->fileInfo($this->fileId($url));
         $fileName = $file->getOriginalFilename();
 
-        return $url . \urlencode($fileName);
+        return $url.\urlencode($fileName);
     }
 
     /**
-     * Calls by `wp_save_image_editor_file` filter
+     * Calls by `wp_save_image_editor_file` filter.
      *
-     * @param bool|null $override
-     * @param string $filename
+     * @param bool|null       $override
+     * @param string          $filename
      * @param WP_Image_Editor $image
-     * @param string $mime_type
-     * @param int $post_id
+     * @param string          $mime_type
+     * @param int             $post_id
+     *
      * @return mixed
+     *
      * @throws Exception
      */
     public function uc_save_image_editor_file($override, $filename, $image, $mime_type, $post_id)
@@ -257,10 +263,6 @@ HTML;
         return true;
     }
 
-    /**
-     * @param FileInfoInterface $oldFile
-     * @param FileInfoInterface $newFile
-     */
     private function changePostMeta(FileInfoInterface $oldFile, FileInfoInterface $newFile)
     {
         global $wpdb;
@@ -271,7 +273,7 @@ HTML;
             $metaKey = isset($value['meta_key']) ? $value['meta_key'] : null;
             $metaValue = isset($value['meta_value']) ? $value['meta_value'] : null;
 
-            if ($postId === null || $metaKey === null || $metaValue === null) {
+            if (null === $postId || null === $metaKey || null === $metaValue) {
                 continue;
             }
 
@@ -283,13 +285,16 @@ HTML;
     /**
      * @see https://wordpress.stackexchange.com/questions/310301/check-what-gutenberg-blocks-are-in-post-content
      *
-     * @param FileInfoInterface $oldFile   Old file UUID
-     * @param FileInfoInterface $newFile new file
+     * @param FileInfoInterface|string $oldFile  Old file UUID
+     * @param FileInfoInterface        $newFile  new file
+     * @param callable                 $callback
      */
-    private function changeImageInPosts(FileInfoInterface $oldFile, FileInfoInterface $newFile)
+    public function changeImageInPosts($oldFile, FileInfoInterface $newFile, $callback = null)
     {
+        $from = $oldFile instanceof FileInfoInterface ? $oldFile->getUuid() : $oldFile;
+
         global $wpdb;
-        $query = \sprintf('SELECT ID FROM `%s` WHERE post_content LIKE \'%%%s%%\'', \sprintf('%sposts', $wpdb->prefix), $oldFile->getUuid());
+        $query = \sprintf('SELECT ID FROM `%s` WHERE post_content LIKE \'%%%s%%\'', \sprintf('%sposts', $wpdb->prefix), $from);
         $result = $wpdb->get_col($query);
         if (!\is_array($result) || empty($result)) {
             return;
@@ -306,7 +311,11 @@ HTML;
             }, $blocksArray);
             $blocksArray = \array_values(\array_filter($blocksArray));
 
-            $blocks = $this->modifyBlocks($blocksArray, $oldFile->getUuid(), $newFile->getUuid());
+            if (null === $callback) {
+                $blocks = $this->modifyBlocks($blocksArray, $from, $newFile->getUuid());
+            } else {
+                $blocks = $callback($blocksArray, $newFile);
+            }
 
             $post->post_content = \serialize_blocks(\array_map(function (WP_Block_Parser_Block $block) {
                 return $this->blockClassToArray($block);
@@ -320,6 +329,7 @@ HTML;
      * @param array|\WP_Block_Parser_Block[] $blocks
      * @param string                         $from
      * @param string                         $changeTo
+     *
      * @return array|\WP_Block_Parser_Block[]
      */
     private function modifyBlocks(array $blocks, $from, $changeTo)
@@ -338,8 +348,6 @@ HTML;
     }
 
     /**
-     * @param array $item
-     *
      * @return WP_Block_Parser_Block|null
      */
     private function blockArrayToClass(array $item)
@@ -362,7 +370,6 @@ HTML;
     }
 
     /**
-     * @param WP_Block_Parser_Block $block
      * @return array
      */
     private function blockClassToArray(WP_Block_Parser_Block $block)
@@ -372,9 +379,9 @@ HTML;
 
     /**
      * @param WP_Image_Editor $editor
-     * @param FileInfoInterface $info
      *
      * @return string
+     *
      * @throws Exception
      */
     private function storeTempFile($editor, FileInfoInterface $info)
@@ -391,7 +398,7 @@ HTML;
     }
 
     /**
-     * Calls on `image_downsize` hook
+     * Calls on `image_downsize` hook.
      *
      * @param $value
      * @param $id
@@ -413,6 +420,7 @@ HTML;
         } else {
             $url = $uc_url;
         }
+
         return [
             $url,
             0, // width
@@ -422,7 +430,7 @@ HTML;
     }
 
     /**
-     * Calls on `post_thumbnail_html`
+     * Calls on `post_thumbnail_html`.
      *
      * @param $html
      * @param $post_id
@@ -445,7 +453,7 @@ HTML;
             $src = $url;
         }
 
-        /** @noinspection HtmlUnknownTarget */
+        /* @noinspection HtmlUnknownTarget */
         return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
     }
 
@@ -465,6 +473,7 @@ HTML;
         if (empty($arr)) {
             return false;
         }
+
         return \implode('x', $arr);
     }
 
@@ -482,11 +491,13 @@ HTML;
             // 9999 -> 2048
             // WP uses 9999 to indicate unlimited width for images,
             // at the moment max width for ucarecdn operaions is 2048
-            if ($arr[1] === 9999) {
+            if (9999 === $arr[1]) {
                 $arr[1] = 2048;
             }
+
             return $arr;
         }
+
         return [];
     }
 
@@ -497,20 +508,20 @@ HTML;
         foreach (get_intermediate_image_sizes() as $s) {
             $sizes[$s] = [0, 0];
             if (in_array($s, ['thumbnail', 'medium', 'large'])) {
-                $sizes[$s][0] = get_option($s . '_size_w');
-                $sizes[$s][1] = get_option($s . '_size_h');
+                $sizes[$s][0] = get_option($s.'_size_w');
+                $sizes[$s][1] = get_option($s.'_size_h');
             } else {
                 if (isset($_wp_additional_image_sizes[$s])) {
-                    $sizes[$s] = [$_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height'],];
+                    $sizes[$s] = [$_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height']];
                 }
             }
         }
+
         return $sizes;
     }
 
     /**
-     * @param FileInfoInterface $file
-     * @param null|int $id existing Post ID
+     * @param int|null $id existing Post ID
      *
      * @return int|WP_Error
      */
@@ -520,7 +531,7 @@ HTML;
         $filename = $file->getOriginalFilename();
         $title = $filename;
 
-        $attachment = array(
+        $attachment = [
             'post_author' => $userId,
             'post_date' => date('Y-m-d H:i:s'),
             'post_type' => 'attachment',
@@ -528,8 +539,8 @@ HTML;
             'post_parent' => (!empty($_REQUEST['post_id']) ? $_REQUEST['post_id'] : null),
             'post_status' => 'inherit',
             'post_mime_type' => $file->getMimeType(),
-        );
-        if ($id !== null) {
+        ];
+        if (null !== $id) {
             $attachment['id'] = $id;
         }
 
@@ -579,16 +590,16 @@ HTML;
             $tabs = \implode(' ', $tab_options);
         }
 
-        $baseParams = array(
+        $baseParams = [
             'public_key' => get_option('uploadcare_public'),
             'previewStep' => false,
             'ajaxurl' => \admin_url('admin-ajax.php'),
             'tabs' => $tabs,
-            'cdnBase' => 'https://' . \get_option('uploadcare_cdn_base', 'ucarecdn.com'),
-        );
-        if (\get_option('uploadcare_finetuning', null) !== null) {
+            'cdnBase' => 'https://'.\get_option('uploadcare_cdn_base', 'ucarecdn.com'),
+        ];
+        if (null !== \get_option('uploadcare_finetuning', null)) {
             $fineTuning = \json_decode(\stripcslashes(\get_option('uploadcare_finetuning')), true);
-            if (\json_last_error() === JSON_ERROR_NONE) {
+            if (JSON_ERROR_NONE === \json_last_error()) {
                 $baseParams = \array_merge($fineTuning, $baseParams);
             }
         }
@@ -598,7 +609,7 @@ HTML;
 
             return \array_merge($baseParams, [
                     'secureSignature' => $secureSignature->getSignature(),
-                    'secureExpire'    => $secureSignature->getExpire()->getTimestamp(),
+                    'secureExpire' => $secureSignature->getExpire()->getTimestamp(),
                 ]);
         }
 

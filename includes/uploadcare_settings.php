@@ -25,7 +25,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_public', $uploadcare_public);
     $uploadcare_secret = $_POST['uploadcare_secret'];
     update_option('uploadcare_secret', $uploadcare_secret);
-    $uploadcare_cdn_base = $_POST['uploadcare_cdn_base'];
+    $uploadcare_cdn_base = \str_replace('https://', '', $_POST['uploadcare_cdn_base']);
     update_option('uploadcare_cdn_base', $uploadcare_cdn_base);
     $uploadcare_upload_lifetime = $_POST['uploadcare_upload_lifetime'];
     update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
