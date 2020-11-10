@@ -34,29 +34,32 @@ class UcUploadProcess extends WP_Background_Process
         $this->admin = new UcAdmin('uploadcare', UPLOADCARE_VERSION);
     }
 
-    protected static function rgxReplace($string, FileInfoInterface $fileInfo)
+    /**
+     * @param string $htmlContent Block content
+     * @param string $url         New image url
+     *
+     * @return string|string[]|null
+     */
+    public static function rgxReplace($htmlContent, $url)
     {
-        $url = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $fileInfo->getUuid());
-
-        return \preg_replace_callback(self::IMAGE_SEARCH_REGEX, static function (array $matches) use ($string, $url) {
+        return \preg_replace_callback(self::IMAGE_SEARCH_REGEX, static function (array $matches) use ($htmlContent, $url) {
             if (!isset($matches[4])) {
-                return $string;
+                return $htmlContent;
             }
             $result = null;
             foreach ($matches as $i => $match) {
-                switch ($i) {
-                    case 0: break;
-                    case 4:
-                        $result .= $url;
-                        break;
-                    default:
-                        $result .= $match;
-                        break;
+                if ($i === 0) { // Match 0 is a full string
+                    continue;
+                }
+                if (\strpos($match, 'http') === 0) { // In case match is a url, change it to new url
+                    $result .= $url;
+                } else {
+                    $result .= $match;
                 }
             }
 
             return $result;
-        }, $string);
+        }, $htmlContent);
     }
 
     /**
@@ -67,11 +70,12 @@ class UcUploadProcess extends WP_Background_Process
      */
     public static function modifyBlocks(array $blocks, FileInfoInterface $fileInfo)
     {
+        $url = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $fileInfo->getUuid());
         foreach ($blocks as $n => $block) {
-            $block->innerHTML = self::rgxReplace($block->innerHTML, $fileInfo);
+            $block->innerHTML = self::rgxReplace($block->innerHTML, $url);
             $innerContent = $block->innerContent;
             foreach ($innerContent as $c => $content) {
-                $innerContent[$c] = self::rgxReplace($content, $fileInfo);
+                $innerContent[$c] = self::rgxReplace($content, $url);
             }
             $block->innerContent = \array_values($innerContent);
             $blocks[$n] = $block;

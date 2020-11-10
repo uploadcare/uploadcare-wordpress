@@ -15,11 +15,38 @@ class UcDownloadProcess extends WP_Background_Process
 
     protected static $alreadySynced = [];
 
+    /**
+     * @var UcAdmin
+     */
+    private $admin;
+
     public function __construct()
     {
         parent::__construct();
         $configuration = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => UploadcareUserAgent()]);
         $this->api = new Api($configuration);
+        $this->admin = new UcAdmin('uploadcare', UPLOADCARE_VERSION);
+    }
+
+    /**
+     * @param array|\WP_Block_Parser_Block[] $blocks
+     * @param string                         $localUrl
+     *
+     * @return array|\WP_Block_Parser_Block[]
+     */
+    public static function modifyBlocks(array $blocks, $localUrl)
+    {
+        foreach ($blocks as $n => $block) {
+            $block->innerHTML = UcUploadProcess::rgxReplace($block->innerHTML, $localUrl);
+            $innerContent = $block->innerContent;
+            foreach ($innerContent as $ic => $item) {
+                $innerContent[$ic] = UcUploadProcess::rgxReplace($item, $localUrl);
+            }
+            $block->innerContent = \array_values($innerContent);
+            $blocks[$n] = $block;
+        }
+
+        return \array_values($blocks);
     }
 
     /**
@@ -39,6 +66,7 @@ class UcDownloadProcess extends WP_Background_Process
         $post = $this->loadPost($item);
         if ($post !== null) {
             $this->updatePost($post, $item, $data);
+            $this->admin->changeImageInPosts($item, \wp_get_attachment_image_src($post->ID, 'full')[0], [self::class, 'modifyBlocks']);
         } else {
             $this->createPost($item, $data);
         }

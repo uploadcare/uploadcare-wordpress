@@ -286,12 +286,13 @@ HTML;
      * @see https://wordpress.stackexchange.com/questions/310301/check-what-gutenberg-blocks-are-in-post-content
      *
      * @param FileInfoInterface|string $oldFile  Old file UUID
-     * @param FileInfoInterface        $newFile  new file
+     * @param FileInfoInterface|string $newFile  new file
      * @param callable                 $callback
      */
-    public function changeImageInPosts($oldFile, FileInfoInterface $newFile, $callback = null)
+    public function changeImageInPosts($oldFile, $newFile, $callback = null)
     {
         $from = $oldFile instanceof FileInfoInterface ? $oldFile->getUuid() : $oldFile;
+        $to = $newFile instanceof FileInfoInterface ? $newFile->getUuid(): $newFile;
 
         global $wpdb;
         $query = \sprintf('SELECT ID FROM `%s` WHERE post_content LIKE \'%%%s%%\'', \sprintf('%sposts', $wpdb->prefix), $from);
@@ -312,7 +313,7 @@ HTML;
             $blocksArray = \array_values(\array_filter($blocksArray));
 
             if (null === $callback) {
-                $blocks = $this->modifyBlocks($blocksArray, $from, $newFile->getUuid());
+                $blocks = $this->modifyBlocks($blocksArray, $from, $to);
             } else {
                 $blocks = $callback($blocksArray, $newFile);
             }
