@@ -425,6 +425,7 @@ HTML;
         } else {
             $url = $uc_url;
         }
+        \ULog($size);
 
         return [
             $url,
@@ -547,6 +548,11 @@ HTML;
             'post_mime_type' => $file->getMimeType(),
         ];
         if (null !== $id) {
+            $exists = \get_post($id, ARRAY_A);
+
+            if (\is_array($exists)) {
+                $attachment = \array_merge($attachment, $exists);
+            }
             $attachment['id'] = $id;
         }
 

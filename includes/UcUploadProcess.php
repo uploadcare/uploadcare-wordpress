@@ -123,8 +123,6 @@ class UcUploadProcess extends WP_Background_Process
             return false;
         }
 
-        \wp_delete_attachment($attachment->ID, true);
-
         $this->admin->attach($fileInfo, (int) $item);
         self::$alreadySynced[] = $item;
         if (isset($oldMeta['sizes'])) {
