@@ -81,6 +81,14 @@ class UcDownloadProcess extends WP_Background_Process
      */
     protected function updatePost(WP_Post $post, $uuid, $data)
     {
+        if (!\function_exists('wp_generate_attachment_metadata')) {
+            if (!defined('ABSPATH')) {
+                require_once(\dirname(\dirname(\dirname(\dirname(__DIR__)))).'/wp-load.php');
+            }
+
+            include_once( ABSPATH . 'wp-admin/includes/image.php' );
+        }
+
         $fileInfo = $this->fileInfo($uuid);
         $filename = $fileInfo->getOriginalFilename();
 

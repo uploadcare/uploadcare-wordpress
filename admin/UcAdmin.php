@@ -349,6 +349,8 @@ HTML;
     }
 
     /**
+     * @param array $item
+     *
      * @return WP_Block_Parser_Block|null
      */
     private function blockArrayToClass(array $item)
@@ -371,6 +373,8 @@ HTML;
     }
 
     /**
+     * @param \WP_Block_Parser_Block $block
+     *
      * @return array
      */
     private function blockClassToArray(WP_Block_Parser_Block $block)
@@ -522,7 +526,8 @@ HTML;
     }
 
     /**
-     * @param int|null $id existing Post ID
+     * @param FileInfoInterface $file
+     * @param int|null          $id existing Post ID
      *
      * @return int|WP_Error
      */

@@ -116,7 +116,7 @@ class UcUploadProcess extends WP_Background_Process
 
         $fileInfo = $this->tryToGetExistingFile($attachment->ID);
         if (null === $fileInfo) {
-            $this->tryToUploadFile($file);
+            $fileInfo = $this->tryToUploadFile($file);
         }
 
         if (null === $fileInfo) {
