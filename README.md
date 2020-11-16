@@ -6,10 +6,12 @@
     alt="">
 </a>
 
-This is a plugin for [WordPress][wordpress], that powers beautiful websites for businesses, professionals, and bloggers, providing it for working with [Uploadcare Widget][uc-feature-widget].
+This is a [File Uploader][uc-feature-widget] plugin by Uploadcare for [WordPress][wordpress].
 
-The plugin allows WordPress users to upload media
-from their devices, social media, cloud storage, and more, check out this [article][wparena-article] for details.
+The plugin allows WordPress users to upload media from their devices, camera, social media, cloud storage, and other destinations. It uses Uploadcare storage and CDN delivery with advanced features, like automatic resize and optimizations, enhance options, and more.
+
+<!-- Misha: not sure if this article is relevant in the firsst paragraph/screen. It's a mediocre article looks like sponsored, better move it to the end -->
+Check out this [article][wparena-article] for details.
 
 [![GitHub release][badge-release-img]][badge-release-url]&nbsp;
 [![Uploadcare stack on StackShare][badge-stack-img]][badge-stack-url]
@@ -41,31 +43,20 @@ from their devices, social media, cloud storage, and more, check out this [artic
 
 ### Manual installation
 
-1. Download the [latest release][github-releases]. The download is a ZIP archive holding the plugin.
-2. Download the [Uploadcare PHP library][github-php]. WordPress library is build around it.
-3. Unzip the first archive to your `wp-content/plugins` directory.
-4. Unzip the second archive to your `wp-content/plugins/uploadcare/uploadcare-php` directory.
-5. Activate the plugin on your "Plugins" page in a WordPress admin area.
-6. Go to "Settings" -> "Uploadcare" and set your public and secret API.
-   The keys are used to identify an Uploadcare project your uploaded media will
-   go to. Please note, you can use `demopublickey` and `demoprivatekey` for
-   testing purposes. The keys point to the demo Uploadcare account where all the
-   files are wiped out every 24 hours.
-   To acquire your own keys, you will need to create
-   an [Uploadcare account][uc-account]. The
-   provided link will navigate you to creating a FREE one.
-7. That is it!
+1. Download the [latest release][github-releases] of a plugin source code.
+1. Unzip it to `wp-content/plugins`.
+1. Download the [Uploadcare PHP library][github-php]. It'll connect your WordPress media library with Uploadcare storage.
+1. Unzip it to `wp-content/plugins/uploadcare/uploadcare-php`.
+1. Activate the plugin in the "Plugins" menu in your WordPress admin account.
+1. Create your [Uploadcare account][uc-account] and go to "Settings" -> "Uploadcare" and set your Public and Secret API Keys. These keys are used to identify an Uploadcare project your uploaded media will go to. For testing purposes, use `demopublickey` and `demoprivatekey`. All the test files will be accessible within 24 hours.
 
 ## Usage
 
-1. Start adding a new post.
-2. Press "Add Media" to insert any media with
-   [Uploadcare Widget][uc-widget-features].
-3. Upload a file using the widget.
-4. When uploading images, you can edit them right in your mobile or desktop
-   browser. This adds the modified image to your post. You can learn more about
-   in-browser image editing [here][uc-widget-image-processing].
-5. Press "Store and Insert." You are there: an image gets added to your post.
+1. Start creating a new post.
+1. Click "Add Media" to insert a media with an Uploadcare [File Uploader][uc-widget-features].
+1. Select files to upload.
+1. When uploading images, you can [edit][uc-widget-image-processing] them right in your mobile or desktop.
+1. Click "Store and Insert" to an image to the library and to your post.
 
 ## Configuration
 
@@ -74,9 +65,7 @@ from their devices, social media, cloud storage, and more, check out this [artic
 Uploadcare Widget can be deeply customized to suit your UX/UI. You can define
 allowed upload sources, implement file validation, and more.
 
-Use our live [widget sandbox][uc-widget-configure] as a starting point and consider
-checking out the docs on [widget configuration][uc-docs-widget-config] and its
-[JavaScript API][uc-docs-widget-js-api].
+Use our live [widget sandbox][uc-widget-configure] as a starting point and check out the docs on [widget configuration][uc-docs-widget-config] and its [JavaScript API][uc-docs-widget-js-api].
 
 ## Contributors
 
@@ -108,8 +97,7 @@ If you think you ran into something in Uploadcare libraries which might have
 security implications, please hit us up at [bugbounty@uploadcare.com][uc-email-bounty]
 or Hackerone.
 
-We'll contact you personally in a short time to fix an issue through co-op and
-prior to any public disclosure.
+We'll contact you shortly to fix an issue prior to any public disclosure.
 
 ## Feedback
 
