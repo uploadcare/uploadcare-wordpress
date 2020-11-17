@@ -44,6 +44,11 @@ class UcAdmin
         $this->api = new Api($this->ucConfig);
     }
 
+    public function projectInfo()
+    {
+        return $this->api->project()->getProjectInfo();
+    }
+
     public function loadAdminCss()
     {
         \wp_enqueue_style('uc-editor');

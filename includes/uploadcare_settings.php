@@ -64,6 +64,15 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
 }
 
+$admin = new UcAdmin('uploadcare', defined('UPLOADCARE_VERSION') ? UPLOADCARE_VERSION : '3.0.0');
+$projectInfo = null;
+$connectError = null;
+try {
+    $projectInfo = $admin->projectInfo();
+} catch (\Exception $e) {
+    $connectError = $e->getMessage();
+}
+
 $loader = new LocalMediaLoader();
 $syncMessage = $loader->loadMedia();
 if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
@@ -82,8 +91,22 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
 </div>
 <?php endif; ?>
 
+<?php if($connectError !== null): ?>
+    <div class="error">
+        <p><strong><?= __('Cannot connect to Uploadcare account. Check your public / private keys')?></strong></p>
+        <small><pre><?= $connectError?></pre></small>
+    </div>
+<?php endif; ?>
+
+<?php if ($projectInfo !== null): ?>
+    <div class="updated">
+        <p>
+            <?= \sprintf(__('Access to project <strong>"%s"</strong> successfully set up'), $projectInfo->getName()) ?>
+        </p>
+    </div>
+<?php endif; ?>
+
 <div class="wrap">
-    <div id="icon-options-general" class="icon32"><br></div>
     <?php echo "<h2>".__('Uploadcare', 'uploadcare')."</h2>"; ?>
     <form name="oscimp_form" method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
         <input type="hidden" name="uploadcare_hidden" value="Y">
