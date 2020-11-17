@@ -293,6 +293,7 @@ HTML;
     {
         $from = $oldFile instanceof FileInfoInterface ? $oldFile->getUuid() : $oldFile;
         $to = $newFile instanceof FileInfoInterface ? $newFile->getUuid(): $newFile;
+        \ULog(\sprintf('Change from %s to %s', $from, $to));
 
         global $wpdb;
         $query = \sprintf('SELECT ID FROM `%s` WHERE post_content LIKE \'%%%s%%\'', \sprintf('%sposts', $wpdb->prefix), $from);
@@ -425,7 +426,6 @@ HTML;
         } else {
             $url = $uc_url;
         }
-        \ULog($size);
 
         return [
             $url,

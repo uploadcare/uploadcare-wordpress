@@ -53,6 +53,7 @@ class UcUploadProcess extends WP_Background_Process
                 }
                 if (\strpos($match, 'http') === 0) { // In case match is a url, change it to new url
                     $result .= $url;
+                    \ULog(\sprintf('%s changed to %s', $match, $url));
                 } else {
                     $result .= $match;
                 }
@@ -104,6 +105,8 @@ class UcUploadProcess extends WP_Background_Process
         }
 
         $file = \get_attached_file($item, true);
+        \ULog(\sprintf('Modify attached file %s', $file));
+
         $fullUrl = \wp_get_attachment_image_src($attachment->ID, 'full');
         $path = \parse_url($fullUrl[0], PHP_URL_PATH);
         $sourceFilename = \pathinfo($path, PATHINFO_FILENAME);
@@ -125,6 +128,9 @@ class UcUploadProcess extends WP_Background_Process
 
         $this->admin->attach($fileInfo, (int) $item);
         self::$alreadySynced[] = $item;
+        if (\is_file($file) && \is_readable($file)) {
+            \unlink($file);
+        }
         if (isset($oldMeta['sizes'])) {
             $this->removeOldThumbnails($oldMeta['sizes']);
         }
