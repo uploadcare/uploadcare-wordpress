@@ -169,7 +169,7 @@ uploadcare.jQuery(function () {
           })
         })
       }).always(() => {
-        uploadcare.jQuery('.uploadcare-loading-screen').removeClass('uploadcare-hidden')
+        uploadcare.jQuery('.uploadcare-loading-screen').addClass('uploadcare-hidden')
       })
     }))
   })
