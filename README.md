@@ -1,6 +1,10 @@
 # Uploadcare WordPress File Uploader and Adaptive Delivery
 
-Upload and store any file of any size from any device or cloud. No more slow downs when serving your images with automatic responsiviness and lazy loading. Improve your WP performance to boost Customer Experience and SEO.
+Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations.
+
+This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages.
+
+File Uploader supports local disk, camera, social media, and many other upload sources. Once uploaded, your files will be delivered with Uploadcare CDN along with Adaptive Delivery that automatically creates responsive images and adapts them for any device and browser.
 
 [![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]  
 
@@ -17,12 +21,12 @@ Upload and store any file of any size from any device or cloud. No more slow dow
 
 ## Features
 
-* Upload any file (image, document, archive) of any size.
-* Every uploaded image added to an article loads faster because Uploadcare automatically analyzes users' context and serve image tailored to their screens: resolution, quality, compression, density.
+* Upload files of any type (image, video, document, archive) and size (up to 5 TB).
+* Every image you upload and insert in a post will load faster. Adaptive Delivery automatically analyzes users' context and serves images tailored to their screens: resolution, quality and compression, pixel density, etc.
 * Transfer your existing media library to Uploadcare risk free.
 * Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Evernote, Box, Skydrive, Dropbox, VK.
 * Custom CDN domain, secure control over who and when can upload files.
-* Compatible with default image editor.
+* Includes in-browser image editor for uploaded files, where you can crop, enhance, etc.
 
 ## Requirements
 
@@ -44,19 +48,19 @@ Install from the [WordPress plugins directory](https://wordpress.org/plugins/upl
 
 ### Manual installation
 
-1. Download the [latest release][github-releases]. The zip file contains the Wordpress plugin itself.
-2. Unzip file to your `wp-content/plugins` folder.
+1. Download the [latest release][github-releases]. The zip file contains the Wordpress plugin.
+2. Unzip the archive to your `wp-content/plugins` folder.
 3. Run `composer install` (install [Composer](https://getcomposer.org/download/)).
 4. Run `yarn && yarn build` (install [Node](https://nodejs.org/en/download/) and [Yarn](https://classic.yarnpkg.com/en/docs/install/)).
-5. Activate the plugin once it is installed.
+5. Activate the plugin in the "Plugins" menu in your WordPress admin account.
 6. Go to "Settings" -> "Uploadcare" and follow instructions.
 
 ## Usage
 
 * Whenever you add an image (via Image or Gallery block or via Media Library) — choose Upload via Uploadcare.
-* You can use default image editor to modify images.
-* See that every image you add to articles is automatically optimized: small resolution for mobile, lower quality for poor connection, etc. It makes sure that each and every user gets your contect fast.
-* If you accidentally uploaded file to a local Media Library, you'll see notification on the top of Admin Dashboard — just click it. Files from local Media Library don't work with adaptive image delivery system.
+* You can use an image editor to modify images.
+* See that every image you add to articles is automatically optimized: small resolution for mobile, lower quality for poor connection, etc. It makes sure that each and every user gets the page content fast.
+* If you accidentally uploaded file to a local Media Library, you'll see a notification on top of the Admin Dashboard — just click it. Files from local Media Library won't work with the adaptive image delivery system.
 
 ## Useful links
 
