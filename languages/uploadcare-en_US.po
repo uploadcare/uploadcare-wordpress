@@ -16,34 +16,40 @@ msgid "Uploadcare"
 msgstr "Uploadcare"
 
 msgid "file"
-msgstr "File"
+msgstr "Local disk"
+
+msgid "camera"
+msgstr "Local webcam"
 
 msgid "url"
-msgstr "Url"
+msgstr "Any URL"
 
 msgid "facebook"
 msgstr "Facebook"
 
-msgid "instagram"
-msgstr "Instagram"
-
-msgid "flickr"
-msgstr "Flickr"
-
 msgid "gdrive"
 msgstr "Google Drive"
+
+msgid "gphotos"
+msgstr "Google Photos"
+
+msgid "dropbox"
+msgstr "Dropbox"
+
+msgid "instagram"
+msgstr "Instagram"
 
 msgid "evernote"
 msgstr "Evernote"
 
+msgid "flickr"
+msgstr "Flickr"
+
+msgid "onedrive"
+msgstr "OneDrive"
+
 msgid "box"
 msgstr "Box"
-
-msgid "skydrive"
-msgstr "Skydrive"
-
-msgid "dropbox"
-msgstr "Dropbox"
 
 msgid "vk"
 msgstr "VK"

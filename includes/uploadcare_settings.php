@@ -2,20 +2,31 @@
 
 $tabs = [
     'file',
+    'camera',
     'url',
     'facebook',
-    'instagram',
-    'flickr',
     'gdrive',
-    'evernote',
-    'box',
-    'skydrive',
+    'gphotos',
     'dropbox',
+    'instagram',
+    'evernote',
+    'flickr',
+    'onedrive',
+    'box',
     'vk',
 ];
 $tab_defaults = [
     'file',
+    'camera',
     'url',
+    'facebook',
+    'gdrive',
+    'gphotos',
+    'dropbox',
+    'instagram',
+    'evernote',
+    'flickr',
+    'onedrive',
 ];
 
 $saved = false;
