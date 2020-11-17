@@ -21,7 +21,7 @@ Check out this [article][wparena-article] for details.
 * [Usage](#usage)
 * [Configuration](#configuration)
   * [Plugin configuration](#plugin-configuration)
-  * [Widget configuration](#widget-configuration)
+  * [File Uploader configuration](#widget-configuration)
 * [Contributors](#contributors)
 * [Security issues](#security-issues)
 * [Feedback](#feedback)
@@ -55,17 +55,17 @@ Check out this [article][wparena-article] for details.
 1. Start creating a new post.
 1. Click "Add Media" to insert a media with an Uploadcare [File Uploader][uc-widget-features].
 1. Select files to upload.
-1. When uploading images, you can [edit][uc-widget-image-processing] them right in your mobile or desktop.
-1. Click "Store and Insert" to an image to the library and to your post.
+1. When uploading images, you can [edit][uc-widget-image-processing] them right in your mobile or desktop web browser.
+1. Click "Store and Insert" to add an image to the library and to your post.
 
 ## Configuration
 
-### Widget configuration
+### File Uploader configuration
 
-Uploadcare Widget can be deeply customized to suit your UX/UI. You can define
+You can customize the File Uploader to mach your website design. Also, you can define
 allowed upload sources, implement file validation, and more.
 
-Use our live [widget sandbox][uc-widget-configure] as a starting point and check out the docs on [widget configuration][uc-docs-widget-config] and its [JavaScript API][uc-docs-widget-js-api].
+Use the live [File Uploader sandbox][uc-widget-configure] as a starting point and check out the docs on [configuration][uc-docs-widget-config] and its [JavaScript API][uc-docs-widget-js-api].
 
 ## Contributors
 
@@ -93,11 +93,9 @@ Siarhei Bautrukevich <https://github.com/bautrukevich>
 
 ## Security issues
 
-If you think you ran into something in Uploadcare libraries which might have
-security implications, please hit us up at [bugbounty@uploadcare.com][uc-email-bounty]
-or Hackerone.
+If you ran into any security implication when using Uploadcare libraries, please hit us up at [bugbounty@uploadcare.com][uc-email-bounty] or Hackerone.
 
-We'll contact you shortly to fix an issue prior to any public disclosure.
+We'll contact you shortly to fix the issue prior to any public disclosure.
 
 ## Feedback
 
