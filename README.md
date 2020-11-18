@@ -2,9 +2,7 @@
 
 Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations.
 
-This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages.
-
-File Uploader supports local disk, camera, social media, and many other upload sources. Once uploaded, your files will be delivered with Uploadcare CDN along with Adaptive Delivery that automatically creates responsive images and adapts them for any device and browser.
+This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can upload from local disks, camera, social media, and many other upload sources. Images and other files will be delivered with Uploadcare CDN. Serve images with Adaptive Delivery that creates responsive images and adapts them for any device.
 
 [![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]  
 
@@ -22,11 +20,11 @@ File Uploader supports local disk, camera, social media, and many other upload s
 ## Features
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
-* Every image you upload and insert in a post will load faster. Adaptive Delivery automatically analyzes users' context and serves images tailored to their screens: resolution, quality and compression, pixel density, etc.
-* Transfer your existing media library to Uploadcare risk free.
-* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Evernote, Box, Skydrive, Dropbox, VK.
-* Custom CDN domain, secure control over who and when can upload files.
-* Includes in-browser image editor for uploaded files, where you can crop, enhance, etc.
+* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
+* Transfer your existing Media Library to your cloud storage at Uploadcare.
+* Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
+* Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
+* Edit images after upload: crop, resize, enhance, etc.
 
 ## Requirements
 
@@ -57,10 +55,9 @@ Install from the [WordPress plugins directory](https://wordpress.org/plugins/upl
 
 ## Usage
 
-* Whenever you add an image (via Image or Gallery block or via Media Library) — choose Upload via Uploadcare.
-* You can use an image editor to modify images.
-* See that every image you add to articles is automatically optimized: small resolution for mobile, lower quality for poor connection, etc. It makes sure that each and every user gets the page content fast.
-* If you accidentally uploaded file to a local Media Library, you'll see a notification on top of the Admin Dashboard — just click it. Files from local Media Library won't work with the adaptive image delivery system.
+* When adding an image while editing a page or in Media Library, choose the "Upload via Uploadcare" option.
+* Use a built-in image editor when needed.
+* If you accidentally upload a file using a standard WordPress option, you can easily transfer them to Uploadcare to use Adaptive Delivery and other features.
 
 ## Useful links
 

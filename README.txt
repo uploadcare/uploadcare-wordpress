@@ -10,25 +10,24 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
 
-Upload and store any file of any size from any device or cloud. No more slow downs when serving your images with automatic responsiviness and lazy loading. Improve your WP performance to boost Customer Experience and SEO.
+Upload and store files of any size from any device or cloud service. Serve responsive images with lazy loading with zero coding. Improve your WordPress site performance with a single click.
 
 == Description ==
 
 ### Features ###
 
-* Upload any file (image, document, archive) of any size.
-* Every uploaded image added to an article loads faster because Uploadcare automatically analyzes users' context and serve image tailored to their screens: resolution, quality, compression, density.
-* Transfer your existing media library to Uploadcare risk free.
-* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Evernote, Box, Skydrive, Dropbox, VK.
-* Custom CDN domain, secure control over who and when can upload files.
-* Compatible with default image editor.
+* Upload files of any type (image, video, document, archive) and size (up to 5 TB).
+* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
+* Transfer your existing Media Library to your cloud storage at Uploadcare.
+* Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
+* Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
+* Edit images after upload: crop, resize, enhance, etc.
 
 ### Usage ###
 
-* Whenever you add an image (via Image or Gallery block or via Media Library) — choose Upload via Uploadcare.
-* You can use default image editor to modify images.
-* See that every image you add to articles is automatically optimized: small resolution for mobile, lower quality for poor connection, etc. It makes sure that each and every user gets your contect fast.
-* If you accidentally uploaded file to a local Media Library, you'll see notification on the top of Admin Dashboard — just click it. Files from local Media Library don't work with adaptive image delivery system.
+* When adding an image while editing a page or in Media Library, choose the "Upload via Uploadcare" option.
+* Use a built-in image editor when needed.
+* If you accidentally upload a file using a standard WordPress option, you can easily transfer them to Uploadcare to use Adaptive Delivery and other features.
 
 ### Uploader translations ###
 
@@ -65,26 +64,26 @@ Upload and store any file of any size from any device or cloud. No more slow dow
 
 ### More information ###
 
-Check [Uploadcare.com](https://uploadcare.com/) to learn more.
+Visit [Uploadcare.com](https://uploadcare.com/) to learn more.
 Send us your feedback, <help@uploadcare.com>
 
 == Installation ==
 
-### Fastest way ###
+### Auto installation (recommended) ###
 
 1. In the plugin manager, click "Add New".
 2. Search for "uploadcare".
 3. Click "install".
-4. Activate the plugin once it is installed.
-5. Go to "Settings" -> "Uploadcare" and follow instructions.
+4. Activate the plugin once it's installed.
+5. Go to "Settings" -> "Uploadcare" and follow the instructions.
 
-### Manual ###
+### Manual installation ###
 
-1. Download the latest release. The zip file contains the Wordpress plugin itself.
-2. Unzip file to your `wp-content/plugins` folder.
+1. Download the [latest release][github-releases]. The zip file contains the Wordpress plugin.
+2. Unzip the archive to your `wp-content/plugins` folder.
 3. Run `composer install` (install [Composer](https://getcomposer.org/download/)).
 4. Run `yarn && yarn build` (install [Node](https://nodejs.org/en/download/) and [Yarn](https://classic.yarnpkg.com/en/docs/install/)).
-5. Activate the plugin once it is installed.
+5. Activate the plugin in the "Plugins" menu in your WordPress admin account.
 6. Go to "Settings" -> "Uploadcare" and follow instructions.
 
 ### Requirements ###
@@ -97,14 +96,14 @@ Send us your feedback, <help@uploadcare.com>
 == Screenshots ==
 
 1. "Add Media" button.
-2. Uploading widget: Choose images from Facebook.
-3. Uploading widget: Choose files from Google Drive.
-4. Uploading widget: Crop image.
+2. File Upload component: Choose images from Facebook.
+3. File Upload component: Choose files from Google Drive.
+4. File Upload component: Crop image.
 
 == Upgrade Notice ==
 
 = 3.0.0 =
-Brand new version, rewritten from scratch. No not only an uploader — introduces adaptive image delivery system to improve and simplify images loading speed. Improved Uploader with better integration with Media Library. Intuitive settings.
+Brand new plugin, rewritten from scratch. In addition to uploading files it now supports Adaptive Delivery which improves image appearance on all devices and increases page load speed. Transfer Media Library files to your Uploadcare storage and update image URLs in all posts automatically. Intuitive settings.
 
 = 2.2.0 =
 If you were controlling source tabs via "finetuning" setting, you should delete it and set new "source tab" config.
