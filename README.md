@@ -51,7 +51,7 @@ Install from the [WordPress plugins directory](https://wordpress.org/plugins/upl
 3. Run `composer install` (install [Composer](https://getcomposer.org/download/)).
 4. Run `yarn && yarn build` (install [Node](https://nodejs.org/en/download/) and [Yarn](https://classic.yarnpkg.com/en/docs/install/)).
 5. Activate the plugin in the "Plugins" menu in your WordPress admin account.
-6. Go to "Settings" -> "Uploadcare" and follow instructions.
+6. Go to "Settings" -> "Uploadcare" and follow the instructions.
 
 ## Usage
 
