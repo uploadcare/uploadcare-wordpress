@@ -111,14 +111,14 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
     <form name="oscimp_form" method="post" action="<?php echo str_replace('%7E', '~', $_SERVER['REQUEST_URI']); ?>">
         <input type="hidden" name="uploadcare_hidden" value="Y">
 
-        <h3><?= __('Set up Uploadcare plugin', 'uploadcare')?></h3>
+        <h3><?= __('Plugin setup', 'uploadcare')?></h3>
         <!-- <p><?= __('VIDEO TUTORIAL', 'uploadcare')?></p> -->
 
-        <h4><?= __('1. Get an Uploadcare account', 'uploadcare')?></h4>
-        <p><?= \sprintf(__('Sign up <a href="https://uploadcare.com/pricing/" target="_blank">here</a>.', 'uploadcare')) ?></p>
+        <h4><?= __('1. Create an Uploadcare account', 'uploadcare')?></h4>
+        <p><?= \sprintf(__('Sign up free <a href="https://uploadcare.com/pricing/" target="_blank">here</a>.', 'uploadcare')) ?></p>
 
-        <h4><?= __('2. Set up your Uploadcare Project API keys', 'uploadcare') ?> <a href="https://uploadcare.com/documentation/keys/" target="_blank">[?]</a></h4>
-        <p><?= \sprintf(__('Find API keys for your Uploadcare Project in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>:', 'uploadcare')) ?></p>
+        <h4><?= __('2. Get your Uploadcare project API keys', 'uploadcare') ?> <a href="https://uploadcare.com/documentation/keys/" target="_blank">[?]</a></h4>
+        <p><?= \sprintf(__('Find API keys in your Uploadcare project\'s <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>:', 'uploadcare')) ?></p>
         <p>
             <label for="uc_uploadcare_public"><?= __('Public Key', 'uploadcare'); ?>:</label>
             <input id="uc_uploadcare_public" type="text" name="uploadcare_public"
@@ -130,8 +130,8 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
 
-        <h4><?= __('3. Transfer your existing Media Library to Uploadcare', 'uploadcare')?></h4>
-        <p><?= __('It\'s required for <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> to work. It moves all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud and updates all articles with new image links.', 'uploadcare')?></p>
+        <h4><?= __('3. Transfer WordPress Media Library to Uploadcare', 'uploadcare')?></h4>
+        <p><?= __('It\'ll move all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud storage and then it\'ll update image URLs in all posts and pages automatically. The transfer is required if you want to use <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a>.', 'uploadcare')?></p>
         <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
             <div style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
                 <strong><?= __('Transfer is in progress') ?></strong>
@@ -147,8 +147,8 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                     <?php $loaderMediaCount = $loader->getLocalMediaCount() ?>
                     <?= \sprintf(
                         _n(
-                            'Transfer %d Wordpress image to Uploadcare',
-                            'Transfer %d Wordpress images to Uploadcare',
+                            'Transfer %d WordPress image to Uploadcare',
+                            'Transfer %d WordPress images to Uploadcare',
                             $loaderMediaCount,
                             'uploadcare'
                         ),
@@ -158,11 +158,11 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             <?php endif; ?>
         <?php endif; ?>
 
-        <p><?= __("Your files are secured during this process. Only after the transfer is fully complete, the files will be removed from your WordPress hosting.", 'uploadcare')?></p>
-        <p><?= __("If you accidentally upload new files with a standard WordPress uploader, we'll suggest you to repeat the transfer and move all new files to Uploadcare.", 'uploadcare')?></p>
-        <p><?= __("The process is reversable if you want to stop using Uploadcare: we'll download all files from the Uploadcare cloud back to your WordPress hosting. See the Advanced options for more details.", 'uploadcare')?></p>
+        <p><?= __("Your files are intact during the transfer. When the process is fully complete, the original WordPress files will be removed.", 'uploadcare')?></p>
+        <p><?= __("If you accidentally upload a few files with a standard WordPress uploader later, you can do Media Library transfer again to keep everything in one place and to use all Uploadcare options.", 'uploadcare')?></p>
+        <p><?= __("The process is reversable if you decide to stop using Uploadcare for your WordPress. Go to the Advanced options and put all files back to your WordPress Media Library.", 'uploadcare')?></p>
 
-        <h4><?= __('4. Choose Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
+        <h4><?= __('4. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
         <?php
         foreach ($tabs as $tn => $tab) {
             ?>
@@ -178,7 +178,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         <h3 id="uc-collapse-toggle" class="uc-show-hide"><?= __('Advanced options', 'uploadcare')?></h3>
         <div id="uc-advanced-options" class="uc-collapsed hide">
             <h4><?= __('Backup', 'uploadcare')?> <a href="https://uploadcare.com/docs/start/settings/#project-settings-advanced-backup" target="_blank">[?]</a></h4>
-            <p><?= __('Uploadcare files are backed up automatically, but you can configure backup to your custom Amazong S3 Bucket. Connect the storage once, and the system will do backups on a timely basis. Set up backups in your Uploadcare <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a> in the Uploading settings for your project.', 'uploadcare')?></p>
+            <p><?= __('All your Uploadcare files are backed up automatically. Additionally, you can configure backups to your Amazong S3 Bucket in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>, Uploading settings.', 'uploadcare')?></p>
 
             <h4><?= __('Custom CDN CNAME', 'uploadcare')?> <a href="https://uploadcare.com/community/t/how-to-set-up-custom-cdn-cname/40" target="_blank">[?]</a></h4>
             <p>
@@ -188,9 +188,10 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             </p>
 
             <h4><?= __('Secure Uploading', 'uploadcare')?> <a href="https://uploadcare.com/docs/security/secure_uploads/" target="_blank">[?]</a></h4>
+            <p><?= __('Control who and when can upload files to your Uploadcare project.', 'uploadcare')?></p>
             <p>
                 <label for="uc_uploadcare_upload_lifetime">
-                    <?= __('Set lifetime in seconds (0 — disabled)', 'uploadcare'); ?>:
+                    <?= __('Set a lifetime in seconds (0 — disabled)', 'uploadcare'); ?>:
                 </label>
                 <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
                        value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
@@ -202,25 +203,26 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                        value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
                 >
                 <label for="uc_uploadcare_adaptive_delivery">
-                    <?= __("Turn off only if you want to explicitly disable it. If you plan doesn't include Adaptive Delivery, the standard CDN delivery option will be used automatically).") ?>
+                    <?= __("Use Adaptive Delivery whenever possible. Uncheck only to force disable it.") ?>
                 </label>
             </p>
+            <p><?= __('Note: check if your Uploadcare plan includes Adaptive Delivery. When not included, a standard CDN option will be used instead, and images won\'t be responsive to screen sizes.', 'uploadcare')?></p>
 
-            <h4><?= __('File Uploader options', 'uploadcare')?> <a href="https://uploadcare.com/docs/uploads/file_uploader_options/" target="_blank">[?]</a></h4>
+            <h4><?= __('File Uploader fine tuning', 'uploadcare')?> <a href="https://uploadcare.com/docs/uploads/file_uploader_options/" target="_blank">[?]</a></h4>
             <p>
                 <label for="uc_uploadcare_finetuning">
-                    <?= __('Note that it must be a valid JSON object with upload parameters.'); ?>
+                    <?= __('Insert a valid JSON object with correct parameters.'); ?>
                 </label>
             </p>
             <p>
                 <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
             </p>
 
-            <h4><?= __('Move all your current images back to Media Library', 'uploadcare')?></h4>
-            <p><?= __('This option will transfer all files from your Uploadcare project to the local WordPress Media Library (<code>/wp-content/uploads/</code>) and it\'ll update all posts and pages with the Media Library image links. Refresh this page later to see if all files were transferred. This process is reversible, you can always put files back to Uploadcare, check out the green button above.', 'uploadcare')?></p>
+            <h4><?= __('Put Uploadcare images back to Media Library', 'uploadcare')?></h4>
+            <p><?= __('Use this feature if you want to stop using Uploadcare with WordPress. It\'ll Transfer all files from your Uploadcare project to the local WordPress Media Library (<code>/wp-content/uploads/</code>) and it\'ll update all posts and pages with the respective image URLs automatically. Refresh this page later to see if all files have been transferred.', 'uploadcare')?></p>
             <p>
             <button class="button" style="color: #990000; border-color: #aa0000" type="submit" value="sync" name="uc_download_data">
-                <?= __('Move all your files back from Uploadcare') ?>
+                <?= __('Put all files back to Media Library') ?>
             </button>
         </p>
         </div>
