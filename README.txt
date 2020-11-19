@@ -96,9 +96,9 @@ Send us your feedback, <help@uploadcare.com>
 == Screenshots ==
 
 1. "Add Media" button.
-2. File Upload component: Choose images from Facebook.
-3. File Upload component: Choose files from Google Drive.
-4. File Upload component: Crop image.
+2. File Uploader: Choose images from Facebook.
+3. File Uploader: Choose files from Google Drive.
+4. File Uploader: Crop image.
 
 == Upgrade Notice ==
 

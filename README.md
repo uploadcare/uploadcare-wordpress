@@ -21,10 +21,10 @@ This plugin allows WordPress authors upload images and other files with Uploadca
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
 * Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
-* Transfer your existing Media Library to your cloud storage at Uploadcare.
+* Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
 * Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
 * Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
-* Edit images after upload: crop, resize, enhance, etc.
+* Compatible with a standard WordPress image editor.
 
 ## Requirements
 
