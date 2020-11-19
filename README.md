@@ -1,6 +1,6 @@
 # Uploadcare WordPress File Uploader and Adaptive Delivery
 
-Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations.
+Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations. Upload and store files of any size from any device or cloud service. Serve responsive images with lazy loading with zero coding. Improve your WordPress site performance with a single click.
 
 This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can upload from local disks, camera, social media, and many other upload sources. Images and other files will be delivered with Uploadcare CDN. Serve images with Adaptive Delivery that creates responsive images and adapts them for any device.
 

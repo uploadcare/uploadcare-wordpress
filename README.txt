@@ -10,7 +10,9 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
 
-Upload and store files of any size from any device or cloud service. Serve responsive images with lazy loading with zero coding. Improve your WordPress site performance with a single click.
+Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations. Upload and store files of any size from any device or cloud service. Serve responsive images with lazy loading with zero coding. Improve your WordPress site performance with a single click.
+
+This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can upload from local disks, camera, social media, and many other upload sources. Images and other files will be delivered with Uploadcare CDN. Serve images with Adaptive Delivery that creates responsive images and adapts them for any device.
 
 == Description ==
 
@@ -18,10 +20,10 @@ Upload and store files of any size from any device or cloud service. Serve respo
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
 * Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
-* Transfer your existing Media Library to your cloud storage at Uploadcare.
+* Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
 * Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
 * Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
-* Edit images after upload: crop, resize, enhance, etc.
+* Compatible with a standard WordPress image editor.
 
 ### Usage ###
 
