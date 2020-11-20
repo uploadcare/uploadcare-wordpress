@@ -10,19 +10,19 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
 
-Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations. Upload and store files of any size from any device or cloud service. Serve responsive images with lazy loading with zero coding. Improve your WordPress site performance with a single click.
+Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Serve responsive images with Uploadcare CDN with lazy loading to improve your WordPress site performance.
 
-This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can upload from local disks, camera, social media, and many other upload sources. Images and other files will be delivered with Uploadcare CDN. Serve images with Adaptive Delivery that creates responsive images and adapts them for any device.
+This plugin allows WordPress authors upload images with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
 
 == Description ==
 
 ### Features ###
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
-* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
+* Upload from your device, social network or cloud: Facebook, Instagram, Dropbox, and others.
 * Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
-* Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
-* Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
+* Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, etc.
+* Specify your custom CDN domain, and use a Secure Uploading feature to control who and when can upload files.
 * Compatible with a standard WordPress image editor.
 
 ### Usage ###
