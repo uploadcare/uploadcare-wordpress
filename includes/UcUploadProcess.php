@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\DomCrawler\Crawler;
 use Uploadcare\Api;
 use Uploadcare\Configuration;
 use Uploadcare\Interfaces\File\FileInfoInterface;
@@ -42,25 +43,24 @@ class UcUploadProcess extends WP_Background_Process
      */
     public static function rgxReplace($htmlContent, $url)
     {
-        return \preg_replace_callback(self::IMAGE_SEARCH_REGEX, static function (array $matches) use ($htmlContent, $url) {
-            if (!isset($matches[4])) {
-                return $htmlContent;
+        $crawler = new Crawler($htmlContent);
+        $collation = [];
+        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation) {
+            $imageId = (int) \preg_replace('/\D/', '', $node->attr('class'));
+            $ucUrl = \get_post_meta($imageId, 'uploadcare_url', true);
+            if (!empty($ucUrl)) {
+                $target = \sprintf(UploadcareMain::RESIZE_TEMPLATE, $ucUrl, '2048x2048');
+                $collation[$node->attr('src')] = $target;
             }
-            $result = null;
-            foreach ($matches as $i => $match) {
-                if ($i === 0) { // Match 0 is a full string
-                    continue;
-                }
-                if (\strpos($match, 'http') === 0) { // In case match is a url, change it to new url
-                    $result .= $url;
-                    \ULog(\sprintf('%s changed to %s', $match, $url));
-                } else {
-                    $result .= $match;
-                }
-            }
+        });
+        $collation = \array_filter($collation);
 
-            return $result;
-        }, $htmlContent);
+        foreach ($collation as $src => $target) {
+            $rgx = sprintf('/src=\"%s\"/mu', \preg_quote($src, '/'));
+            $htmlContent = (string) \preg_replace($rgx, \sprintf('src=%s', $target), $htmlContent);
+        }
+
+        return $htmlContent;
     }
 
     /**
@@ -104,18 +104,16 @@ class UcUploadProcess extends WP_Background_Process
             return false;
         }
 
+        $sourceFilename = $attachment->post_name;
         $file = \get_attached_file($item, true);
         \ULog(\sprintf('Modify attached file %s', $file));
-
-        $fullUrl = \wp_get_attachment_image_src($attachment->ID, 'full');
-        $path = \parse_url($fullUrl[0], PHP_URL_PATH);
-        $sourceFilename = \pathinfo($path, PATHINFO_FILENAME);
 
         if (!\is_file($file)) {
             \error_log(\sprintf('Cannot load file \'%s\'', $file));
 
             return false;
         }
+        $directory = \pathinfo($file, PATHINFO_DIRNAME);
 
         $fileInfo = $this->tryToGetExistingFile($attachment->ID);
         if (null === $fileInfo) {
@@ -128,15 +126,20 @@ class UcUploadProcess extends WP_Background_Process
 
         $this->admin->attach($fileInfo, (int) $item);
         self::$alreadySynced[] = $item;
-        if (\is_file($file) && \is_readable($file)) {
-            \unlink($file);
-        }
-        if (isset($oldMeta['sizes'])) {
-            $this->removeOldThumbnails($oldMeta['sizes']);
-        }
+
+        $this->removeStaled($directory, $sourceFilename);
         $this->admin->changeImageInPosts($sourceFilename, $fileInfo, [self::class, 'modifyBlocks']);
 
         return false;
+    }
+
+    protected function removeStaled($dirname, $baseName)
+    {
+        $files = \glob(\sprintf('%s/%s*', \rtrim($dirname, '/'), \ltrim($baseName, '/')));
+        foreach ($files as $file) {
+            \ULog(\sprintf('Remove %s', $file));
+            \unlink($file) ? \ULog('done') : \ULog('fail');
+        }
     }
 
     /**

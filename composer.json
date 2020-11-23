@@ -5,7 +5,8 @@
     "ext-curl": "*",
     "ext-json": "*",
     "uploadcare/uploadcare-php": "^3.0",
-    "deliciousbrains/wp-background-processing": "^1.0"
+    "deliciousbrains/wp-background-processing": "^1.0",
+    "symfony/dom-crawler": "^3.4"
   },
   "autoload": {
     "psr-4": {

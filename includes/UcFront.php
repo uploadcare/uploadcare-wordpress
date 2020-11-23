@@ -1,6 +1,8 @@
 <?php
 
 
+use Symfony\Component\DomCrawler\Crawler;
+
 class UcFront
 {
     const IMAGE_REGEX = '/(<img\s?.+)(src=\")(.[^\"]+)(.+)/m';
@@ -41,7 +43,7 @@ class UcFront
     }
 
     /**
-     * Calls on `render_block`. Loads images and replace `src` to `data-blink-src`.
+     * Calls on `render_block`. Loads images and replace `src` to `data-blink-uuid`.
      * @see UploadcareMain::defineFrontHooks()
      *
      * @param $content
@@ -51,24 +53,64 @@ class UcFront
      */
     public function renderBlock($content, array $block)
     {
+        if (!isset($block['blockName'])) {
+            return $content;
+        }
         if (\is_admin()) {
             return $content;
         }
 
-        if (!isset($block['blockName']) || $block['blockName'] !== 'core/image') {
-            return $content;
+        if ($block['blockName'] === 'core/image' || $block['blockName'] === 'core/gallery') {
+            return $block['blockName'] === 'core/gallery'
+                ? $this->changeContent($content, false)
+                : $this->changeContent($content, $this->adaptiveDelivery);
         }
-        if (\strpos($content, \get_option('uploadcare_cdn_base')) === false) {
-            return $content;
-        }
-        if (!$this->adaptiveDelivery) {
-            return $this->replaceImageUrl($content);
-        }
-        return (string) \preg_replace_callback(self::IMAGE_REGEX, static function (array $data) {
-            $uuid = \pathinfo($data[3], PATHINFO_BASENAME);
 
-            return $data[1] . 'data-blink-uuid="' . $uuid . $data[4];
-        }, $content);
+        return $content;
+    }
+
+    /**
+     * @param string $content
+     * @param bool $blink
+     * @return string
+     */
+    protected function changeContent($content, $blink = true)
+    {
+        $crawler = new Crawler($content);
+        $collation = [];
+        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $blink) {
+            $imageId = (int) \preg_replace('/\D/', '', $node->attr('class'));
+            $ucUrl = \get_post_meta($imageId, 'uploadcare_url', true);
+            $ucUuid = \get_post_meta($imageId, 'uploadcare_uuid', true);
+            if (!empty($ucUrl)) {
+                $target = $blink ? $ucUuid : \sprintf(UploadcareMain::RESIZE_TEMPLATE, $ucUrl, '2048x2048');
+                $collation[$node->attr('src')] = [
+                    'ucUrl' => $ucUrl,
+                    'target' => $target,
+                    'data-full-url' => $node->extract(['data-full-url'])[0],
+                ];
+            }
+
+        });
+        $collation = \array_filter($collation);
+
+        $replace = $blink ? 'data-blink-uuid' : 'src';
+        foreach ($collation as $src => $targetArray) {
+            $rgx = sprintf('/src=\"%s\"/mu', \preg_quote($src, '/'));
+            $content = (string) \preg_replace($rgx, \sprintf('%s="%s"', $replace, $targetArray['target']), $content);
+            if (!empty($targetArray['data-full-url'])) {
+                $content = (string) \preg_replace('/' . \preg_quote($targetArray['data-full-url'], '/') . '/mu', $targetArray['ucUrl'], $content);
+            }
+        }
+
+        return $content;
+    }
+
+    protected function changeAttributeContent($attributeName, $sourceValue, $targetValue, $content)
+    {
+        $regex = sprintf('/%s="%s"/', $attributeName, \preg_quote($sourceValue, '/'));
+
+        return \preg_replace($regex, $targetValue, $content);
     }
 
     /**
