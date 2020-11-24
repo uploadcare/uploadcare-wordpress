@@ -188,7 +188,11 @@ HTML;
         }
 
         $uuid = $this->fileId($url);
-        $this->api->file()->deleteFile($uuid);
+        try {
+            $this->api->file()->deleteFile($uuid);
+        } catch (\Exception $e) {
+            \ULog(\sprintf('Unable to delete file %s', $uuid));
+        }
     }
 
     // filters
