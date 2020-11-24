@@ -53,3 +53,6 @@ msgstr "Box"
 
 msgid "vk"
 msgstr "VK"
+
+msgid "huddle"
+msgstr "Huddle"

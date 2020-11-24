@@ -13,6 +13,7 @@ $tabs = [
     'flickr',
     'onedrive',
     'box',
+    'huddle',
     'vk',
 ];
 $tab_defaults = [
