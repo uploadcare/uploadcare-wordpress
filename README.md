@@ -20,7 +20,7 @@ This plugin allows WordPress authors upload images with Uploadcare File Uploader
 ## Features
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
-* Upload from your device, social network or cloud: Facebook, Instagram, Dropbox, and others.
+* Upload from your device, URL, social network (Facebook, Instagram, VK, Flickr), and cloud (Dropbox, Google Drive, Google Photos, OneDrive, Box, Huddle, Evernote).
 * Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
 * Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, etc.
 * Specify your custom CDN domain, and use a Secure Uploading feature to control who and when can upload files.
