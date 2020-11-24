@@ -1,8 +1,6 @@
 # Uploadcare WordPress File Uploader and Adaptive Delivery
 
-Uploadcare, all-round media storage, management and delivery solution, breaks many of the standard WordPress Media Library limitations.
-
-This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can upload from local disks, camera, social media, and many other upload sources. Images and other files will be delivered with Uploadcare CDN. Serve images with Adaptive Delivery that creates responsive images and adapts them for any device.
+Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert them to WordPress posts and serve responsive images with Uploadcare CDN to improve your WordPress site performance.
 
 [![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]  
 
@@ -20,11 +18,11 @@ This plugin allows WordPress authors upload images and other files with Uploadca
 ## Features
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
-* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
-* Transfer your existing Media Library to your cloud storage at Uploadcare.
-* Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
-* Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
-* Edit images after upload: crop, resize, enhance, etc.
+* Upload from your device, URL, social network (Facebook, Instagram, VK, Flickr), and cloud (Dropbox, Google Drive, Google Photos, OneDrive, Box, Huddle, Evernote).
+* Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
+* Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, which closes all image-related frontend tasks.
+* Specify your custom CDN domain, and use a Secure Uploading feature to control who and when can upload files.
+* Compatible with a standard WordPress image editor.
 
 ## Requirements
 

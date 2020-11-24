@@ -10,18 +10,20 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
 
-Upload and store files of any size from any device or cloud service. Serve responsive images with lazy loading with zero coding. Improve your WordPress site performance with a single click.
+Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Serve responsive images with Uploadcare CDN with lazy loading to improve your WordPress site performance.
+
+This plugin allows WordPress authors upload images with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
 
 == Description ==
 
 ### Features ###
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
-* Upload from any device or cloud: Facebook, Instagram, Flickr, Google Drive, Dropbox, and others.
-* Transfer your existing Media Library to your cloud storage at Uploadcare.
-* Uploadcare CDN will serve images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable resolution, quality and compression, pixel density, etc.
-* Specify your custom CDN domain, and use a Secure Uploading feature to control over who and when can upload files.
-* Edit images after upload: crop, resize, enhance, etc.
+* Upload from your device, URL, social network (Facebook, Instagram, VK, Flickr), and cloud (Dropbox, Google Drive, Google Photos, OneDrive, Box, Huddle, Evernote).
+* Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
+* Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, which closes all image-related frontend tasks.
+* Specify your custom CDN domain, and use a Secure Uploading feature to control who and when can upload files.
+* Compatible with a standard WordPress image editor.
 
 ### Usage ###
 
@@ -96,9 +98,9 @@ Send us your feedback, <help@uploadcare.com>
 == Screenshots ==
 
 1. "Add Media" button.
-2. File Upload component: Choose images from Facebook.
-3. File Upload component: Choose files from Google Drive.
-4. File Upload component: Crop image.
+2. File Uploader: Choose images from Facebook.
+3. File Uploader: Choose files from Google Drive.
+4. File Uploader: Crop image.
 
 == Upgrade Notice ==
 
