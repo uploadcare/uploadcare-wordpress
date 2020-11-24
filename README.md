@@ -1,8 +1,6 @@
 # Uploadcare WordPress File Uploader and Adaptive Delivery
 
-Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Serve responsive images with Uploadcare CDN with lazy loading to improve your WordPress site performance.
-
-This plugin allows WordPress authors upload images with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
+Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert them to WordPress posts and serve responsive images with Uploadcare CDN to improve your WordPress site performance.
 
 [![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]  
 
@@ -22,7 +20,7 @@ This plugin allows WordPress authors upload images with Uploadcare File Uploader
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
 * Upload from your device, URL, social network (Facebook, Instagram, VK, Flickr), and cloud (Dropbox, Google Drive, Google Photos, OneDrive, Box, Huddle, Evernote).
 * Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
-* Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, etc.
+* Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, which closes all image-related frontend tasks.
 * Specify your custom CDN domain, and use a Secure Uploading feature to control who and when can upload files.
 * Compatible with a standard WordPress image editor.
 
