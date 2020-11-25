@@ -220,7 +220,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             </p>
 
             <h4><?= __('Put Uploadcare images back to Media Library', 'uploadcare')?></h4>
-            <p><?= __('Use this feature if you want to stop using Uploadcare with WordPress. It\'ll Transfer all files from your Uploadcare project to the local WordPress Media Library (<code>/wp-content/uploads/</code>) and it\'ll update all posts and pages with the respective image URLs automatically. Refresh this page later to see if all files have been transferred.', 'uploadcare')?></p>
+            <p><?= __('Use this feature if you want to stop using Uploadcare with WordPress. It\'ll transfer all files from your Uploadcare project to the local WordPress Media Library (<code>/wp-content/uploads/</code>) and it\'ll update all posts and pages with the respective image URLs automatically. Refresh this page later to see if all files have been transferred.', 'uploadcare')?></p>
             <p>
             <button class="button" style="color: #990000; border-color: #aa0000" type="submit" value="sync" name="uc_download_data">
                 <?= __('Put all files back to Media Library') ?>
