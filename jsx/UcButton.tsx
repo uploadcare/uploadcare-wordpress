@@ -8,15 +8,22 @@ const { __ } = wp.i18n;
 const uploader = new UcUploader(config.config);
 
 const upload = async () => {
-    const data = await uploader.upload();
-    const block = wp.data.select('core/block-editor').getSelectedBlock();
-    if (block === null) return false;
+    try {
+        const data = await uploader.upload();
+        const block = wp.data.select('core/block-editor').getSelectedBlock();
+        if (block === null) return false;
 
-    block.attributes.url = data.cdnUrl;
-    block.attributes.alt = data.name;
+        block.attributes.url = data.cdnUrl;
+        block.attributes.alt = data.name;
 
-    wp.data.dispatch('core/block-editor').clearSelectedBlock();
-    wp.data.dispatch('core/block-editor').replaceBlock(block.clientId, block);
+        wp.data.dispatch('core/block-editor').clearSelectedBlock();
+        wp.data.dispatch('core/block-editor').replaceBlock(block.clientId, block);
+    } catch (err) {
+        document.querySelectorAll('div.uploadcare-loading-screen').forEach(el => {
+            el.classList.add('uploadcare-hidden')
+        });
+
+    }
 }
 
 class UcButton extends React.Component

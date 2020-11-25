@@ -77,6 +77,7 @@ export default class UcUploader {
             })
             .fail(() => {
                 this.loadingScreen.classList.add('uploadcare-hidden')
+                return Promise.reject('Fail')
             });
     }
 
