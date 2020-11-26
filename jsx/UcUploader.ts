@@ -64,8 +64,9 @@ export default class UcUploader {
         return uploadcare.openDialog([], null, {multiple: false})
             .done(data => {
                 this.loadingScreen.classList.remove('uploadcare-hidden');
-                return data.promise().done((fileInfo: FileInfoResponse) => {
-                        this.storeImage(fileInfo).then(json => {
+                return data.promise()
+                    .done((fileInfo: FileInfoResponse) => {
+                        this.storeImage(fileInfo as FileInfoResponse).then(json => {
                             this.loadingScreen.classList.add('uploadcare-hidden');
                             return json;
                         }).catch(err => {
@@ -74,10 +75,17 @@ export default class UcUploader {
                             this.loadingScreen.classList.add('uploadcare-hidden')
                         });
                     })
+                    .fail((reason, info) => {
+                        this.makeErrorBlock(`File ${info.name} not uploaded to cloud`)
+                        return false;
+                    })
+                    .always(() => {
+                        this.loadingScreen.classList.add('uploadcare-hidden')
+                    })
             })
             .fail(() => {
                 this.loadingScreen.classList.add('uploadcare-hidden')
-                return Promise.reject('Fail')
+                return false;
             });
     }
 
