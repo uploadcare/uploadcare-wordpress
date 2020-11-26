@@ -95,7 +95,10 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
 <?php if($connectError !== null): ?>
     <div class="error">
         <p><strong><?= __('Cannot connect to Uploadcare account. Check your public / private keys')?></strong></p>
-        <small><pre><?= $connectError?></pre></small>
+        <p id="error-collapse-toggle" class="uc-toggle"><?= __('Support information') ?></p>
+        <div data-toggle="error-collapse-toggle" class="uc-collapsed hide" style="margin-bottom: 1rem">
+            <pre><small><?= $connectError?></small></pre>
+        </div>
     </div>
 <?php endif; ?>
 
@@ -144,7 +147,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                     <strong style="color: #23A100"><?= __('All your Media Library files have been transfered successfully') ?></strong>
                 </div>
             <?php else: ?>
-                <button class="button" type="submit" value="sync" name="uc_sync_data">
+                <button <?= $connectError !== null ? 'disabled="disabled"' : null ?> class="button" type="submit" value="sync" name="uc_sync_data">
                     <?php $loaderMediaCount = $loader->getLocalMediaCount() ?>
                     <?= \sprintf(
                         _n(
@@ -176,8 +179,8 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         }
         ?>
 
-        <h3 id="uc-collapse-toggle" class="uc-show-hide"><?= __('Advanced options', 'uploadcare')?></h3>
-        <div id="uc-advanced-options" class="uc-collapsed hide">
+        <h3 id="uc-collapse-toggle" class="uc-show-hide uc-toggle"><?= __('Advanced options', 'uploadcare')?></h3>
+        <div id="uc-advanced-options" data-toggle="uc-collapse-toggle" class="uc-collapsed hide">
             <h4><?= __('Backup', 'uploadcare')?> <a href="https://uploadcare.com/docs/start/settings/#project-settings-advanced-backup" target="_blank">[?]</a></h4>
             <p><?= __('All your Uploadcare files are backed up automatically. Additionally, you can configure backups to your Amazong S3 Bucket in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>, Uploading settings.', 'uploadcare')?></p>
 
@@ -234,12 +237,13 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
 
 <script>
     (() => {
-        document.getElementById('uc-collapse-toggle').addEventListener('click', () => {
-            const target = document.getElementById('uc-advanced-options');
-            if (target.classList.contains('hide'))
-                target.classList.remove('hide')
-            else
-                target.classList.add('hide')
+        document.querySelectorAll('.uc-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                const selector = '[data-toggle="' + e.target.id + '"]'
+                document.querySelectorAll(selector).forEach(target => {
+                    target.classList.contains('hide') ? target.classList.remove('hide') : target.classList.add('hide');
+                })
+            })
         });
     })()
 </script>

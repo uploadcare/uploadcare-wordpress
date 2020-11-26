@@ -1,10 +1,13 @@
 @import "spinner";
 
+.uc-toggle {
+  cursor: pointer;
+}
+
 .uc-show-hide {
   padding: 1rem;
   border-radius: 4px;
   background-color: #e6e6e6;
-  cursor: pointer;
 }
 
 .uc-collapsed {
