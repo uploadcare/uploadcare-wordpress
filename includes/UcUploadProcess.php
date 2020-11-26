@@ -104,7 +104,6 @@ class UcUploadProcess extends WP_Background_Process
             return false;
         }
 
-        $sourceFilename = $attachment->post_name;
         $file = \get_attached_file($item, true);
         \ULog(\sprintf('Modify attached file %s', $file));
 
@@ -113,7 +112,6 @@ class UcUploadProcess extends WP_Background_Process
 
             return false;
         }
-        $directory = \pathinfo($file, PATHINFO_DIRNAME);
 
         $fileInfo = $this->tryToGetExistingFile($attachment->ID);
         if (null === $fileInfo) {
@@ -127,8 +125,13 @@ class UcUploadProcess extends WP_Background_Process
         $this->admin->attach($fileInfo, (int) $item);
         self::$alreadySynced[] = $item;
 
+        /*
+         * Commented — we don't change images in existing posts, it's not working
+        $sourceFilename = $attachment->post_name;
+        $directory = \pathinfo($file, PATHINFO_DIRNAME);
         $this->removeStaled($directory, $sourceFilename);
         $this->admin->changeImageInPosts($sourceFilename, $fileInfo, [self::class, 'modifyBlocks']);
+        */
 
         return false;
     }

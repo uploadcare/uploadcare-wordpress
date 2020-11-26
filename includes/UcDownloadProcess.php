@@ -66,7 +66,10 @@ class UcDownloadProcess extends WP_Background_Process
         $post = $this->loadPost($item);
         if ($post !== null) {
             $this->updatePost($post, $item, $data);
+            /*
+             * Commented — we don't change images in existing posts, it's not working
             $this->admin->changeImageInPosts($item, \wp_get_attachment_image_src($post->ID, 'full')[0], [self::class, 'modifyBlocks']);
+            */
         } else {
             $this->createPost($item, $data);
         }
