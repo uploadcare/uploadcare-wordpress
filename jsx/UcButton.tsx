@@ -13,8 +13,18 @@ const upload = async () => {
         const block = wp.data.select('core/block-editor').getSelectedBlock();
         if (block === null) return false;
 
-        block.attributes.url = data.cdnUrl;
-        block.attributes.alt = data.name;
+        if (block.name === 'core/gallery') {
+            const newImage = {
+                fullUrl: data.cdnUrl,
+                url: data.cdnUrl,
+            }
+            block.attributes.images.push(newImage)
+        }
+
+        if (block.name === 'core/image') {
+            block.attributes.url = data.cdnUrl;
+            block.attributes.alt = data.name;
+        }
 
         wp.data.dispatch('core/block-editor').clearSelectedBlock();
         wp.data.dispatch('core/block-editor').replaceBlock(block.clientId, block);
