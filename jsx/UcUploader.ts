@@ -1,4 +1,5 @@
 import uploadcare from 'uploadcare-widget/uploadcare'
+import FileInfoResponse from "./FileInfoResponse";
 
 interface UcConfig {
     ajaxurl: string;
@@ -8,32 +9,6 @@ interface UcConfig {
     secureSignature?: string;
     secureExpire?: string;
     tabs: string;
-}
-
-interface ImageInfo {
-    color_mode: string;
-    datetime_original?: Date;
-    dpi?: number;
-    format: string;
-    geo_location?: [lat: number, lng: number],
-    height: number;
-    width: number;
-    orientation?: string
-    sequence: boolean;
-}
-
-interface FileInfoResponse {
-    cdnUrl: string;
-    originalUrl: string;
-    cdnUrlModifiers?: string;
-    isImage: boolean;
-    isStored: boolean;
-    mimeType: string;
-    name: string;
-    originalImageInfo?: ImageInfo;
-    size: number;
-    sourceInfo: { source: string, file: File };
-    uuid: string;
 }
 
 export default class UcUploader {
@@ -57,35 +32,23 @@ export default class UcUploader {
         this.loadingScreen.append(this.spinnerBlock);
     }
 
-    upload(): Promise<FileInfoResponse> {
+    async upload(): Promise<any> {
         document.body.append(this.loadingScreen);
         this.loadingScreen.classList.remove('uploadcare-hidden')
 
-        return uploadcare.openDialog([], null, {multiple: false})
+        return await uploadcare.openDialog([], null, {multiple: false})
             .done(data => {
-                this.loadingScreen.classList.remove('uploadcare-hidden');
-                return data.promise()
-                    .done((fileInfo: FileInfoResponse) => {
-                        this.storeImage(fileInfo as FileInfoResponse).then(json => {
-                            this.loadingScreen.classList.add('uploadcare-hidden');
-                            return json;
-                        }).catch(err => {
-                            this.makeErrorBlock(err);
-                        }).finally(() => {
-                            this.loadingScreen.classList.add('uploadcare-hidden')
-                        });
-                    })
-                    .fail((reason, info) => {
-                        this.makeErrorBlock(`File ${info.name} not uploaded to cloud`)
-                        return false;
-                    })
-                    .always(() => {
-                        this.loadingScreen.classList.add('uploadcare-hidden')
-                    })
-            })
-            .fail(() => {
+                return data.then((fileInfo: FileInfoResponse) => {
+                    return this.storeImage(fileInfo).then((fi: FileInfoResponse) => fi);
+                }).fail((reason, info) => {
+                    this.makeErrorBlock(`File ${info.name} not uploaded to cloud`)
+                    return Promise.reject()
+                }).always(() => {
+                    this.loadingScreen.classList.add('uploadcare-hidden')
+                })
+            }).fail(() => {
                 this.loadingScreen.classList.add('uploadcare-hidden')
-                return false;
+                return Promise.reject();
             });
     }
 
@@ -102,7 +65,7 @@ export default class UcUploader {
         this.errorBlockWrapper.append(errBlock);
     }
 
-    private storeImage(file: FileInfoResponse): Promise<Response> {
+    private storeImage(file: FileInfoResponse): Promise<FileInfoResponse> {
         const data = new FormData();
         data.append('action', 'uploadcare_handle');
         data.append('file_url', file.cdnUrl);
@@ -113,9 +76,16 @@ export default class UcUploader {
             body: data,
         }).then(response => {
             if (response.status !== 200) {
+                this.makeErrorBlock(`File ${file.name} not uploaded to cloud`)
                 throw new Error('Unable to get valid response from Wordpress engine');
             }
-            return response.json()
+            return response.json().then(d => {
+                file.attach_id = d.attach_id;
+
+                return file;
+            })
+        }).finally(() => {
+            this.loadingScreen.classList.add('uploadcare-hidden')
         });
     }
 }
