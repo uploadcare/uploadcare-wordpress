@@ -90,14 +90,24 @@ class UcFront
                     'target' => $target,
                     'data-full-url' => $node->extract(['data-full-url'])[0],
                 ];
+            } else {
+                $collation[$node->attr('src')] = [
+                    'ucUrl' => null,
+                    'target' => $node->attr('src'),
+                    'data-full-url' => $node->extract(['data-full-url'])[0],
+                ];
             }
 
         });
         $collation = \array_filter($collation);
 
-        $replace = $blink ? 'data-blink-uuid' : 'src';
         foreach ($collation as $src => $targetArray) {
+            $replace = $blink ? 'data-blink-uuid' : 'src';
             $rgx = sprintf('/src=\"%s\"/mu', \preg_quote($src, '/'));
+            if ($targetArray['ucUrl'] === null) {
+                $replace = 'data-blink-src';
+            }
+
             $content = (string) \preg_replace($rgx, \sprintf('%s="%s"', $replace, $targetArray['target']), $content);
             if (!empty($targetArray['data-full-url'])) {
                 $content = (string) \preg_replace('/' . \preg_quote($targetArray['data-full-url'], '/') . '/mu', $targetArray['ucUrl'], $content);

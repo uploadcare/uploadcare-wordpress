@@ -36,7 +36,6 @@ const upload = () => {
         document.querySelectorAll('div.uploadcare-loading-screen').forEach(el => {
             el.classList.add('uploadcare-hidden')
         });
-
     }
 }
 
