@@ -61,10 +61,8 @@ class UcFront
             return $content;
         }
 
-        if ($block['blockName'] === 'core/image' || $block['blockName'] === 'core/gallery') {
-            return $block['blockName'] === 'core/gallery'
-                ? $this->changeContent($content, false)
-                : $this->changeContent($content, $this->adaptiveDelivery);
+        if ($block['blockName'] === 'core/image') {
+            return $this->changeContent($content, $this->adaptiveDelivery);
         }
 
         return $content;
