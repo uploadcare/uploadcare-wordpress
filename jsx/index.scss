@@ -1,5 +1,13 @@
 @import "spinner";
 
+.wp-block-uploadcare-image {
+  figcaption {
+    &:focus {
+      outline: solid 1px gray;
+    }
+  }
+}
+
 .uc-toggle {
   cursor: pointer;
 }

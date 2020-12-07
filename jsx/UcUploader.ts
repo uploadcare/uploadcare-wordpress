@@ -32,24 +32,22 @@ export default class UcUploader {
         this.loadingScreen.append(this.spinnerBlock);
     }
 
-    async upload(): Promise<any> {
+    async upload(multiple: Boolean): Promise<FileInfoResponse> {
         document.body.append(this.loadingScreen);
         this.loadingScreen.classList.remove('uploadcare-hidden')
 
-        return await uploadcare.openDialog([], null, {multiple: false})
-            .done(data => {
-                return data.then((fileInfo: FileInfoResponse) => {
-                    return this.storeImage(fileInfo).then((fi: FileInfoResponse) => fi);
-                }).fail((reason, info) => {
-                    this.makeErrorBlock(`File ${info.name} not uploaded to cloud`)
-                    return Promise.reject()
-                }).always(() => {
-                    this.loadingScreen.classList.add('uploadcare-hidden')
-                })
-            }).fail(() => {
-                this.loadingScreen.classList.add('uploadcare-hidden')
-                return Promise.reject();
-            });
+        try {
+            const data = await uploadcare.openDialog([], null, {multiple: multiple}).done();
+            return await this.storeImage(data);
+        } catch (err) {
+            if (typeof err !== 'undefined') {
+                this.makeErrorBlock('Unable to upload file');
+                return Promise.reject(err);
+            }
+            return Promise.reject();
+        } finally {
+            this.loadingScreen.classList.add('uploadcare-hidden')
+        }
     }
 
     private makeErrorBlock(errorText: string): void {
