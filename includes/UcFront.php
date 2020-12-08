@@ -60,8 +60,9 @@ class UcFront
         if (\is_admin()) {
             return $content;
         }
+        $blocks = ['core/image', 'uploadcare/image'];
 
-        if ($block['blockName'] === 'core/image') {
+        if (\in_array($block['blockName'], $blocks, true)) {
             return $this->changeContent($content, $this->adaptiveDelivery);
         }
 
