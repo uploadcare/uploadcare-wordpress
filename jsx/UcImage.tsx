@@ -1,22 +1,26 @@
-import { registerBlockType } from '@wordpress/blocks';
-import React from "react/index";
-import { Dashicon } from '@wordpress/components';
-import UcUploader from "./UcUploader";
+import {registerBlockType} from '@wordpress/blocks';
+import React from 'react/index';
+import UcUploader from './UcUploader';
 import config from './uc-config';
-import { __ } from '@wordpress/i18n';
-import { RichText } from '@wordpress/block-editor';
-import { Button } from '@wordpress/components';
+import {__} from '@wordpress/i18n';
+import {RichText, MediaUpload} from '@wordpress/block-editor';
+import {Button} from '@wordpress/components';
+import FileInfoResponse from './FileInfoResponse';
+import imageIcon from './icons/image';
+import WpMedia from './WpMedia';
 
 const uploader = new UcUploader(config.config);
 
-const icon = () => (
-    <Dashicon icon={'format-image'}/>
-)
+const wrapperStyle = {
+    backgroundColor: '#fff',
+    padding: '.5rem',
+};
 
 registerBlockType('uploadcare/image', {
-    title: 'Uploadcare Image',
+    title: __('Uploadcare Image'),
+    description: __('Add image with awesome Adaptive Delivery option'),
     category: 'media',
-    icon: icon(),
+    icon: imageIcon(),
     attributes: {
         title: {
             type: 'array',
@@ -25,6 +29,9 @@ registerBlockType('uploadcare/image', {
         },
         mediaID: {
             type: 'number',
+        },
+        mediaUid: {
+            type: 'string',
         },
         mediaURL: {
             type: 'string',
@@ -37,40 +44,62 @@ registerBlockType('uploadcare/image', {
         attributes: {
             title: __('Uploadcare', 'uploadcare'),
             mediaURL: 'https://ucarecdn.com/6c5b97ee-4ce9-490f-92e9-50cba0271917/intelligence.svg',
-            mediaID: '0000'
-        }
+            mediaID: '0000',
+            mediaUid: 'no-uuid',
+        },
     },
     edit(props) {
         const {className, attributes: {title, mediaID, mediaURL}, setAttributes} = props;
-        const onChangeTitle = (value) => { setAttributes({title: value}); };
+        const onChangeTitle = (value) => {
+            setAttributes({title: value});
+        };
         const setImage = () => {
-            uploader.upload(false).then((fileInfo) => onSelectImage(fileInfo)).catch(() => {});
-        }
-        const onSelectImage = (media) => {
+            uploader.upload(false).then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
+        };
+        const onUploadImage = (media: FileInfoResponse) => {
             setAttributes({
                 mediaURL: media.cdnUrl,
                 mediaID: media.attach_id,
+                mediaUid: media.uuid,
             });
         };
+        const onSelectImage = (wpMedia: WpMedia) => {
+            setAttributes({
+                mediaURL: wpMedia.url,
+                mediaID: wpMedia.id,
+                mediaUid: wpMedia.filename,
+            });
+        }
 
-        return <figure className={ className }>
-            {mediaID ? <img alt={title} src={mediaURL} /> : null}
-            <RichText tagName={'figcaption'} value={title} onChange={onChangeTitle}/>
-            <Button
-                className='uploadcare-picker__button'
-                onClick={setImage}
-            >
-                { __('Upload via Uploadcare', 'uploadcare') }
-            </Button>
-        </figure>;
+        return <div className={'uploadcare-handler'}>
+            <figure className={className}>
+                {mediaID ? <img alt={title} src={mediaURL}/> : null}
+                <RichText tagName={'figcaption'} value={title} onChange={onChangeTitle}/>
+            </figure>
+            <div style={wrapperStyle}>
+                <Button
+                    className={'uploadcare-picker__button'}
+                    onClick={setImage}
+                >
+                    {__('Upload via Uploadcare', 'uploadcare')}
+                </Button>
+                <MediaUpload
+                    onSelect={onSelectImage}
+                    render={({ open }) => (
+                        <Button isTertiary onClick={ open }>{__('WordPress Media Library')}</Button>
+                    )}
+                    />
+            </div>
+        </div>
+            ;
     },
     save(props) {
-        const {className, attributes: {title, mediaID, mediaURL} } = props;
+        const {className, attributes: {title, mediaID, mediaURL}} = props;
 
-        return <figure className={ className }>
-            { mediaURL ? (<img id={mediaID} src={mediaURL} className={'uploadcare-image'} alt={title} />) : null }
-            <RichText.Content tagName="figcaption" value={title} />
-        </figure>
+        return <figure className={className}>
+            {mediaID ? (<img id={mediaID} src={mediaURL} className={'uploadcare-image'} alt={title}/>) : null}
+            <RichText.Content tagName="figcaption" value={title}/>
+        </figure>;
     },
 });
 
