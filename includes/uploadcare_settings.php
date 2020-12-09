@@ -203,7 +203,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
                        value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
             </p>
-            <p><?= __('Note: currently this feature will disable Adaptive Delivery for files not hosted in Uploadcare.', 'uploadcare')?></p>
+            <p><?= __('Note: this feature will disable Adaptive Delivery for files that are not hosted with Uploadcare.', 'uploadcare')?></p>
 
             <h4><?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
             <p>
