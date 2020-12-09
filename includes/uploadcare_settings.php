@@ -180,7 +180,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 <?php endif; ?>
             <?php endif; ?>
 
-            <p><?= __("Your files are intact during the transfer. When the process is fully complete, the original WordPress files will be kept. We keep them because WordPress engine is not reliable and for now we can't ensure that all image URLs are replaced with a new ones.", 'uploadcare')?></p>
+            <p><?= __("Your files are intact during the transfer and after. We keep the original file duplicates because the WordPress engine is not reliable and some image URLs may mot be replaced with the new ones.", 'uploadcare')?></p>
             <p><?= __("If you accidentally upload a few files with a standard WordPress uploader later, you can do Media Library transfer again to keep everything in one place and to use all Uploadcare options.", 'uploadcare')?></p>
             <p><?= __("The process is reversable if you decide to stop using Uploadcare for your WordPress. Go to the Advanced options and put all files back to your WordPress Media Library.", 'uploadcare')?></p>
 
