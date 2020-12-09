@@ -10,7 +10,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
 
-Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Serve lazy loading responsive images, video or audio embeds with Uploadcare CDN to improve your WordPress site performance.
+Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert images to WordPress posts and make them responsive and lazy loaded automatically. Embed video & audio and serve everything with Uploadcare CDN to improve your WordPress site performance.
 
 This plugin allows WordPress authors upload files with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
 
