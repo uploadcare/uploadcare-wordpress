@@ -12,7 +12,7 @@ Donate link: https://uploadcare.com/pricing/
 
 Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert images to WordPress posts and make them responsive and lazy loaded automatically. Embed video & audio and serve everything with Uploadcare CDN to improve your WordPress site performance.
 
-This plugin allows WordPress authors upload files with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
+This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
 
 == Description ==
 
