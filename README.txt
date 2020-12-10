@@ -28,7 +28,7 @@ This plugin allows WordPress authors upload images and other files with Uploadca
 
 ### Usage ###
 
-* When adding an image, video or audio while editing a page or in Media Library, choose one of the Uploadcare options, or add them to Media Library with "Upload with Uploadcare".
+* To add an image, video & audio while editing a post or a page, choose one of the Uploadcare blocks. Also, you can upload any file directly to your Media Library with “Upload with Uploadcare” button — it’ll be hosted and delivered with Uploadcare.
 * Use a built-in image editor when needed.
 * If you accidentally upload a file using a standard WordPress option, you can easily transfer them to Uploadcare to use Adaptive Delivery and other features.
 
