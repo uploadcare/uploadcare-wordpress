@@ -1,2 +1,3 @@
-import "./index.scss";
-import "./UcImage";
+import './index.scss';
+import './UcImage';
+// import './UcPhotoswipe'

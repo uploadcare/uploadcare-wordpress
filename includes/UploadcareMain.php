@@ -63,9 +63,7 @@ class UploadcareMain
         $ucFront = new UcFront($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('wp_enqueue_scripts', $ucFront, 'frontendScripts');
-        if (\get_option('uploadcare_adaptive_delivery')) {
-            $this->loader->add_filter('render_block', $ucFront, 'renderBlock', 0, 2);
-        }
+        $this->loader->add_filter('render_block', $ucFront, 'renderBlock', 0, 2);
         $this->loader->add_filter('post_thumbnail_html', $ucFront, 'postFeaturedImage', 10, 5);
     }
 

@@ -37,9 +37,11 @@ class UcFront
     {
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
         \wp_register_script('blink-loader', $pluginDirUrl . '/js/blinkLoader.js', [], $this->pluginVersion, false);
+//        \wp_register_script('uploadcare-elements', 'https://uploadcare.dev/elements.js?' . \get_option('uploadcare_public'), [], null, false);
         if (!empty(\get_option('uploadcare_public', null))) {
             \wp_localize_script('blink-loader', 'UC_PUBLIC_KEY', \get_option('uploadcare_public'));
             \wp_enqueue_script('blink-loader');
+//            \wp_enqueue_script('uploadcare-elements');
         }
     }
 

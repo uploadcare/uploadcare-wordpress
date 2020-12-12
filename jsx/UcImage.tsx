@@ -17,7 +17,7 @@ const wrapperStyle = {
 };
 
 registerBlockType('uploadcare/image', {
-    title: __('Uploadcare Image'),
+    title: __('Uploadcare Image', 'uploadcare'),
     description: __('Add image with awesome Adaptive Delivery option'),
     category: 'media',
     icon: imageIcon(),
@@ -54,7 +54,7 @@ registerBlockType('uploadcare/image', {
             setAttributes({title: value});
         };
         const setImage = () => {
-            uploader.upload(false).then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
+            uploader.upload().then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
         };
         const onUploadImage = (media: FileInfoResponse) => {
             setAttributes({
