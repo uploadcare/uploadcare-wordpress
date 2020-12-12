@@ -134,39 +134,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
 
-        <h4><?= __('3. Transfer WordPress Media Library to Uploadcare', 'uploadcare')?></h4>
-        <p><?= __('It\'ll move all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud storage and then it\'ll update image URLs in all posts and pages automatically. The transfer is required if you want to use <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a>.', 'uploadcare')?></p>
-        <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
-            <div style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
-                <strong><?= __('Transfer is in progress') ?></strong>
-            </div>
-        <?php else: ?>
-            <?php if ($loader->getHasLocalMedia() === false): ?>
-                <div
-                    style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
-                    <strong style="color: #23A100"><?= __('All your Media Library files have been transfered successfully') ?></strong>
-                </div>
-            <?php else: ?>
-                <button <?= $connectError !== null ? 'disabled="disabled"' : null ?> class="button" type="submit" value="sync" name="uc_sync_data">
-                    <?php $loaderMediaCount = $loader->getLocalMediaCount() ?>
-                    <?= \sprintf(
-                        _n(
-                            'Transfer %d WordPress image to Uploadcare',
-                            'Transfer %d WordPress images to Uploadcare',
-                            $loaderMediaCount,
-                            'uploadcare'
-                        ),
-                        \number_format_i18n($loaderMediaCount)
-                    ) ?>
-                </button>
-            <?php endif; ?>
-        <?php endif; ?>
-
-        <p><?= __("Your files are intact during the transfer. When the process is fully complete, the original WordPress files will be removed.", 'uploadcare')?></p>
-        <p><?= __("If you accidentally upload a few files with a standard WordPress uploader later, you can do Media Library transfer again to keep everything in one place and to use all Uploadcare options.", 'uploadcare')?></p>
-        <p><?= __("The process is reversable if you decide to stop using Uploadcare for your WordPress. Go to the Advanced options and put all files back to your WordPress Media Library.", 'uploadcare')?></p>
-
-        <h4><?= __('4. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
+        <h4><?= __('3. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
         <?php
         foreach ($tabs as $tn => $tab) {
             ?>
@@ -179,8 +147,43 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         }
         ?>
 
+        <h4><?= __('4. Start uploading image, video or audio files', 'uploadcare') ?></h4>
+        <p><?= \sprintf(__('Upload any file in <a href="/wp-admin/media-new.php" target="_blank">Media Library</a>, or choose Uploadcare Image, Uploadcare Gallery, Uploadcare Photoswipe, Uploadcare Video, or Uploadcare Audio when editing a <a href="/wp-admin/edit.php" target="_blank">post</a> or a <a href="/wp-admin/edit.php?post_type=page" target="_blank">page</a>.', 'uploadcare')) ?></p>
+
         <h3 id="uc-collapse-toggle" class="uc-show-hide uc-toggle"><?= __('Advanced options', 'uploadcare')?></h3>
         <div id="uc-advanced-options" data-toggle="uc-collapse-toggle" class="uc-collapsed hide">
+            <h4><?= __('Transfer WordPress Media Library to Uploadcare', 'uploadcare')?></h4>
+            <p><?= __('It\'ll move all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud storage and then it\'ll update image URLs in all posts and pages automatically. The transfer is required if you want to use <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> with Secure Uploading feature.', 'uploadcare')?></p>
+            <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
+                <div style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
+                    <strong><?= __('Transfer is in progress') ?></strong>
+                </div>
+            <?php else: ?>
+                <?php if ($loader->getHasLocalMedia() === false): ?>
+                    <div
+                        style="display: inline-block; border: solid 1px #23a100; padding: 0 10px; line-height: 30px; border-radius: 4px;">
+                        <strong style="color: #23A100"><?= __('All your Media Library files have been transfered successfully') ?></strong>
+                    </div>
+                <?php else: ?>
+                    <button <?= $connectError !== null ? 'disabled="disabled"' : null ?> class="button" type="submit" value="sync" name="uc_sync_data">
+                        <?php $loaderMediaCount = $loader->getLocalMediaCount() ?>
+                        <?= \sprintf(
+                            _n(
+                                'Transfer %d WordPress image to Uploadcare',
+                                'Transfer %d WordPress images to Uploadcare',
+                                $loaderMediaCount,
+                                'uploadcare'
+                            ),
+                            \number_format_i18n($loaderMediaCount)
+                        ) ?>
+                    </button>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <p><?= __("Your files are intact during the transfer and after. We keep the original file duplicates because the WordPress engine is not reliable and some image URLs may mot be replaced with the new ones.", 'uploadcare')?></p>
+            <p><?= __("If you accidentally upload a few files with a standard WordPress uploader later, you can do Media Library transfer again to keep everything in one place and to use all Uploadcare options.", 'uploadcare')?></p>
+            <p><?= __("The process is reversable if you decide to stop using Uploadcare for your WordPress. Go to the Advanced options and put all files back to your WordPress Media Library.", 'uploadcare')?></p>
+
             <h4><?= __('Backup', 'uploadcare')?> <a href="https://uploadcare.com/docs/start/settings/#project-settings-advanced-backup" target="_blank">[?]</a></h4>
             <p><?= __('All your Uploadcare files are backed up automatically. Additionally, you can configure backups to your Amazong S3 Bucket in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>, Uploading settings.', 'uploadcare')?></p>
 
@@ -200,6 +203,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 <input id="uc_uploadcare_upload_lifetime" type="text" name="uploadcare_upload_lifetime"
                        value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
             </p>
+            <p><?= __('Note: this feature will disable Adaptive Delivery for files that are not hosted with Uploadcare.', 'uploadcare')?></p>
 
             <h4><?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
             <p>
@@ -210,7 +214,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                     <?= __("Use Adaptive Delivery whenever possible. Uncheck only to force disable it.") ?>
                 </label>
             </p>
-            <p><?= __('Note: check if your Uploadcare plan includes Adaptive Delivery. When not included, a standard CDN option will be used instead, and images won\'t be responsive to screen sizes.', 'uploadcare')?></p>
+            <p><?= __('Note: when disabled, a standard CDN option will be used instead, and images won\'t be responsive to screen sizes.', 'uploadcare')?></p>
 
             <h4><?= __('File Uploader fine tuning', 'uploadcare')?> <a href="https://uploadcare.com/docs/uploads/file_uploader_options/" target="_blank">[?]</a></h4>
             <p>
