@@ -1,10 +1,10 @@
-import {registerBlockType} from '@wordpress/blocks';
+import { registerBlockType } from '@wordpress/blocks';
 import React from 'react/index';
 import UcUploader from './UcUploader';
 import config from './uc-config';
-import {__} from '@wordpress/i18n';
-import {RichText, MediaUpload} from '@wordpress/block-editor';
-import {Button} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import { RichText, MediaUpload } from '@wordpress/block-editor';
+import { Button } from '@wordpress/components';
 import FileInfoResponse from './FileInfoResponse';
 import imageIcon from './icons/image';
 import WpMedia from './WpMedia';
@@ -54,7 +54,7 @@ registerBlockType('uploadcare/image', {
             setAttributes({title: value});
         };
         const setImage = () => {
-            uploader.upload().then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
+            uploader.upload(mediaURL).then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
         };
         const onUploadImage = (media: FileInfoResponse) => {
             setAttributes({
@@ -79,7 +79,7 @@ registerBlockType('uploadcare/image', {
             <div style={wrapperStyle}>
                 <Button
                     className={'uploadcare-picker__button'}
-                    onClick={setImage}
+                    onClick={ setImage }
                 >
                     {__('Upload via Uploadcare', 'uploadcare')}
                 </Button>

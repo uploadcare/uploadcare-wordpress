@@ -1,5 +1,6 @@
 import uploadcare from 'uploadcare-widget/uploadcare'
 import FileInfoResponse from "./FileInfoResponse";
+import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
 
 interface UcConfig {
     ajaxurl: string;
@@ -33,32 +34,16 @@ export default class UcUploader {
         document.body.append(this.loadingScreen);
     }
 
-    async multiUpload(/*init: Array<any>*/): Promise<FileInfoResponse[]> {
-        const initFiles = [
-            uploadcare.fileFrom('uploaded', '586eabc1-91ff-4942-adb2-e89a60893bc0'),
-            uploadcare.fileFrom('uploaded', 'bebd4fb4-e106-4adb-968d-a12e253ce5e7'),
-            uploadcare.fileFrom('uploaded', 'ddcbc84e-ee4f-4126-a0d5-46535a03a172'),
-        ];
-
-        // todo https://uploadcare.com/docs/file_uploader_api/files_uploads/#file-new-instance
-        const data = await uploadcare.openDialog(initFiles, null, {multiple: true}).done();
-        return Promise.all(data.files())
-
-        // return files.forEach((file: Promise<FileInfoResponse>) => file.then(res => {
-        //     console.log(res)
-        //
-        //     return res;
-        // }));
-    }
-
-    async upload(): Promise<FileInfoResponse> {
+    async upload(mediaUrl?: string): Promise<FileInfoResponse> {
         this.loadingScreen.classList.remove('uploadcare-hidden')
+        uploadcare.registerTab('preview', uploadcareTabEffects)
 
+        const initFile = mediaUrl ? [uploadcare.fileFrom('uploaded', mediaUrl)] : []
         try {
-            const data = await uploadcare.openDialog([], null, {multiple: false}).done();
+            const data = await uploadcare.openDialog(initFile, null, {multiple: false}).done();
             return await this.storeImage(data);
         } catch (err) {
-            if (typeof err !== 'undefined') {
+            if (err === 'upload') {
                 this.makeErrorBlock('Unable to upload file');
                 return Promise.reject(err);
             }

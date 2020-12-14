@@ -107,8 +107,11 @@ class UcAdmin
 
         \wp_enqueue_script('uc-config');
         \wp_enqueue_script('uploadcare-elements');
-        \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
         \wp_enqueue_style('uc-editor');
+
+        if (\in_array($hook, ['post.php', 'post-new.php'], true)) {
+            \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
+        }
     }
 
     /**
@@ -118,15 +121,15 @@ class UcAdmin
      */
     public function uploadcare_handle()
     {
-        $id = $this->fileId($_POST['file_url']);
+        $cdnUrl = $_POST['file_url'];
+        $id = $this->fileId($cdnUrl);
 
         $file = $this->api->file()->fileInfo($id);
-        $attachment_id = $this->attach($file);
-        $fileUrl = \get_post_meta($attachment_id, '_wp_attached_file', true);
+        $attachment_id = $this->attach($file, null, $cdnUrl);
 
         $result = [
             'attach_id' => $attachment_id,
-            'fileUrl' => $fileUrl,
+            'fileUrl' => $cdnUrl,
             'isLocal' => false,
         ];
 
@@ -481,7 +484,11 @@ HTML;
      */
     private function fileId($url)
     {
-        return (string) \pathinfo($url, PATHINFO_BASENAME);
+        if (($spl = \strpos($url, '/-')) !== false) {
+            $url = \substr($url, 0, $spl);
+        }
+
+        return (string) \pathinfo(\rtrim($url, '/') . '/', PATHINFO_BASENAME);
     }
 
     private function thumbnailSize($size = 'thumbnail')
@@ -550,10 +557,11 @@ HTML;
     /**
      * @param FileInfoInterface $file
      * @param int|null          $id existing Post ID
+     * @param string|null       $modifiedUrl
      *
      * @return int|WP_Error
      */
-    public function attach(FileInfoInterface $file, $id = null)
+    public function attach(FileInfoInterface $file, $id = null, $modifiedUrl = null)
     {
         $userId = get_current_user_id();
         $filename = $file->getOriginalFilename();
@@ -581,7 +589,7 @@ HTML;
         $attachment_id = wp_insert_post($attachment, true);
         $meta = $isImage ? $this->getFinalDim($file) : ['width' => null, 'height' => null];
 
-        $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
+        $attached_file = $modifiedUrl !== null ? $modifiedUrl : \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
         \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
         \add_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid(), true);
 
