@@ -10,7 +10,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
 
-Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert images to WordPress posts and make them responsive and lazy loaded automatically. Embed video & audio and serve everything with Uploadcare CDN to improve your WordPress site performance.
+Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert them to WordPress posts and serve responsive lazy loaded images with Uploadcare CDN to improve your WordPress site performance.
 
 This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
 
@@ -20,7 +20,7 @@ This plugin allows WordPress authors upload images and other files with Uploadca
 
 * Upload files of any type (image, video, document, archive) and size (up to 5 TB).
 * Upload from your device, URL, social network (Facebook, Instagram, VK, Flickr), and cloud (Dropbox, Google Drive, Google Photos, OneDrive, Box, Huddle, Evernote).
-* Insert images and galleries, embed video & audio files into your posts, and place other files and archives for download.
+* Insert images into your posts, and place other files and archives for download.
 * Uploadcare CDN serves images faster in all parts of the world. Adaptive Delivery analyzes users' context and serves images in a suitable format, resolution, compression, which closes all image-related frontend tasks.
 * Transfer your existing Media Library to your Uploadcare storage with no risk of data loss.
 * Specify your custom CDN domain, and use a Secure Uploading feature to control who and when can upload files.
@@ -28,7 +28,7 @@ This plugin allows WordPress authors upload images and other files with Uploadca
 
 ### Usage ###
 
-* To add an image, video & audio while editing a post or a page, choose one of the Uploadcare blocks. Also, you can upload any file directly to your Media Library with “Upload with Uploadcare” button — it’ll be hosted and delivered with Uploadcare.
+* To add an image while editing a post or a page, choose "Uploadcare image" block. Also, you can upload any file directly to your Media Library with “Upload with Uploadcare” button — it’ll be hosted and delivered with Uploadcare.
 * Use a built-in image editor when needed.
 * If you accidentally upload a file using a standard WordPress option, you can easily transfer them to Uploadcare to use Adaptive Delivery and other features.
 
