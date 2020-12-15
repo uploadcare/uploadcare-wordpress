@@ -3,8 +3,8 @@
 Contributors: andrew72ru
 Tags: media upload, file upload, file handling, cdn, storage, adaptive delivery, responsive, optimization, performance, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
 Requires at least: 5+
-Tested up to: 5.3.3
-Stable tag: 2.7.2
+Tested up to: 5.6
+Stable tag: 3.0.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
