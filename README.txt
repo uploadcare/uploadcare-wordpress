@@ -1,7 +1,8 @@
 === Uploadcare File Uploader and Adaptive Delivery ===
 
 Contributors: andrew72ru
-Tags: media upload, file upload, file handling, cdn, storage, adaptive delivery, responsive, optimization, performance, facebook, dropbox, instagram, google drive, vk, evernote, box, images, flickr
+Tags: media upload, image upload, file upload, camera upload, file handling, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance, facebook, google drive, google photos, dropbox, instagram, evernote, flickr, onedrive, box, huddle, vk
+
 Requires at least: 5+
 Tested up to: 5.6
 Stable tag: 3.0.0
