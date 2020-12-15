@@ -147,8 +147,8 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
         }
         ?>
 
-        <h4><?= __('4. Start uploading image, video or audio files', 'uploadcare') ?></h4>
-        <p><?= \sprintf(__('Upload any file in <a href="/wp-admin/media-new.php" target="_blank">Media Library</a>, or choose Uploadcare Image, Uploadcare Gallery, Uploadcare Photoswipe, Uploadcare Video, or Uploadcare Audio when editing a <a href="/wp-admin/edit.php" target="_blank">post</a> or a <a href="/wp-admin/edit.php?post_type=page" target="_blank">page</a>.', 'uploadcare')) ?></p>
+        <h4><?= __('4. Start uploading', 'uploadcare') ?></h4>
+        <p><?= \sprintf(__('Upload any file in <a href="/wp-admin/media-new.php" target="_blank">Media Library</a>, or choose Uploadcare Image when editing a <a href="/wp-admin/edit.php" target="_blank">post</a> or a <a href="/wp-admin/edit.php?post_type=page" target="_blank">page</a>.', 'uploadcare')) ?></p>
 
         <h3 id="uc-collapse-toggle" class="uc-show-hide uc-toggle"><?= __('Advanced options', 'uploadcare')?></h3>
         <div id="uc-advanced-options" data-toggle="uc-collapse-toggle" class="uc-collapsed hide">
