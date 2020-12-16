@@ -94,8 +94,8 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
 
 <?php if($connectError !== null): ?>
     <div class="error">
-        <p><strong><?= __('Cannot connect to Uploadcare account. Check your public / private keys')?></strong></p>
-        <p id="error-collapse-toggle" class="uc-toggle"><?= __('Support information') ?></p>
+        <p><strong><?= __('Can\'t connect to the Uploadcare account. Check your public & secret keys.')?></strong></p>
+        <p id="error-collapse-toggle" class="uc-toggle"><?= __('More information') ?></p>
         <div data-toggle="error-collapse-toggle" class="uc-collapsed hide" style="margin-bottom: 1rem">
             <pre><small><?= $connectError?></small></pre>
         </div>
