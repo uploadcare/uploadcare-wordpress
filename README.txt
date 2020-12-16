@@ -107,7 +107,7 @@ Send us your feedback, <help@uploadcare.com>
 == Upgrade Notice ==
 
 = 3.0.0 =
-Brand new plugin, rewritten from scratch. In addition to uploading files it now supports Adaptive Delivery which improves image appearance on all devices and increases page load speed. Transfer Media Library files to your Uploadcare storage and update image URLs in all posts automatically. Intuitive settings.
+Brand new plugin, rewritten from scratch. In addition to uploading files it now supports Adaptive Delivery which improves image appearance on all devices and increases page load speed. Transfer Media Library files to your Uploadcare storage. Intuitive settings.
 
 = 2.2.0 =
 If you were controlling source tabs via "finetuning" setting, you should delete it and set new "source tab" config.
@@ -129,7 +129,7 @@ Access all files in your Uploadcare account via Media Library.
 = 3.0.0 =
 * Brand new version, rewritten from scratch.
 * Adaptive image delivery system for auto responsiviness, quality optimization, and lazy loading.
-* Better integration with Media Library and Guttenberg.
+* Better integration with Media Library and WYSIWYG.
 * Transfer your old files to Uploadcare and back. (Risk free!)
 * Updated Settings page.
 * Removed "uploadcare" shortcode that allowed your readers to upload files.
