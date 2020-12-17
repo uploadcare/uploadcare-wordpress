@@ -54,6 +54,10 @@ class UcFront
      */
     public function renderBlock($content, array $block)
     {
+        if (empty(\get_option('uploadcare_public')) || empty(\get_option('uploadcare_secret'))) {
+            return $content;
+        }
+
         if (!isset($block['blockName'])) {
             return $content;
         }
