@@ -107,7 +107,7 @@ class UcFront
         foreach ($collation as $src => $targetArray) {
             $replace = $blink ? 'data-blink-uuid' : 'src';
             $rgx = sprintf('/src=\"%s\"/mu', \preg_quote($src, '/'));
-            if ($targetArray['ucUrl'] === null) {
+            if ($targetArray['ucUrl'] === null && $this->adaptiveDelivery) {
                 $replace = 'data-blink-src';
             }
 
