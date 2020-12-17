@@ -67,7 +67,9 @@ class UcFront
         $blocks = ['core/image', 'uploadcare/image'];
 
         if (\in_array($block['blockName'], $blocks, true)) {
-            return $this->changeContent($content, $this->adaptiveDelivery);
+            $itemId = $block['blockName'] === 'core/image' ? $block['attrs']['id'] : $block['attrs']['mediaID'];
+
+            return $this->changeContent($content, $this->adaptiveDelivery, (int) $itemId);
         }
 
         return $content;
@@ -75,45 +77,37 @@ class UcFront
 
     /**
      * @param string $content
-     * @param bool $blink
+     * @param bool   $blink
+     * @param int    $imageId
+     *
      * @return string
      */
-    protected function changeContent($content, $blink = true)
+    protected function changeContent($content, $blink, $imageId)
     {
         $crawler = new Crawler($content);
         $collation = [];
-        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $blink) {
-            $imageId = (int) \preg_replace('/\D/', '', $node->attr('class'));
-            $ucUrl = \get_post_meta($imageId, 'uploadcare_url', true);
-            $ucUuid = \get_post_meta($imageId, 'uploadcare_uuid', true);
-            if (!empty($ucUrl)) {
-                $target = $blink ? $ucUuid : \sprintf(UploadcareMain::RESIZE_TEMPLATE, $ucUrl, '2048x2048');
-                $collation[$node->attr('src')] = [
-                    'ucUrl' => $ucUrl,
-                    'target' => $target,
-                    'data-full-url' => $node->extract(['data-full-url'])[0],
-                ];
-            } else {
-                $collation[$node->attr('src')] = [
-                    'ucUrl' => null,
-                    'target' => $node->attr('src'),
-                    'data-full-url' => $node->extract(['data-full-url'])[0],
-                ];
+        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $blink, $imageId) {
+            $imageUrl = $node->attr('src');
+            $attachedFile = \get_post_meta($imageId, '_wp_attached_file', true);
+            $isLocal = true;
+
+            if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
+                $imageUrl = $attachedFile;
+                $isLocal = false;
             }
 
+            if (!$this->adaptiveDelivery && !$isLocal) {
+                $imageUrl = \sprintf(UploadcareMain::RESIZE_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048');
+            }
+
+            $collation[$node->attr('src')] = $imageUrl;
         });
         $collation = \array_filter($collation);
-
-        foreach ($collation as $src => $targetArray) {
-            $replace = $blink ? 'data-blink-uuid' : 'src';
-            $rgx = sprintf('/src=\"%s\"/mu', \preg_quote($src, '/'));
-            if ($targetArray['ucUrl'] === null && $this->adaptiveDelivery) {
-                $replace = 'data-blink-src';
-            }
-
-            $content = (string) \preg_replace($rgx, \sprintf('%s="%s"', $replace, $targetArray['target']), $content);
-            if (!empty($targetArray['data-full-url'])) {
-                $content = (string) \preg_replace('/' . \preg_quote($targetArray['data-full-url'], '/') . '/mu', $targetArray['ucUrl'], $content);
+        foreach ($collation as $src => $target) {
+            if (!$this->adaptiveDelivery) {
+                $content = \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
+            } else {
+                $content = \preg_replace('/src=/mu', 'data-blink-src=', $content);
             }
         }
 
