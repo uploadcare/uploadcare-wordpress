@@ -142,7 +142,7 @@ class UcAdmin
      */
     public function uploadcare_media_upload()
     {
-        $sign = __('Click to upload any file from anywhere', $this->plugin_name);
+        $sign = __('Click to upload any file up to 5GB from anywhere', $this->plugin_name);
         $btn = __('Upload via Uploadcare', $this->plugin_name);
         $href = 'javascript:ucPostUploadUiBtn();';
 
