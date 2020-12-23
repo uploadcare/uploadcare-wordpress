@@ -22,11 +22,17 @@ class UcFront
      */
     private $adaptiveDelivery;
 
+    /**
+     * @var bool Secure uploads enabled
+     */
+    private $secureUploads;
+
     public function __construct($pluginName, $pluginVersion)
     {
         $this->pluginName = $pluginName;
         $this->pluginVersion = $pluginVersion;
         $this->adaptiveDelivery = (bool) \get_option('uploadcare_adaptive_delivery');
+        $this->secureUploads = (bool) \get_option('uploadcare_upload_lifetime', 0) > 0;
     }
 
     /**
@@ -69,7 +75,7 @@ class UcFront
         if (\in_array($block['blockName'], $blocks, true)) {
             $itemId = $block['blockName'] === 'core/image' ? $block['attrs']['id'] : $block['attrs']['mediaID'];
 
-            return $this->changeContent($content, $this->adaptiveDelivery, (int) $itemId);
+            return $this->changeContent($content, (int) $itemId);
         }
 
         return $content;
@@ -77,16 +83,15 @@ class UcFront
 
     /**
      * @param string $content
-     * @param bool   $blink
      * @param int    $imageId
      *
      * @return string
      */
-    protected function changeContent($content, $blink, $imageId)
+    protected function changeContent($content, $imageId)
     {
         $crawler = new Crawler($content);
         $collation = [];
-        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $blink, $imageId) {
+        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $imageId) {
             $imageUrl = $node->attr('src');
             $attachedFile = \get_post_meta($imageId, '_wp_attached_file', true);
             $isLocal = true;
@@ -96,18 +101,34 @@ class UcFront
                 $isLocal = false;
             }
 
-            if (!$this->adaptiveDelivery && !$isLocal) {
-                $imageUrl = \sprintf(UploadcareMain::RESIZE_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048');
+            // If Adaptive delivery is off and we have a remote file — change file url to transformation url
+            if (!$this->adaptiveDelivery) {
+                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::RESIZE_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048') : null;
+            }
+            // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
+            if ($this->adaptiveDelivery && $this->secureUploads) {
+                $imageUrl = !$isLocal ? \get_post_meta($imageId, 'uploadcare_uuid', true) : null;
             }
 
             $collation[$node->attr('src')] = $imageUrl;
         });
         $collation = \array_filter($collation);
+
         foreach ($collation as $src => $target) {
+            // If Adaptive delivery is off we already have only remote images in collation, and all array values has already changed to transformation urls
             if (!$this->adaptiveDelivery) {
-                $content = \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
-            } else {
-                $content = \preg_replace('/src=/mu', 'data-blink-src=', $content);
+                $content = (string) \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
+            }
+            // If Adaptive delivery is on and Secure uploads is off it changes everything to `data-blink-src`.
+            // In this case, the `collation` array contains all images (remote and local) and all this images can be shown throw Adaptive delivery.
+            if ($this->adaptiveDelivery && !$this->secureUploads) {
+                $content = (string) \preg_replace('/src=/mu', 'data-blink-src=', $content);
+            }
+            // If adaptive delivery and secure uploads both enabled we have to change all sources to uuids and also change `src` attribute to `data-blink-uuid`.
+            // In this case collation array values are already uuids.
+            if ($this->adaptiveDelivery && $this->secureUploads) {
+                $content = (string) \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
+                $content = (string) \preg_replace('/src=/mu', 'data-blink-uuid=', $content);
             }
         }
 
