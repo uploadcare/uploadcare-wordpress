@@ -42,9 +42,9 @@ class UcFront
     public function frontendScripts()
     {
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
-        \wp_register_script('blink-loader', $pluginDirUrl . '/js/blinkLoader.js', [], $this->pluginVersion, false);
         if (!empty(\get_option('uploadcare_public', null))) {
-            \wp_localize_script('blink-loader', 'UC_PUBLIC_KEY', \get_option('uploadcare_public'));
+            \wp_register_script('blink-loader', $pluginDirUrl . '/js/blinkLoader.js', [], $this->pluginVersion, false);
+            \wp_localize_script('blink-loader', 'blinkLoaderConfig', $this->getJsConfig());
             \wp_enqueue_script('blink-loader');
         }
     }
@@ -191,5 +191,27 @@ class UcFront
 
             return $data[1] . $data[2] . $data[3] . $data[4];
         }, $html);
+    }
+
+    private function getJsConfig()
+    {
+        $baseParams = [
+            'pubkey' => \get_option('uploadcare_public'),
+            'fadeIn' => true,
+            'lazyload' => true,
+            'smartCompression' => true,
+            'responsive' => true,
+            'retina' => true,
+            'webp' => true,
+        ];
+
+        if (\get_option('uploadcare_blink_loader', null) !== null) {
+            $userParams = \json_decode(\stripslashes(\get_option('uploadcare_blink_loader', [])), true);
+            if (\json_last_error() === JSON_ERROR_NONE) {
+                $baseParams = \array_merge($userParams, $baseParams);
+            }
+        }
+
+        return $baseParams;
     }
 }

@@ -43,6 +43,8 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
+    $uploadcare_blink_loader = $_POST['uploadcare_blink_loader'];
+    update_option('uploadcare_blink_loader', $uploadcare_blink_loader);
 
     if (!isset($_POST['uploadcare_source_tabs']) || empty($_POST['uploadcare_source_tabs'])) {
         $uploadcare_source_tabs[0] = 'file';
@@ -60,6 +62,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_secret            = \trim(get_option('uploadcare_secret'));
     $uploadcare_cdn_base          = \trim(get_option('uploadcare_cdn_base', 'ucarecdn.com'));
     $uploadcare_finetuning        = \trim(get_option('uploadcare_finetuning'));
+    $uploadcare_blink_loader      = \trim(get_option('uploadcare_blink_loader'));
     $uploadcare_source_tabs       = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_upload_lifetime   = get_option('uploadcare_upload_lifetime', '0');
     $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
@@ -224,6 +227,16 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             </p>
             <p>
                 <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
+            </p>
+
+            <h4><?= __('Blink loader options', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/#adaptive-integrate-sdk">[?]</a></h4>
+            <p>
+                <label for="uc_uploadcare_blink_loader">
+                    <?= __('Insert a valid JSON object with correct parameters'); ?>
+                </label>
+            </p>
+            <p>
+                <textarea style="font-family: monospace" name="uploadcare_blink_loader" id="uc_uploadcare_blink_loader" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_blink_loader)) ?></textarea>
             </p>
 
             <h4><?= __('Put Uploadcare images back to Media Library', 'uploadcare')?></h4>
