@@ -81,10 +81,10 @@ registerBlockType('uploadcare/image', {
                 <div className={'components-placeholder is-large'}>
                     <div className={'components-placeholder__label'}>
                         <span className={'block-editor-block-icon'}>{imageIcon()}</span>
-                        {__('Uploadcare Image', 'uploadcare')}
+                        {__('Uploadcare image', 'uploadcare')}
                     </div>
                     <div className={'components-placeholder__instructions'}>
-                        {__('Upload image to Uploadcare storage', 'uploadcare')}
+                        {__('Upload and edit image with Uploadcare', 'uploadcare')}
                     </div>
                 </div>
             }
