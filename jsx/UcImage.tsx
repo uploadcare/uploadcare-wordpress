@@ -9,6 +9,7 @@ import FileInfoResponse from './FileInfoResponse';
 import imageIcon from './icons/image';
 import WpMedia from './WpMedia';
 
+config.config.imagesOnly = true;
 const uploader = new UcUploader(config.config);
 
 const wrapperStyle = {

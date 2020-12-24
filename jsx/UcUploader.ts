@@ -10,6 +10,7 @@ interface UcConfig {
     secureSignature?: string;
     secureExpire?: string;
     tabs: string;
+    imagesOnly: boolean;
 }
 
 export default class UcUploader {
@@ -37,10 +38,14 @@ export default class UcUploader {
     async upload(mediaUrl?: string): Promise<FileInfoResponse> {
         this.loadingScreen.classList.remove('uploadcare-hidden')
         uploadcare.registerTab('preview', uploadcareTabEffects)
+        const dialogPreferences = {
+            multiple: false,
+            imagesOnly: true,
+        }
 
         const initFile = mediaUrl ? [uploadcare.fileFrom('uploaded', mediaUrl)] : []
         try {
-            const data = await uploadcare.openDialog(initFile, null, {multiple: false}).done();
+            const data = await uploadcare.openDialog(initFile, null, dialogPreferences).done();
             return await this.storeImage(data);
         } catch (err) {
             if (err === 'upload') {
