@@ -72,27 +72,37 @@ registerBlockType('uploadcare/image', {
             });
         }
 
-        return <div className={'uploadcare-handler'}>
-            <figure className={className}>
-                {mediaID ? <img alt={title} src={mediaURL}/> : null}
-                <RichText tagName={'figcaption'} value={title} onChange={onChangeTitle}/>
-            </figure>
+        return <figure className={`${className} uploadcare-handler`}>
+            {mediaID ?
+                <div className={'imageWrap'}>
+                    <img alt={title} src={mediaURL} />
+                    <RichText tagName={'figcaption'} value={title} onChange={onChangeTitle} />
+                </div> :
+                <div className={'components-placeholder is-large'}>
+                    <div className={'components-placeholder__label'}>
+                        <span className={'block-editor-block-icon'}>{imageIcon()}</span>
+                        {__('Uploadcare Image', 'uploadcare')}
+                    </div>
+                    <div className={'components-placeholder__instructions'}>
+                        {__('Upload image to Uploadcare storage', 'uploadcare')}
+                    </div>
+                </div>
+            }
             <div style={wrapperStyle}>
                 <Button
                     className={'uploadcare-picker__button'}
-                    onClick={ setImage }
+                    onClick={setImage}
                 >
-                    {__('Upload via Uploadcare', 'uploadcare')}
+                    { mediaID ? __('Edit with Uploadcare', 'uploadcare') : __('Upload via Uploadcare', 'uploadcare') }
                 </Button>
-                <MediaUpload
+                {!mediaID ? <MediaUpload
                     onSelect={onSelectImage}
-                    render={({ open }) => (
-                        <Button isTertiary onClick={ open }>{__('WordPress Media Library')}</Button>
+                    render={({open}) => (
+                        <Button isTertiary onClick={open}>{__('WordPress Media Library')}</Button>
                     )}
-                    />
+                /> : null}
             </div>
-        </div>
-            ;
+        </figure>;
     },
     save(props) {
         const {className, attributes: {title, mediaID, mediaURL}} = props;
