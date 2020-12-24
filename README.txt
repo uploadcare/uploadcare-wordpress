@@ -4,8 +4,8 @@ Contributors: andrew72ru
 Tags: media upload, image upload, file upload, camera upload, file handling, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance, facebook, google drive, google photos, dropbox, instagram, evernote, flickr, onedrive, box, huddle, vk
 
 Requires at least: 5+
-Tested up to: 5.3.3
-Stable tag: 2.7.2
+Tested up to: 5.6
+Stable tag: 3.0.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -125,6 +125,10 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.0.1 =
+* Fixed issue with plugin activation to prevent malfunction when PHP DOMDocument class is disabled.
+* Various small improvements.
 
 = 3.0.0 =
 * Brand new version, rewritten from scratch.
