@@ -24,7 +24,7 @@ jobs:
                 run: |
                     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
                     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-                    sudo apt update && sudo apt install yarn nodejs-dev node-gyp libssl1.0-dev
+                    sudo apt update && sudo apt install nodejs-dev node-gyp libssl1.0-dev yarn
                     yarn --version
                     yarn && yarn run build
                     rm -rf node_modules
