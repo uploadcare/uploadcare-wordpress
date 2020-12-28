@@ -99,10 +99,12 @@ Send us your feedback, <help@uploadcare.com>
 
 == Screenshots ==
 
-1. "Add Media" button.
-2. File Uploader: Choose images from Facebook.
-3. File Uploader: Choose files from Google Drive.
-4. File Uploader: Crop image.
+1. Insert images right into your posts.
+2. Upload from local disks, cameras, URLs, clouds, and socials.
+3. Edit images after upload: crop, enhance, etc.
+4. Adaptive delivery: automate creating responsive images with resize, smart compression, and lazy loading.
+5. Images are delivered with Uploadcare CDN.
+6. Transfer existing Media Library to Uploadcare.
 
 == Upgrade Notice ==
 
