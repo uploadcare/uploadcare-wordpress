@@ -1,2 +1,6 @@
 .vscode
 .idea
+composer.lock
+vendor
+node_modules
+compiled-js/*
