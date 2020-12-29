@@ -25,7 +25,7 @@ if (PHP_VERSION_ID < 50600) {
     exit("Uploadcare plugin requires PHP version <b>5.6+</b>, you've got <b>" . PHP_VERSION . "</b>");
 }
 
-define('UPLOADCARE_VERSION', '3.0.0');
+define('UPLOADCARE_VERSION', '3.0.1');
 
 require_once __DIR__ . '/vendor/autoload.php';
 
