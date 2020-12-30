@@ -1,7 +1,7 @@
 {
   "name": "uploadcare/uploadcare-wordpress",
   "require": {
-    "php": ">=5.6",
+    "php": "^7.1",
     "ext-curl": "*",
     "ext-json": "*",
     "uploadcare/uploadcare-php": "^3.0",
@@ -12,5 +12,8 @@
     "psr-4": {
       "Uploadcare\\": "vendor/uploadcare/uploadcare-php/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7"
   }
 }
