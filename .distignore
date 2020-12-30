@@ -2,6 +2,9 @@
 /.git
 /.github
 /node_modules
+/compiled-js
+/vendor
+composer.lock
 
 .distignore
 .gitignore
