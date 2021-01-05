@@ -5,7 +5,7 @@
  * @package Uploadcare
  */
 
-$_tests_dir = \dirname(\dirname(\dirname(\dirname(__DIR__)))) . '/wordpress-tests-lib';
+$_tests_dir = dirname(__DIR__, 4) . '/wordpress-tests-lib';
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 

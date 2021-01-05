@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection AutoloadingIssuesInspection */
+
 /**
  * @link              https://uploadcare.com
  * @since             3.0.0
@@ -8,7 +9,7 @@
  * Plugin Name:       Uploadcare File Uploader and Adaptive Delivery
  * Plugin URI:        https://github.com/uploadcare/uploadcare-wordpress
  * Description:       Upload and store any file of any size from any device or cloud. No more slow downs when serving your images with automatic responsiviness and lazy loading. Improve your WP performance to boost Customer Experience and SEO.
- * Version:           3.0.1
+ * Version:           3.0.2
  * Author:            Uploadcare
  * Author URI:        https://uploadcare.com/
  * License:           GPL-2.0+
@@ -16,40 +17,50 @@
  * Text Domain:       uploadcare
  * Domain Path:       /languages
  */
+class Uploadcare_Wordpress_Plugin {
 
-if (!defined('WPINC')) {
-    die();
-}
+    public const UPLOADCARE_VERSION = '3.0.2';
 
-if (PHP_VERSION_ID < 50600) {
-    exit("Uploadcare plugin requires PHP version <b>5.6+</b>, you've got <b>" . PHP_VERSION . "</b>");
-}
+    public function __construct()
+    {
+        if (!defined('WPINC')) {
+            die();
+        }
+        if (PHP_VERSION_ID < 70100) {
+            exit("Uploadcare plugin requires PHP version <b>7.1+</b>, you've got <b>" . PHP_VERSION . "</b>");
+        }
+        define('UPLOADCARE_VERSION', self::UPLOADCARE_VERSION);
 
-define('UPLOADCARE_VERSION', '3.0.1');
+        $this->init();
+        $this->run_uploadcare();
+    }
 
-require_once __DIR__ . '/vendor/autoload.php';
+    public function activate_uploadcare(): void
+    {
+        UcActivator::activate();
+    }
 
-function activate_uploadcare()
-{
-    require_once __DIR__ . '/includes/UcActivator.php';
-    UcActivator::activate();
-}
+    public function deactivate_uploadcare(): void
+    {
+        UcDeactivator::deactivate();
+    }
 
-function deactivate_uploadcare()
-{
-    require_once __DIR__ . '/includes/UcDeactivator.php';
-    UcDeactivator::deactivate();
-}
+    public function run_uploadcare(): void
+    {
+        $plugin = new UploadcareMain();
+        $plugin->run();
+    }
 
-register_activation_hook(__FILE__, 'activate_uploadcare');
-register_deactivation_hook(__FILE__, 'deactivate_uploadcare');
+    public function init(): void
+    {
+        require_once __DIR__ . '/vendor/autoload.php';
+        require_once __DIR__ . '/includes/UcActivator.php';
+        require_once __DIR__ . '/includes/UcDeactivator.php';
+        require_once __DIR__ . '/includes/UploadcareMain.php';
 
-require __DIR__ . '/includes/UploadcareMain.php';
-
-function run_uploadcare()
-{
-    $plugin = new UploadcareMain();
-    $plugin->run();
+        \register_activation_hook(__FILE__, [$this, 'activate_uploadcare']);
+        \register_deactivation_hook(__FILE__, [$this, 'deactivate_uploadcare']);
+    }
 }
 
 /** @noinspection ForgottenDebugOutputInspection */
@@ -60,10 +71,10 @@ function ULog(...$args)
     }
 }
 
-function UploadcareUserAgent()
+function UploadcareUserAgent(): array
 {
     global $wp_version;
-    return ['Uploadcare-wordpress', \sprintf('%s,%s', $wp_version, UPLOADCARE_VERSION)];
+    return ['Uploadcare-wordpress', \sprintf('%s,%s', $wp_version, Uploadcare_Wordpress_Plugin::UPLOADCARE_VERSION)];
 }
 
-run_uploadcare();
+new Uploadcare_Wordpress_Plugin();
