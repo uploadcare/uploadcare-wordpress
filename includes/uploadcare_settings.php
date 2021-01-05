@@ -43,8 +43,8 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     update_option('uploadcare_upload_lifetime', $uploadcare_upload_lifetime);
     $uploadcare_finetuning = $_POST['uploadcare_finetuning'];
     update_option('uploadcare_finetuning', $uploadcare_finetuning);
-    $uploadcare_blink_loader = $_POST['uploadcare_blink_loader'];
-    update_option('uploadcare_blink_loader', $uploadcare_blink_loader);
+//    $uploadcare_blink_loader = $_POST['uploadcare_blink_loader'];
+//    update_option('uploadcare_blink_loader', $uploadcare_blink_loader);
 
     if (!isset($_POST['uploadcare_source_tabs']) || empty($_POST['uploadcare_source_tabs'])) {
         $uploadcare_source_tabs[0] = 'file';
