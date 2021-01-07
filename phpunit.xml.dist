@@ -18,6 +18,11 @@
             <directory suffix=".php">
                 ./includes
             </directory>
+            <exclude>
+                <file>
+                    ./includes/uploadcare_settings.php
+                </file>
+            </exclude>
             <directory suffix=".php">
                 ./admin
             </directory>

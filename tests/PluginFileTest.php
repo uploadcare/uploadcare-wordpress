@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
+namespace Tests;
 
-class PluginFileTest extends WP_UnitTestCase
+class PluginFileTest extends LoadedPluginTestCase
 {
     private $logPath = __DIR__ . '/_output/error.log';
 
@@ -15,7 +16,7 @@ class PluginFileTest extends WP_UnitTestCase
 
     public function testClassExists(): void
     {
-        self::assertTrue(\class_exists(Uploadcare_Wordpress_Plugin::class));
+        self::assertTrue(\class_exists(\Uploadcare_Wordpress_Plugin::class));
     }
 
     public function testVersionConstantIsDefined(): void
@@ -31,13 +32,13 @@ class PluginFileTest extends WP_UnitTestCase
         $result = \UploadcareUserAgent();
         self::assertIsArray($result);
         self::assertContains('Uploadcare-wordpress', $result);
-        self::assertEquals(Uploadcare_Wordpress_Plugin::UPLOADCARE_VERSION, \UPLOADCARE_VERSION);
+        self::assertEquals(\Uploadcare_Wordpress_Plugin::UPLOADCARE_VERSION, \UPLOADCARE_VERSION);
         self::assertContains(\sprintf('%s,%s', $wp_version, \UPLOADCARE_VERSION), $result);
     }
 
     public function testClassActions(): void
     {
-        $mockedPlugin = $this->getMockBuilder(Uploadcare_Wordpress_Plugin::class)
+        $mockedPlugin = $this->getMockBuilder(\Uploadcare_Wordpress_Plugin::class)
             ->getMock();
         $mockedPlugin->expects(self::once())->method('init');
         $mockedPlugin->expects(self::once())->method('run_uploadcare');
