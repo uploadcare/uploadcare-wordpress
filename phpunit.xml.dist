@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<phpunit
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.5/phpunit.xsd"
     bootstrap="tests/bootstrap.php"
     backupGlobals="false"
     colors="true"
@@ -12,4 +13,17 @@
             <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">
+                ./includes
+            </directory>
+            <directory suffix=".php">
+                ./admin
+            </directory>
+            <file>
+                ./uploadcare.php
+            </file>
+        </whitelist>
+    </filter>
 </phpunit>
