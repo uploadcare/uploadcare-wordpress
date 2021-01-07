@@ -23,13 +23,13 @@ class Uploadcare_Wordpress_Plugin {
 
     public function __construct()
     {
-        if (!defined('WPINC')) {
+        if (!\defined('WPINC')) {
             die();
         }
         if (PHP_VERSION_ID < 70100) {
             exit("Uploadcare plugin requires PHP version <b>7.1+</b>, you've got <b>" . PHP_VERSION . "</b>");
         }
-        define('UPLOADCARE_VERSION', self::UPLOADCARE_VERSION);
+        \defined('UPLOADCARE_VERSION') or \define('UPLOADCARE_VERSION', self::UPLOADCARE_VERSION);
 
         $this->init();
         $this->run_uploadcare();
@@ -66,6 +66,10 @@ class Uploadcare_Wordpress_Plugin {
 /** @noinspection ForgottenDebugOutputInspection */
 function ULog(...$args)
 {
+    if (!\is_array($args) || empty($args)) {
+        return;
+    }
+
     foreach ($args as $arg) {
         \error_log("\t[LOG::Ulog]\n".\var_export($arg, true)."\n");
     }
