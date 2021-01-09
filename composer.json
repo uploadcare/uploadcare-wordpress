@@ -10,9 +10,7 @@
     "symfony/dom-crawler": "^3.4"
   },
   "autoload": {
-    "psr-4": {
-      "Uploadcare\\": "vendor/uploadcare/uploadcare-php/"
-    }
+    "classmap": ["includes/", "admin/"]
   },
     "autoload-dev": {
         "psr-4": {

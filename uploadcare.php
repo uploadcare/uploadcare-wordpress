@@ -54,9 +54,6 @@ class Uploadcare_Wordpress_Plugin {
     public function init(): void
     {
         require_once __DIR__ . '/vendor/autoload.php';
-        require_once __DIR__ . '/includes/UcActivator.php';
-        require_once __DIR__ . '/includes/UcDeactivator.php';
-        require_once __DIR__ . '/includes/UploadcareMain.php';
 
         \register_activation_hook(__FILE__, [$this, 'activate_uploadcare']);
         \register_deactivation_hook(__FILE__, [$this, 'deactivate_uploadcare']);
