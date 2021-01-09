@@ -144,4 +144,14 @@ class UcAdminTest extends \WP_UnitTestCase
 
         $this->expectOutputRegex('attach_id');
     }
+
+    public function testUploadcareMediaUpload(): void
+    {
+        require_once \dirname(__DIR__) . '/uploadcare.php';
+        require_once \dirname(__DIR__) . '/admin/UcAdmin.php';
+        $admin = new \UcAdmin('uploadcare-test', 'TEST_VERSION');
+
+        $admin->uploadcare_media_upload();
+        $this->expectOutputRegex('/uploadcare/');
+    }
 }

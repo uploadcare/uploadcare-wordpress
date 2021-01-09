@@ -10,8 +10,9 @@ class PluginFileTest extends LoadedPluginTestCase
     {
         parent::setUp();
 
-        if (\is_file($this->logPath))
+        if (\is_file($this->logPath)) {
             \unlink($this->logPath);
+        }
     }
 
     public function testClassExists(): void
