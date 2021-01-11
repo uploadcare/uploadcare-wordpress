@@ -134,13 +134,6 @@ class UcFront
         return $content;
     }
 
-    protected function changeAttributeContent($attributeName, $sourceValue, $targetValue, $content)
-    {
-        $regex = sprintf('/%s="%s"/', $attributeName, \preg_quote($sourceValue, '/'));
-
-        return \preg_replace($regex, $targetValue, $content);
-    }
-
     /**
      * Calls on `post_thumbnail_html`. If thumbnail is an uploadcare image, make it an adaptive delivered.
      * @see UploadcareMain::defineFrontHooks()
@@ -157,10 +150,11 @@ class UcFront
     {
         global $wpdb;
         $resizeParam = '2048x2048';
-        if (\in_array($size, get_intermediate_image_sizes(), true)) {
+        if (\in_array($size, \get_intermediate_image_sizes(), true)) {
             $resizeParam = \get_option(\sprintf('%s_size_w', $size), '2048') . 'x' . \get_option(\sprintf('%s_size_h', $size), '2048');
         }
 
+        // It is impossible to direct get post meta for a featured image
         $q = \sprintf('SELECT meta_value FROM `%s` WHERE meta_key=\'uploadcare_url\' AND post_id=%d', \sprintf('%spostmeta', $wpdb->prefix), $post_thumbnail_id);
         $result = $wpdb->get_col($q);
 
