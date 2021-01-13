@@ -201,7 +201,7 @@ class UcFront
         if (\get_option('uploadcare_blink_loader', null) !== null) {
             $userParams = \json_decode(\stripslashes(\get_option('uploadcare_blink_loader', [])), true);
             if (\json_last_error() === JSON_ERROR_NONE) {
-                $baseParams = \array_merge($userParams, $baseParams);
+                $baseParams = \array_merge($baseParams, $userParams);
             }
         }
 

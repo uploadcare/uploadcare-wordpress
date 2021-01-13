@@ -160,4 +160,29 @@ class UcFrontFunctionalTest extends LoadedPluginTestCase
         self::assertNotEquals($result, $content);
         self::assertStringContainsString('data-blink-src', $result);
     }
+
+    public function testJsConfigMethod(): void
+    {
+        $getJsConfig = (new \ReflectionObject($this->service))->getMethod('getJsConfig');
+        $getJsConfig->setAccessible(true);
+        $result = $getJsConfig->invoke($this->service);
+
+        self::assertIsArray($result);
+        foreach (['pubkey', 'fadeIn', 'lazyload', 'smartCompression', 'responsive', 'retina', 'webp'] as $item) {
+            self::assertArrayHasKey($item, $result);
+        }
+    }
+
+    public function testJsConfigWithOptions(): void
+    {
+        $options = '{"retina": false}';
+        \update_option('uploadcare_blink_loader', $options);
+
+        $getJsConfig = (new \ReflectionObject($this->service))->getMethod('getJsConfig');
+        $getJsConfig->setAccessible(true);
+        $result = $getJsConfig->invoke($this->service);
+
+        self::assertArrayHasKey('retina', $result);
+        self::assertFalse($result['retina']);
+    }
 }
