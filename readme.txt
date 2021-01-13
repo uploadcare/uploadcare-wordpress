@@ -3,7 +3,7 @@
 Contributors: andrew72ru, rsedykh
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 7.1
+Tested up to: 5.6
 Requires PHP: 7.1
 Stable tag: trunk
 License: GPLv2 or later
