@@ -61,8 +61,8 @@ Install from the [WordPress plugins directory](https://wordpress.org/plugins/upl
 
 ## Useful links
 
-[Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-wordpress)
-[Changelog](https://wordpress.org/plugins/uploadcare/#developers)
-[Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
-[Security policy](https://github.com/uploadcare/uploadcare-wordpress/security/policy)
+[Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-wordpress)  
+[Changelog](https://wordpress.org/plugins/uploadcare/#developers)  
+[Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)  
+[Security policy](https://github.com/uploadcare/uploadcare-wordpress/security/policy)  
 [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
