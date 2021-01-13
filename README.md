@@ -2,7 +2,7 @@
 
 Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert them to WordPress posts and serve responsive lazy loaded images with Uploadcare CDN to improve your WordPress site performance.
 
-[![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]  
+[![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]
 
 [travis-img]: https://api.travis-ci.org/uploadcare/uploadcare-wordpress.svg
 [travis]: https://travis-ci.org/uploadcare/uploadcare-wordpress
@@ -28,13 +28,14 @@ Uploadcare, all-round media upload, storage, management, and delivery solution, 
 ## Requirements
 
 - Wordpress 5+
-- PHP 5.6+
+- PHP 7.1+
 - php-curl
 - php-json
+- php-dom
 
 ## Install
 
-### Fastest way
+### The fastest way
 
 Install from the [WordPress plugins directory](https://wordpress.org/plugins/uploadcare/).
 
@@ -60,8 +61,8 @@ Install from the [WordPress plugins directory](https://wordpress.org/plugins/upl
 
 ## Useful links
 
-[Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-wordpress)  
-[Changelog](https://wordpress.org/plugins/uploadcare/#developers)  
-[Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)  
-[Security policy](https://github.com/uploadcare/uploadcare-wordpress/security/policy)  
-[Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)  
+[Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-wordpress)
+[Changelog](https://wordpress.org/plugins/uploadcare/#developers)
+[Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
+[Security policy](https://github.com/uploadcare/uploadcare-wordpress/security/policy)
+[Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
