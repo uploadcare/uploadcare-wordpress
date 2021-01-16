@@ -146,7 +146,7 @@ class UcAdmin
         $btn = __('Upload via Uploadcare', $this->plugin_name);
         $href = 'javascript:ucPostUploadUiBtn();';
 
-        if ('add' !== \get_current_screen()->action) {
+        if (\get_current_screen() !== null && 'add' !== \get_current_screen()->action) {
             $href = \admin_url().'media-new.php';
             $sign .= ' '.__('from Wordpress upload page');
         }
@@ -212,7 +212,7 @@ HTML;
      */
     public function uc_get_attachment_url($url, $post_id)
     {
-        if (!($uc_url = get_post_meta($post_id, 'uploadcare_url', true))) {
+        if (!($uc_url = \get_post_meta($post_id, 'uploadcare_url', true))) {
             return $url;
         }
 
@@ -236,7 +236,7 @@ HTML;
         $file = $this->api->file()->fileInfo($this->fileId($url));
         $fileName = $file->getOriginalFilename();
 
-        return $url.\urlencode($fileName);
+        return $url . \urlencode($fileName);
     }
 
     /**
@@ -586,7 +586,7 @@ HTML;
         }
 
         $isImage = $file->isImage();
-        $attachment_id = wp_insert_post($attachment, true);
+        $attachment_id = \wp_insert_post($attachment, true);
         $meta = $isImage ? $this->getFinalDim($file) : ['width' => null, 'height' => null];
 
         $attached_file = $modifiedUrl !== null ? $modifiedUrl : \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());

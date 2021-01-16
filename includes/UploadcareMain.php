@@ -28,25 +28,11 @@ class UploadcareMain
             $this->version = '3.0.0';
         }
         $this->plugin_name = 'uploadcare';
+        $this->loader = new UcLoader();
 
-        $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
         $this->defineFrontHooks();
-    }
-
-    private function load_dependencies()
-    {
-        require_once __DIR__ . '/UcLoader.php';
-        require_once __DIR__ . '/UcI18n.php';
-        require_once __DIR__ . '/UcFront.php';
-        require_once __DIR__ . '/UcUploadProcess.php';
-        require_once __DIR__ . '/UcDownloadProcess.php';
-        require_once \dirname(__DIR__) . '/admin/UcAdmin.php';
-        require_once \dirname(__DIR__) . '/admin/LocalMediaLoader.php';
-        require_once \dirname(__DIR__) . '/admin/RemoteMediaLoader.php';
-
-        $this->loader = new UcLoader();
     }
 
     private function set_locale()
