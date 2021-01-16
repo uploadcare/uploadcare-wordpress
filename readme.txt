@@ -4,7 +4,7 @@ Contributors: andrew72ru, rsedykh
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
 Tested up to: 5.6
-Requires PHP: 5.6
+Requires PHP: 7.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -92,9 +92,10 @@ Send us your feedback, <help@uploadcare.com>
 ### Requirements ###
 
 * Wordpress 5+
-* PHP 5.6+
+* PHP 7.1+
 * php-curl
 * php-json
+* php-dom
 
 == Screenshots ==
 
@@ -108,7 +109,7 @@ Send us your feedback, <help@uploadcare.com>
 == Upgrade Notice ==
 
 = 3.0.0 =
-Brand new plugin, rewritten from scratch. In addition to uploading files it now supports Adaptive Delivery which improves image appearance on all devices and increases page load speed. Transfer Media Library files to your Uploadcare storage. Intuitive settings.
+Brand new plug-in, rewritten from scratch. Note that forks from older plugins (v2.*) won't be compatible with the new version. In addition to uploading files it now supports Adaptive Delivery which improves image appearance on all devices and increases page load speed. Transfer Media Library files to your Uploadcare storage. Intuitive settings.
 
 = 2.2.0 =
 If you were controlling source tabs via "finetuning" setting, you should delete it and set new "source tab" config.

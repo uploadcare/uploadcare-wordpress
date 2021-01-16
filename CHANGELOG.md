@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.2] — 2021-01-13
+
+* Plugin as class.
+* Composer autoload.
+* Unit-tests for most classes and methods.
+
+## [3.0.1] — 2020-12-25
+
+Brand new plugin, rewritten from scratch.
 
 ## [2.7.2] — 2020-05-13
 
@@ -243,7 +252,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 [uploadcare/uploadcare-php]: https://github.com/uploadcare/uploadcare-php
 
-[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.7.2..HEAD
+[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.2..HEAD
+[3.0.2]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.1..v3.0.2
+[3.0.1]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.7.2..v3.0.1
 [2.7.2]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.7.1..v2.7.2
 [2.7.1]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.7.0..v2.7.1
 [2.7.0]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.6.1..v2.7.0
