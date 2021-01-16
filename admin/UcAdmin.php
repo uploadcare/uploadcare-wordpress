@@ -84,10 +84,13 @@ class UcAdmin
         \wp_register_script('uploadcare-config', $pluginDirUrl.'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_script('uploadcare-main', $pluginDirUrl.'js/main.js', ['uploadcare-config'], $this->version);
-        \wp_register_script('image-block', $pluginDirUrl.'/compiled-js/blocks.js', [], $this->version, true);
+        \wp_register_script('image-block', $pluginDirUrl.'compiled-js/blocks.js', [], $this->version, true);
         \wp_localize_script('uc-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_style('uploadcare-style', $pluginDirUrl.'css/uploadcare.css', [], $this->version);
-        \wp_register_style('uc-editor', $pluginDirUrl.'/compiled-js/blocks.css', [], $this->version);
+        \wp_register_style('uc-editor', $pluginDirUrl.'compiled-js/blocks.css', [], $this->version);
+
+        \wp_register_script('admin-js', $pluginDirUrl . 'compiled-js/admin.js', [], $this->version);
+        \wp_register_style('admin-css', $pluginDirUrl . 'compiled-js/admin.css', [], $this->version);
     }
 
     /**
@@ -108,6 +111,9 @@ class UcAdmin
         \wp_enqueue_script('uc-config');
         \wp_enqueue_script('uploadcare-elements');
         \wp_enqueue_style('uc-editor');
+
+        \wp_enqueue_style('admin-css');
+        \wp_enqueue_script('admin-js', null, require \dirname(__DIR__) . '/compiled-js/admin.asset.php');
 
         if (\in_array($hook, ['post.php', 'post-new.php'], true)) {
             \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
@@ -146,13 +152,15 @@ class UcAdmin
         $btn = __('Upload via Uploadcare', $this->plugin_name);
         $href = 'javascript:ucPostUploadUiBtn();';
 
+        $styleDef = \get_current_screen() !== null ? \get_current_screen()->action : null;
         if (\get_current_screen() !== null && 'add' !== \get_current_screen()->action) {
             $href = \admin_url().'media-new.php';
             $sign .= ' '.__('from Wordpress upload page');
+            $styleDef = 'wrap-margin';
         }
 
         echo <<<HTML
-<div class="uc-picker-wrapper">
+<div class="uc-picker-wrapper $styleDef">
     <p class="uploadcare-picker">
         <a id="uploadcare-post-upload-ui-btn"
            class="button button-hero"
