@@ -116,7 +116,10 @@ class UcAdmin
         \wp_enqueue_script('admin-js', null, require \dirname(__DIR__) . '/compiled-js/admin.asset.php');
 
         if (\in_array($hook, ['post.php', 'post-new.php'], true)) {
-            \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
+            $scr = \get_current_screen();
+            if (\method_exists($scr, 'is_block_editor') && $scr->is_block_editor()) {
+                \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
+            }
         }
     }
 
