@@ -2,9 +2,13 @@
 /.git
 /.github
 /node_modules
-/compiled-js
-/vendor
 composer.lock
+
+vendor/symfony/polyfill-intl-idn/bootstrap80.php
+vendor/symfony/polyfill-ctype/bootstrap80.php
+vendor/symfony/polyfill-intl-normalizer/bootstrap80.php
+vendor/symfony/polyfill-mbstring/bootstrap80.php
+vendor/symfony/polyfill-uuid/bootstrap80.php
 
 .distignore
 .gitignore
