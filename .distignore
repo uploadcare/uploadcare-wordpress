@@ -3,6 +3,7 @@
 /.github
 /node_modules
 composer.lock
+vendor/symfony/polyfill-intl-idn/bootstrap80.php
 
 .distignore
 .gitignore
