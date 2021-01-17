@@ -2,6 +2,7 @@
 /.git
 /.github
 /node_modules
+composer.lock
 
 .distignore
 .gitignore
