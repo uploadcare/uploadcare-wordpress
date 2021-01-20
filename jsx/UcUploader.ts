@@ -1,17 +1,7 @@
 import uploadcare from 'uploadcare-widget/uploadcare'
-import FileInfoResponse from "./FileInfoResponse";
+import FileInfoResponse from './interfaces/FileInfoResponse';
+import UcConfig from './interfaces/UcConfig';
 import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
-
-interface UcConfig {
-    ajaxurl: string;
-    cdnBase: string;
-    previewStep: boolean;
-    public_key: string;
-    secureSignature?: string;
-    secureExpire?: string;
-    tabs: string;
-    imagesOnly: boolean;
-}
 
 export default class UcUploader {
     private loadingScreen: HTMLDivElement = document.createElement('div');

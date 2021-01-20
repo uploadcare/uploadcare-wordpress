@@ -5,7 +5,7 @@ import config from './uc-config';
 import { __ } from '@wordpress/i18n';
 import { RichText, MediaUpload } from '@wordpress/block-editor';
 import { Button } from '@wordpress/components';
-import FileInfoResponse from './FileInfoResponse';
+import FileInfoResponse from './interfaces/FileInfoResponse';
 import imageIcon from './icons/image';
 import WpMedia from './WpMedia';
 

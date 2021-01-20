@@ -68,7 +68,14 @@ function ULog(...$args)
     }
 
     foreach ($args as $arg) {
-        \error_log("\t[LOG::Ulog]\n".\var_export($arg, true)."\n");
+        $data = [
+            "\t[LOG::Ulog]",
+            "\n",
+            \var_export($arg, true),
+            "\n",
+        ];
+
+        \error_log(\implode('', $data));
     }
 }
 

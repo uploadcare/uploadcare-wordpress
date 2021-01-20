@@ -89,7 +89,9 @@ class UcAdmin
         \wp_register_style('uploadcare-style', $pluginDirUrl.'css/uploadcare.css', [], $this->version);
         \wp_register_style('uc-editor', $pluginDirUrl.'compiled-js/blocks.css', [], $this->version);
 
-        \wp_register_script('admin-js', $pluginDirUrl . 'compiled-js/admin.js', [], $this->version);
+        \wp_register_script('admin-js', $pluginDirUrl . 'compiled-js/admin.js', [
+            'image-edit', 'jquery', 'media'
+        ], $this->version);
         \wp_register_style('admin-css', $pluginDirUrl . 'compiled-js/admin.css', [], $this->version);
     }
 
