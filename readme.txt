@@ -128,6 +128,11 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 3.0.2 =
+* Plugin as class.
+* Composer autoload.
+* Unit-tests for most classes and methods.
+
 = 3.0.1 =
 * Fixed issue with plugin activation to prevent malfunction when PHP DOMDocument class is disabled.
 * Various small improvements.
