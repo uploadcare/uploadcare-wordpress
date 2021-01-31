@@ -133,19 +133,35 @@ class UcAdmin
     public function uploadcare_handle()
     {
         $cdnUrl = $_POST['file_url'];
-        $id = $this->fileId($cdnUrl);
+        $uuid = $this->fileId($cdnUrl);
 
-        $file = $this->api->file()->fileInfo($id);
-        $attachment_id = $this->attach($file, null, $cdnUrl);
+        $file = $this->api->file()->fileInfo($uuid);
+        $attachment_id = $this->attach($file, $this->loadPostByUuid($uuid), [
+            'uploadcare_url_modifiers' => $_POST['uploadcare_url_modifiers'] ?? '',
+        ]);
 
         $result = [
             'attach_id' => $attachment_id,
             'fileUrl' => $cdnUrl,
             'isLocal' => false,
+            'uploadcare_url_modifiers' => ($_POST['uploadcare_url_modifiers'] ?? ''),
         ];
 
         echo \json_encode($result);
         \wp_die();
+    }
+
+    public function loadPostByUuid(string $uuid): ?\WP_Post
+    {
+        global $wpdb;
+        $query = \sprintf('SELECT post_id FROM `%s` WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
+        $result = $wpdb->get_results($query, ARRAY_A);
+
+        if (($result[0]['post_id'] ?? null) === null) {
+            return null;
+        }
+
+        return \get_post($result[0]['post_id']);
     }
 
     /**
@@ -213,6 +229,21 @@ HTML;
         }
     }
 
+    protected function makeModifiedUrl(int $postId, string $modifiers = ''): ?string
+    {
+        $uuid = \get_post_meta($postId, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
+            return null;
+        }
+
+        $base = \get_option('uploadcare_cdn_base');
+        if (\strpos($base, 'http') !== 0) {
+            $base = \sprintf('https://%s', $base);
+        }
+
+        return \sprintf('%s/%s/%s', $base, $uuid, $modifiers);
+    }
+
     // filters
 
     /**
@@ -225,11 +256,13 @@ HTML;
      */
     public function uc_get_attachment_url($url, $post_id)
     {
-        if (!($uc_url = \get_post_meta($post_id, 'uploadcare_url', true))) {
+        $uuid = \get_post_meta($post_id, 'uploadcare_uuid', true);
+
+        if (empty($uuid)) {
             return $url;
         }
 
-        return $uc_url;
+        return $this->makeModifiedUrl($post_id, \get_post_meta($post_id, 'uploadcare_url_modifiers', true));
     }
 
     /**
@@ -442,17 +475,17 @@ HTML;
      */
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
-        if (!$uc_url = get_post_meta($id, 'uploadcare_url', true)) {
+        $uuid = \get_post_meta($id, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
             return false;
         }
+        $baseUrl = $this->makeModifiedUrl($id, \get_post_meta($id, 'uploadcare_url_modifiers', true));
 
         $sz = $this->thumbnailSize($size);
         if ($sz) {
-            // chop filename part
-            $url = preg_replace('/[^\/]*$/', '', $uc_url);
-            $url = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $url, $sz);
+            $url = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $baseUrl, $sz);
         } else {
-            $url = $uc_url;
+            $url = $baseUrl;
         }
 
         return [
@@ -571,11 +604,11 @@ HTML;
     /**
      * @param FileInfoInterface $file
      * @param int|null          $id existing Post ID
-     * @param string|null       $modifiedUrl
+     * @param array             $options
      *
      * @return int|WP_Error
      */
-    public function attach(FileInfoInterface $file, $id = null, $modifiedUrl = null)
+    public function attach(FileInfoInterface $file, $id = null, $options = [])
     {
         $userId = get_current_user_id();
         $filename = $file->getOriginalFilename();
@@ -603,12 +636,21 @@ HTML;
         $attachment_id = \wp_insert_post($attachment, true);
         $meta = $isImage ? $this->getFinalDim($file) : ['width' => null, 'height' => null];
 
-        $attached_file = $modifiedUrl !== null ? $modifiedUrl : \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
-        \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
-        \add_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid(), true);
-
-        \add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
-        \add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
+        $attached_file = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $file->getUuid());
+        if ($id === null) {
+            \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
+            \add_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid(), true);
+            \add_post_meta($attachment_id, 'uploadcare_url_modifiers', ($options['uploadcare_url_modifiers'] ?? ''), true);
+            \add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
+            \add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
+        }
+        if ($id !== null) {
+            \update_post_meta($attachment_id, 'uploadcare_url', $attached_file);
+            \update_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid());
+            \update_post_meta($attachment_id, 'uploadcare_url_modifiers', ($options['uploadcare_url_modifiers'] ?? ''));
+            \update_post_meta($attachment_id, '_wp_attached_file', $attached_file);
+            \update_post_meta($attachment_id, '_wp_attachment_metadata', $meta);
+        }
 
         return $attachment_id;
     }

@@ -34,6 +34,32 @@ class UcFront
         $this->secureUploads = (bool) \get_option('uploadcare_upload_lifetime', 0) > 0;
     }
 
+    public function editorPostMeta(): void
+    {
+        $parameters = [
+            'show_in_rest' => true,
+            'type' => 'string',
+        ];
+
+        \register_post_meta('attachment', 'uploadcare_url_modifiers', $parameters);
+        \register_post_meta('attachment', 'uploadcare_url', $parameters);
+        \register_post_meta('attachment', 'uploadcare_uuid', $parameters);
+    }
+
+    public function prepareAttachment(array $response, \WP_Post $attachment, $meta): array
+    {
+        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true)))
+            return $response;
+
+        $response['meta'] = [
+            'uploadcare_url_modifiers' => \get_post_meta($attachment->ID, 'uploadcare_url_modifiers', true),
+            'uploadcare_url' => \get_post_meta($attachment->ID, 'uploadcare_url', true),
+            'uploadcare_uuid' => \get_post_meta($attachment->ID, 'uploadcare_uuid', true),
+        ];
+
+        return $response;
+    }
+
     /**
      * Calls on `wp_enqueue_scripts`
      * @see UploadcareMain::defineFrontHooks()

@@ -31,6 +31,7 @@ export default class UcUploader {
         const dialogPreferences = {
             multiple: false,
             imagesOnly: true,
+            previewStep: true,
         }
 
         const initFile = mediaUrl ? [uploadcare.fileFrom('uploaded', mediaUrl)] : []
@@ -64,7 +65,8 @@ export default class UcUploader {
     private storeImage(file: FileInfoResponse): Promise<FileInfoResponse> {
         const data = new FormData();
         data.append('action', 'uploadcare_handle');
-        data.append('file_url', file.cdnUrl as string);
+        data.append('file_url', file.originalUrl as string);
+        data.append('uploadcare_url_modifiers', file.cdnUrlModifiers as string);
 
         return window.fetch(this.config.ajaxurl, {
             method: 'POST',

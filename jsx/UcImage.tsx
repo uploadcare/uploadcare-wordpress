@@ -8,9 +8,11 @@ import { Button } from '@wordpress/components';
 import FileInfoResponse from './interfaces/FileInfoResponse';
 import imageIcon from './icons/image';
 import WpMedia from './WpMedia';
+import UcMediaMeta from './UcMediaMeta';
 
 config.config.imagesOnly = true;
 const uploader = new UcUploader(config.config);
+const cdnBase = config.config.cdnBase;
 
 const wrapperStyle = {
     backgroundColor: '#fff',
@@ -34,11 +36,8 @@ registerBlockType('uploadcare/image', {
         mediaUid: {
             type: 'string',
         },
-        mediaURL: {
+        cdnUrlModifiers: {
             type: 'string',
-            source: 'attribute',
-            selector: 'img',
-            attribute: 'src',
         },
     },
     example: {
@@ -47,21 +46,32 @@ registerBlockType('uploadcare/image', {
             mediaURL: 'https://ucarecdn.com/6c5b97ee-4ce9-490f-92e9-50cba0271917/intelligence.svg',
             mediaID: '0000',
             mediaUid: 'no-uuid',
+            cdnUrlModifiers: '',
         },
     },
     edit(props) {
-        const {className, attributes: {title, mediaID, mediaURL}, setAttributes} = props;
+        const {className, attributes: {title, mediaID, mediaUid, cdnUrlModifiers}, setAttributes} = props;
+
+        if (mediaID) {
+            UcMediaMeta.fetch(mediaID).then(data => {
+                if (data.uploadcare_url_modifiers.length > 0) {
+                    setAttributes({cdnUrlModifiers: data.uploadcare_url_modifiers[0]})
+                }
+            })
+        }
         const onChangeTitle = (value) => {
             setAttributes({title: value});
         };
         const setImage = () => {
-            uploader.upload(mediaURL).then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
+            uploader.upload(mediaUid ? `${cdnBase}/${mediaUid}/${cdnUrlModifiers}`: undefined).then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
         };
         const onUploadImage = (media: FileInfoResponse) => {
+            console.log(media)
             setAttributes({
-                mediaURL: media.cdnUrl,
+                mediaURL: media.originalUrl,
                 mediaID: media.attach_id,
                 mediaUid: media.uuid,
+                cdnUrlModifiers: media.cdnUrlModifiers,
             });
         };
         const onSelectImage = (wpMedia: WpMedia) => {
@@ -69,13 +79,14 @@ registerBlockType('uploadcare/image', {
                 mediaURL: wpMedia.url,
                 mediaID: wpMedia.id,
                 mediaUid: wpMedia.filename,
+                cdnUrlModifiers: wpMedia.meta['uploadcare_url_modifiers'] || '',
             });
         }
 
         return <figure className={`${className} uploadcare-handler`}>
             {mediaID ?
                 <div className={'imageWrap'}>
-                    <img alt={title} src={mediaURL} />
+                    <img alt={title} src={`${cdnBase}/${mediaUid}/${cdnUrlModifiers}`} />
                     <RichText tagName={'figcaption'} value={title} onChange={onChangeTitle} />
                 </div> :
                 <div className={'components-placeholder is-large'}>
@@ -105,10 +116,10 @@ registerBlockType('uploadcare/image', {
         </figure>;
     },
     save(props) {
-        const {className, attributes: {title, mediaID, mediaURL}} = props;
+        const {className, attributes: {title, mediaID, mediaUid, cdnUrlModifiers}} = props;
 
         return <figure className={className}>
-            {mediaID ? (<img id={mediaID} src={mediaURL} className={'uploadcare-image'} alt={title}/>) : null}
+            {mediaID ? (<img id={mediaID} src={`${cdnBase}/${mediaUid}/${cdnUrlModifiers}`} className={'uploadcare-image'} alt={title}/>) : null}
             <RichText.Content tagName="figcaption" value={title}/>
         </figure>;
     },
