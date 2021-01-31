@@ -116,7 +116,9 @@ class UcFront
     {
         $crawler = new Crawler($content);
         $collation = [];
-        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $imageId) {
+        $modifiers = \get_post_meta($imageId, 'uploadcare_url_modifiers', true);
+
+        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $imageId, $modifiers) {
             $imageUrl = $node->attr('src');
             $attachedFile = \get_post_meta($imageId, '_wp_attached_file', true);
             $isLocal = true;
@@ -134,6 +136,9 @@ class UcFront
             if ($this->adaptiveDelivery && $this->secureUploads) {
                 $imageUrl = !$isLocal ? \get_post_meta($imageId, 'uploadcare_uuid', true) : null;
             }
+            if ($imageUrl !== null && $isLocal === false) {
+                $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
+            }
 
             $collation[$node->attr('src')] = $imageUrl;
         });
@@ -147,6 +152,7 @@ class UcFront
             // If Adaptive delivery is on and Secure uploads is off it changes everything to `data-blink-src`.
             // In this case, the `collation` array contains all images (remote and local) and all this images can be shown throw Adaptive delivery.
             if ($this->adaptiveDelivery && !$this->secureUploads) {
+                $content = (string) \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
                 $content = (string) \preg_replace('/src=/mu', 'data-blink-src=', $content);
             }
             // If adaptive delivery and secure uploads both enabled we have to change all sources to uuids and also change `src` attribute to `data-blink-uuid`.
