@@ -1,3 +1,5 @@
+enum Orientation { portrait = 'portrait', landscape = 'landscape' }
+
 export default interface WpMedia {
     alt?: string;
     author: number;
@@ -16,7 +18,7 @@ export default interface WpMedia {
     mime: string;
     modified: Date;
     name: string;
-    orientation: string;
+    orientation: Orientation;
     status: string;
     subtype: string;
     title: string;

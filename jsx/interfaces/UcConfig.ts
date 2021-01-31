@@ -7,4 +7,6 @@ export default interface UcConfig {
     secureExpire?: string;
     tabs: string;
     imagesOnly: boolean;
+    multiple: boolean;
+    effects: Array<string>;
 }

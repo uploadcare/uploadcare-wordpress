@@ -78,12 +78,8 @@ class UploadcareMain
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
 //        $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
-        $this->loader->add_filter('wp_image_editors', $this, 'addImageEditor');
-    }
-
-    public function addImageEditor($editors): array
-    {
-        return \array_merge([UploadcareImageEditor::class], $editors);
+//        $this->loader->add_filter('wp_image_editors', $this, 'addImageEditor');
+//        $this->loader->add_filter('image_editor_save_pre', $this, 'savePre', 10, 2);
     }
 
     /**

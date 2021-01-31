@@ -264,6 +264,7 @@ HTML;
      * @return mixed
      *
      * @throws Exception
+     * @todo do wee need this?
      */
     public function uc_save_image_editor_file($override, $filename, $image, $mime_type, $post_id)
     {
