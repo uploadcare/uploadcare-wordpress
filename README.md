@@ -4,8 +4,8 @@ Uploadcare, all-round media upload, storage, management, and delivery solution, 
 
 [![Build Status][travis-img]][travis] [![Uploadcare stack on StackShare][stack-img]][stack]
 
-[travis-img]: https://api.travis-ci.org/uploadcare/uploadcare-wordpress.svg
-[travis]: https://travis-ci.org/uploadcare/uploadcare-wordpress
+[travis-img]: https://api.travis-ci.com/uploadcare/uploadcare-wordpress.svg
+[travis]: https://travis-ci.com/uploadcare/uploadcare-wordpress
 [stack-img]: http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
 [stack]: https://stackshare.io/uploadcare/stacks/
 
