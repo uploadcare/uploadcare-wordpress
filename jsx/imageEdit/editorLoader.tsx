@@ -3,19 +3,20 @@ import config from '../uc-config';
 import UcConfig from '../interfaces/UcConfig';
 import WpMediaModel from '../interfaces/WpMediaModel';
 import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
-import effectsConfig from '../effects'
-import {FileInfo} from '@uploadcare/react-widget';
+import UcUploader from '../UcUploader';
+import FileInfoResponse from '../interfaces/FileInfoResponse';
 
 config.config.imagesOnly = true;
 
 export default class UcEditor {
     private panelPlaceholder: HTMLDivElement = document.createElement('div');
     private readonly config: UcConfig;
+    private readonly uploader: UcUploader;
 
     constructor() {
         this.config = config.config;
         this.panelPlaceholder.setAttribute('id', 'uc-panel-placeholder');
-        uploadcare.start({effects: effectsConfig.config});
+        this.uploader = new UcUploader(this.config);
     }
 
     private static registerStyle(): void {
@@ -34,13 +35,14 @@ export default class UcEditor {
         wrapper.style.padding = '1rem';
         wrapper.appendChild(this.panelPlaceholder);
 
-        const ucFile: FileInfo = uploadcare.fileFrom('uploaded', model.attributes.url);
+        const ucFile: FileInfoResponse = uploadcare.fileFrom('uploaded', model.attributes.url);
 
         const localConfig = this.config;
         localConfig.imagesOnly = true;
         localConfig.multiple = false;
-        localConfig.effects = effectsConfig.config;
 
-        return await uploadcare.openPanel(this.panelPlaceholder, ucFile, localConfig).done();
+        const data = await uploadcare.openPanel(this.panelPlaceholder, ucFile, localConfig).done();
+
+        return this.uploader.storeImage(data as FileInfoResponse);
     }
 }

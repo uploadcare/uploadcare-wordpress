@@ -5,7 +5,6 @@ import FileInfoResponse from './interfaces/FileInfoResponse';
 import UcUploader from './UcUploader';
 import { __ } from '@wordpress/i18n';
 import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
-import effectsConfig from './effects'
 
 export default class UploadToLibrary {
     private readonly config: UcConfig;
@@ -16,9 +15,7 @@ export default class UploadToLibrary {
         config.config.multiple = true; // always made a multiple uploader
         uploadcare.registerTab('preview', uploadcareTabEffects);
         this.config = config.config;
-        this.config.effects = effectsConfig.config;
         this.uploader = new UcUploader(this.config);
-        uploadcare.start({effects: this.config.effects})
     }
 
     public async upload(): Promise<any> {

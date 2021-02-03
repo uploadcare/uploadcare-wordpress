@@ -2,6 +2,7 @@ import uploadcare from 'uploadcare-widget/uploadcare'
 import FileInfoResponse from './interfaces/FileInfoResponse';
 import UcConfig from './interfaces/UcConfig';
 import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
+import effectsConfig from './effects'
 
 export default class UcUploader {
     private loadingScreen: HTMLDivElement = document.createElement('div');
@@ -14,6 +15,7 @@ export default class UcUploader {
         config.previewStep = Boolean(config.previewStep);
         config.multiple = Boolean(config.multiple);
         this.config = config;
+        uploadcare.start({effects: effectsConfig.config});
 
         this.errorBlockWrapper.classList.add('uc-error');
         this.errorBlockWrapper.classList.add('uploadcare-hidden');
