@@ -7,7 +7,7 @@ import { RichText, MediaUpload } from '@wordpress/block-editor';
 import { Button } from '@wordpress/components';
 import FileInfoResponse from './interfaces/FileInfoResponse';
 import imageIcon from './icons/image';
-import WpMedia from './WpMedia';
+import WpMedia from './interfaces/WpMedia';
 import UcMediaMeta from './UcMediaMeta';
 
 config.config.imagesOnly = true;

@@ -1,4 +1,4 @@
-import WpMedia from '../WpMedia';
+import WpMedia from './WpMedia';
 
 export default interface WpMediaModel {
     cid: string;

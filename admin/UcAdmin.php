@@ -83,14 +83,13 @@ class UcAdmin
         \wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
         \wp_register_script('uploadcare-config', $pluginDirUrl.'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
-        \wp_register_script('uploadcare-main', $pluginDirUrl.'js/main.js', ['uploadcare-config'], $this->version);
         \wp_register_script('image-block', $pluginDirUrl.'compiled-js/blocks.js', [], $this->version, true);
         \wp_localize_script('uc-config', 'WP_UC_PARAMS', $this->getJsConfig());
         \wp_register_style('uploadcare-style', $pluginDirUrl.'css/uploadcare.css', [], $this->version);
         \wp_register_style('uc-editor', $pluginDirUrl.'compiled-js/blocks.css', [], $this->version);
 
         \wp_register_script('admin-js', $pluginDirUrl . 'compiled-js/admin.js', [
-            'image-edit', 'jquery', 'media'
+            'image-edit', 'jquery', 'media', 'uploadcare-config',
         ], $this->version);
         \wp_register_style('admin-css', $pluginDirUrl . 'compiled-js/admin.css', [], $this->version);
     }
@@ -119,7 +118,7 @@ class UcAdmin
 
         if (\in_array($hook, ['post.php', 'post-new.php'], true)) {
             $scr = \get_current_screen();
-            if (\method_exists($scr, 'is_block_editor') && $scr->is_block_editor()) {
+            if ($scr !== null && \method_exists($scr, 'is_block_editor') && $scr->is_block_editor()) {
                 \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
             }
         }
@@ -136,15 +135,20 @@ class UcAdmin
         $uuid = $this->fileId($cdnUrl);
 
         $file = $this->api->file()->fileInfo($uuid);
+        $modifiers = $_POST['uploadcare_url_modifiers'] ?? '';
+        if ($modifiers === 'null') {
+            $modifiers = '';
+        }
+
         $attachment_id = $this->attach($file, $this->loadPostByUuid($uuid), [
-            'uploadcare_url_modifiers' => $_POST['uploadcare_url_modifiers'] ?? '',
+            'uploadcare_url_modifiers' => $modifiers,
         ]);
 
         $result = [
             'attach_id' => $attachment_id,
             'fileUrl' => $cdnUrl,
             'isLocal' => false,
-            'uploadcare_url_modifiers' => ($_POST['uploadcare_url_modifiers'] ?? ''),
+            'uploadcare_url_modifiers' => $modifiers,
         ];
 
         echo \json_encode($result);
@@ -157,11 +161,11 @@ class UcAdmin
         $query = \sprintf('SELECT post_id FROM `%s` WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
         $result = $wpdb->get_results($query, ARRAY_A);
 
-        if (($result[0]['post_id'] ?? null) === null) {
+        if (($postId = ($result[0]['post_id'] ?? null)) === null) {
             return null;
         }
 
-        return \get_post($result[0]['post_id']);
+        return \get_post($postId);
     }
 
     /**
@@ -169,14 +173,16 @@ class UcAdmin
      */
     public function uploadcare_media_upload()
     {
+        \wp_enqueue_script('uc-config');
+        \wp_enqueue_script('admin-js', null, require \dirname(__DIR__) . '/compiled-js/admin.asset.php');
         $sign = __('Click to upload any file up to 5GB from anywhere', $this->plugin_name);
         $btn = __('Upload via Uploadcare', $this->plugin_name);
-        $href = 'javascript:ucPostUploadUiBtn();';
+        $href = '#';
 
         $styleDef = \get_current_screen() !== null ? \get_current_screen()->action : null;
         if (\get_current_screen() !== null && 'add' !== \get_current_screen()->action) {
             $href = \admin_url().'media-new.php';
-            $sign .= ' '.__('from Wordpress upload page');
+            $sign .= ' <br><strong>'.__('from Wordpress upload page') . '</strong>';
             $styleDef = 'wrap-margin';
         }
 
@@ -217,11 +223,10 @@ HTML;
      */
     public function attachmentDelete($postId, $post)
     {
-        if (!$post instanceof \WP_Post || !($url = \get_post_meta($postId, 'uploadcare_url', true))) {
+        if (!$post instanceof \WP_Post || !($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
             return;
         }
 
-        $uuid = $this->fileId($url);
         try {
             $this->api->file()->deleteFile($uuid);
         } catch (\Exception $e) {
@@ -261,8 +266,9 @@ HTML;
         if (empty($uuid)) {
             return $url;
         }
+        $modifiers = \get_post_meta($post_id, 'uploadcare_url_modifiers', true);
 
-        return $this->makeModifiedUrl($post_id, \get_post_meta($post_id, 'uploadcare_url_modifiers', true));
+        return $this->makeModifiedUrl($post_id, !empty($modifiers) ? $modifiers : '');
     }
 
     /**
@@ -689,15 +695,16 @@ HTML;
 
         $baseParams = [
             'public_key' => get_option('uploadcare_public'),
-            'previewStep' => false,
+            'previewStep' => true,
             'ajaxurl' => \admin_url('admin-ajax.php'),
             'tabs' => $tabs,
             'cdnBase' => 'https://'.\get_option('uploadcare_cdn_base', 'ucarecdn.com'),
+            'multiple' => true,
         ];
         if (null !== \get_option('uploadcare_finetuning', null)) {
             $fineTuning = \json_decode(\stripcslashes(\get_option('uploadcare_finetuning')), true);
             if (JSON_ERROR_NONE === \json_last_error()) {
-                $baseParams = \array_merge($fineTuning, $baseParams);
+                $baseParams = \array_merge($baseParams, $fineTuning);
             }
         }
 

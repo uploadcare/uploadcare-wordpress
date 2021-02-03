@@ -15,6 +15,7 @@ export default class UcEditor {
     constructor() {
         this.config = config.config;
         this.panelPlaceholder.setAttribute('id', 'uc-panel-placeholder');
+        uploadcare.start({effects: effectsConfig.config});
     }
 
     private static registerStyle(): void {
@@ -23,7 +24,7 @@ export default class UcEditor {
         document.head.appendChild(customStyle);
     }
 
-    async showPanel(wrapper: any, model: WpMediaModel) {
+    public async showPanel(wrapper: any, model: WpMediaModel) {
         if (!(wrapper instanceof HTMLDivElement))
             return false;
         uploadcare.registerTab('preview', uploadcareTabEffects);
@@ -40,6 +41,6 @@ export default class UcEditor {
         localConfig.multiple = false;
         localConfig.effects = effectsConfig.config;
 
-        const data = await uploadcare.openPanel(this.panelPlaceholder, ucFile, localConfig).done();
+        return await uploadcare.openPanel(this.panelPlaceholder, ucFile, localConfig).done();
     }
 }

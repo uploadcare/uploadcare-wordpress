@@ -8,10 +8,11 @@ export default class UcUploader {
     private spinnerBlock: HTMLDivElement = document.createElement('div');
     private errorBlockWrapper: HTMLDivElement = document.createElement('div');
     private errorContent: HTMLParagraphElement = document.createElement('p');
-    private config: UcConfig;
+    private readonly config: UcConfig;
 
     constructor(config: UcConfig) {
         config.previewStep = Boolean(config.previewStep);
+        config.multiple = Boolean(config.multiple);
         this.config = config;
 
         this.errorBlockWrapper.classList.add('uc-error');
@@ -28,11 +29,10 @@ export default class UcUploader {
     async upload(mediaUrl?: string): Promise<FileInfoResponse> {
         this.loadingScreen.classList.remove('uploadcare-hidden')
         uploadcare.registerTab('preview', uploadcareTabEffects)
-        const dialogPreferences = {
-            multiple: false,
-            imagesOnly: true,
-            previewStep: true,
-        }
+        const dialogPreferences = this.config;
+        dialogPreferences.multiple = false;
+        dialogPreferences.imagesOnly = true;
+        dialogPreferences.previewStep = true;
 
         const initFile = mediaUrl ? [uploadcare.fileFrom('uploaded', mediaUrl)] : []
         try {
@@ -49,7 +49,7 @@ export default class UcUploader {
         }
     }
 
-    private makeErrorBlock(errorText: string): void {
+    public makeErrorBlock(errorText: string): void {
         const wrapper = document.querySelector('div.block-editor__typewriter') || document.body;
 
         wrapper.append(this.errorBlockWrapper);
@@ -62,7 +62,7 @@ export default class UcUploader {
         this.errorBlockWrapper.append(errBlock);
     }
 
-    private storeImage(file: FileInfoResponse): Promise<FileInfoResponse> {
+    public storeImage(file: FileInfoResponse): Promise<FileInfoResponse> {
         const data = new FormData();
         data.append('action', 'uploadcare_handle');
         data.append('file_url', file.originalUrl as string);
