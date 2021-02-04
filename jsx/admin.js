@@ -24,11 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploader = new UploadToLibrary();
     if (document.getElementById('uploadcare-post-upload-ui-btn') === null) return false;
 
-    document.getElementById('uploadcare-post-upload-ui-btn').addEventListener('click', (e) => {
+    document.getElementById('uploadcare-post-upload-ui-btn').addEventListener('click', async (e) => {
         e.preventDefault();
 
-        uploader.upload()
-        .then(() => { window.location.pathname = window.location.pathname.split('/').slice(0, window.location.pathname.split('/').length - 1).concat(['upload.php']).join('/') })
-        .catch(() => {});
+        const moveTo = window.location.pathname.split('/').slice(0, window.location.pathname.split('/').length - 1).concat(['upload.php']).join('/');
+        await uploader.upload()
+
+        window.location.pathname = moveTo;
     })
 })
