@@ -134,7 +134,15 @@ class UcFront
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
-                $imageUrl = !$isLocal ? \get_post_meta($imageId, 'uploadcare_uuid', true) : null;
+                $uuid = \get_post_meta($imageId, 'uploadcare_uuid', true);
+                if (!$uuid) {
+                    $uuid = UploadcareMain::getUuid(\get_post_meta($imageId, 'uploadcare_url', true));
+                    if ($uuid !== null) {
+                        \update_post_meta($imageId, 'uploadcare_uuid', $uuid);
+                    }
+                }
+
+                $imageUrl = !$isLocal ? $uuid : null;
             }
             if ($imageUrl !== null && $isLocal === false) {
                 $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
@@ -194,8 +202,13 @@ class UcFront
             if ($this->adaptiveDelivery === false) {
                 return $this->replaceImageUrl(\sprintf('<img src="%s" />', $result[0]), $resizeParam);
             }
-            $uuid = \pathinfo($result[0], PATHINFO_BASENAME);
+            $uuid = UploadcareMain::getUuid($result[0]);
+            $modifiers = \get_post_meta($post_id, 'uploadcare_url_modifiers', true);
+            if (!empty($modifiers)) {
+                $uuid = \sprintf('%s/%s', $uuid, $modifiers);
+            }
 
+            /** @noinspection RequiredAttributes */
             return \sprintf('<img data-blink-uuid="%s" alt="post-%d">', $uuid, $post_id);
         }
 

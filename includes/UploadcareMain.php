@@ -2,8 +2,9 @@
 
 class UploadcareMain
 {
-    const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
-    const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
+    public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
+    public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
+    public const UUID_REGEX = '/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/';
 
     /**
      * @var UcLoader
@@ -33,6 +34,18 @@ class UploadcareMain
         $this->set_locale();
         $this->define_admin_hooks();
         $this->defineFrontHooks();
+    }
+
+    public static function getUuid(string $data = null): ?string
+    {
+        if ($data === null) {
+            return null;
+        }
+
+        $matches = [];
+        \preg_match(self::UUID_REGEX, $data, $matches);
+
+        return $matches[0] ?? null;
     }
 
     private function set_locale()
