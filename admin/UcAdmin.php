@@ -4,6 +4,7 @@ use Uploadcare\Api;
 use Uploadcare\Configuration;
 use Uploadcare\Interfaces\File\FileInfoInterface;
 use Uploadcare\Interfaces\File\ImageInfoInterface;
+use Uploadcare\Interfaces\Response\ProjectInfoInterface;
 
 class UcAdmin
 {
@@ -44,7 +45,7 @@ class UcAdmin
         $this->api = new Api($this->ucConfig);
     }
 
-    public function projectInfo()
+    public function projectInfo(): ProjectInfoInterface
     {
         return $this->api->project()->getProjectInfo();
     }
@@ -221,9 +222,14 @@ HTML;
      * @param int      $postId
      * @param \WP_Post $post
      */
-    public function attachmentDelete($postId, $post)
+    public function attachmentDelete($postId, $post): void
     {
-        if (!$post instanceof \WP_Post || !($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
+        $uuid = \get_post_meta($postId, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
+            $uuid = UploadcareMain::getUuid(\get_post_meta($postId, 'uploadcare_url', true) ?: null);
+        }
+
+        if (empty($uuid)) {
             return;
         }
 
@@ -259,9 +265,18 @@ HTML;
      *
      * @return string
      */
-    public function uc_get_attachment_url($url, $post_id)
+    public function uc_get_attachment_url(string $url, int $post_id): string
     {
         $uuid = \get_post_meta($post_id, 'uploadcare_uuid', true);
+        if ($uuid === false) {
+            $ucUrl = \get_post_meta($post_id, 'uploadcare_url', true);
+            if ($ucUrl) {
+                $uuid = UploadcareMain::getUuid($ucUrl);
+            }
+            if ($uuid !== null) {
+                \update_post_meta($post_id, 'uploadcare_uuid', $uuid);
+            }
+        }
 
         if (empty($uuid)) {
             return $url;
@@ -482,6 +497,15 @@ HTML;
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
         $uuid = \get_post_meta($id, 'uploadcare_uuid', true);
+        if ($uuid === false) {
+            $url = \get_post_meta($id, 'uploadcare_url', true);
+            if ($url === false) {
+                return false;
+            }
+
+            $uuid = UploadcareMain::getUuid($url);
+        }
+
         if (empty($uuid)) {
             return false;
         }
