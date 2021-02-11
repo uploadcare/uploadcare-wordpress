@@ -161,6 +161,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
 
         <h3 id="uc-collapse-toggle" class="uc-show-hide uc-toggle"><?= __('Advanced options', 'uploadcare')?></h3>
         <div id="uc-advanced-options" data-toggle="uc-collapse-toggle" class="uc-collapsed hide">
+            <!--
             <h4><?= __('Transfer WordPress Media Library to Uploadcare', 'uploadcare')?></h4>
             <p><?= __('It\'ll move all previously uploaded files from your <code>/wp-content/uploads/</code> folder to Uploadcare cloud storage and then it\'ll update image URLs in all posts and pages automatically. The transfer is required if you want to use <a href="https://uploadcare.com/products/adaptive-delivery/" target="_blank">Adaptive Delivery</a> with Secure Uploading feature.', 'uploadcare')?></p>
             <?php if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync'): ?>
@@ -192,6 +193,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
             <p><?= __("Your files are intact during the transfer and after. We keep the original file duplicates because the WordPress engine is not reliable and some image URLs may mot be replaced with the new ones.", 'uploadcare')?></p>
             <p><?= __("If you accidentally upload a few files with a standard WordPress uploader later, you can do Media Library transfer again to keep everything in one place and to use all Uploadcare options.", 'uploadcare')?></p>
             <p><?= __("The process is reversable if you decide to stop using Uploadcare for your WordPress. Go to the Advanced options and put all files back to your WordPress Media Library.", 'uploadcare')?></p>
+            -->
 
             <h4><?= __('Backup', 'uploadcare')?> <a href="https://uploadcare.com/docs/start/settings/#project-settings-advanced-backup" target="_blank">[?]</a></h4>
             <p><?= __('All your Uploadcare files are backed up automatically. Additionally, you can configure backups to your Amazong S3 Bucket in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>, Uploading settings.', 'uploadcare')?></p>
@@ -245,6 +247,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 <textarea style="font-family: monospace" name="uploadcare_finetuning" id="uc_uploadcare_finetuning" rows="10" cols="75"><?= \trim(\stripslashes($uploadcare_finetuning)) ?></textarea>
             </p>
 
+            <!--
             <h4><?= __('Put Uploadcare images back to Media Library', 'uploadcare')?></h4>
             <p><?= __('Use this feature if you want to stop using Uploadcare with WordPress. It\'ll transfer all files from your Uploadcare project to the local WordPress Media Library (<code>/wp-content/uploads/</code>) and it\'ll update all posts and pages with the respective image URLs automatically. Refresh this page later to see if all files have been transferred.', 'uploadcare')?></p>
             <p>
@@ -252,6 +255,7 @@ if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
                 <?= __('Put all files back to Media Library') ?>
             </button>
         </p>
+            -->
         </div>
 
         <?php submit_button(); ?>
