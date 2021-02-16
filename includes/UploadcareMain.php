@@ -2,8 +2,9 @@
 
 class UploadcareMain
 {
-    const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
-    const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
+    public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
+    public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
+    public const UUID_REGEX = '/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/';
 
     /**
      * @var UcLoader
@@ -35,6 +36,18 @@ class UploadcareMain
         $this->defineFrontHooks();
     }
 
+    public static function getUuid(string $data = null): ?string
+    {
+        if ($data === null) {
+            return null;
+        }
+
+        $matches = [];
+        \preg_match(self::UUID_REGEX, $data, $matches);
+
+        return $matches[0] ?? null;
+    }
+
     private function set_locale()
     {
         $this->loader->add_action('plugins_loaded', new UcI18n($this->plugin_name), 'load_plugin_textdomain');
@@ -48,6 +61,8 @@ class UploadcareMain
     {
         $ucFront = new UcFront($this->get_plugin_name(), $this->get_version());
 
+        $this->loader->add_action('init', $ucFront, 'editorPostMeta');
+        $this->loader->add_filter('wp_prepare_attachment_for_js', $ucFront, 'prepareAttachment', 0, 3);
         $this->loader->add_action('wp_enqueue_scripts', $ucFront, 'frontendScripts');
         $this->loader->add_filter('render_block', $ucFront, 'renderBlock', 0, 2);
         $this->loader->add_filter('post_thumbnail_html', $ucFront, 'postFeaturedImage', 10, 5);
@@ -77,7 +92,9 @@ class UploadcareMain
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
-        $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
+//        $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
+//        $this->loader->add_filter('wp_image_editors', $this, 'addImageEditor');
+//        $this->loader->add_filter('image_editor_save_pre', $this, 'savePre', 10, 2);
     }
 
     /**

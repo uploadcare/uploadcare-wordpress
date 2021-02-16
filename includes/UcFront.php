@@ -34,6 +34,32 @@ class UcFront
         $this->secureUploads = (bool) \get_option('uploadcare_upload_lifetime', 0) > 0;
     }
 
+    public function editorPostMeta(): void
+    {
+        $parameters = [
+            'show_in_rest' => true,
+            'type' => 'string',
+        ];
+
+        \register_post_meta('attachment', 'uploadcare_url_modifiers', $parameters);
+        \register_post_meta('attachment', 'uploadcare_url', $parameters);
+        \register_post_meta('attachment', 'uploadcare_uuid', $parameters);
+    }
+
+    public function prepareAttachment(array $response, \WP_Post $attachment, $meta): array
+    {
+        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true)))
+            return $response;
+
+        $response['meta'] = [
+            'uploadcare_url_modifiers' => \get_post_meta($attachment->ID, 'uploadcare_url_modifiers', true),
+            'uploadcare_url' => \get_post_meta($attachment->ID, 'uploadcare_url', true),
+            'uploadcare_uuid' => \get_post_meta($attachment->ID, 'uploadcare_uuid', true),
+        ];
+
+        return $response;
+    }
+
     /**
      * Calls on `wp_enqueue_scripts`
      * @see UploadcareMain::defineFrontHooks()
@@ -90,7 +116,9 @@ class UcFront
     {
         $crawler = new Crawler($content);
         $collation = [];
-        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $imageId) {
+        $modifiers = \get_post_meta($imageId, 'uploadcare_url_modifiers', true);
+
+        $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $imageId, $modifiers) {
             $imageUrl = $node->attr('src');
             $attachedFile = \get_post_meta($imageId, '_wp_attached_file', true);
             $isLocal = true;
@@ -106,7 +134,18 @@ class UcFront
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
-                $imageUrl = !$isLocal ? \get_post_meta($imageId, 'uploadcare_uuid', true) : null;
+                $uuid = \get_post_meta($imageId, 'uploadcare_uuid', true);
+                if (!$uuid) {
+                    $uuid = UploadcareMain::getUuid(\get_post_meta($imageId, 'uploadcare_url', true));
+                    if ($uuid !== null) {
+                        \update_post_meta($imageId, 'uploadcare_uuid', $uuid);
+                    }
+                }
+
+                $imageUrl = !$isLocal ? $uuid : null;
+            }
+            if ($imageUrl !== null && $isLocal === false) {
+                $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
             }
 
             $collation[$node->attr('src')] = $imageUrl;
@@ -121,6 +160,7 @@ class UcFront
             // If Adaptive delivery is on and Secure uploads is off it changes everything to `data-blink-src`.
             // In this case, the `collation` array contains all images (remote and local) and all this images can be shown throw Adaptive delivery.
             if ($this->adaptiveDelivery && !$this->secureUploads) {
+                $content = (string) \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
                 $content = (string) \preg_replace('/src=/mu', 'data-blink-src=', $content);
             }
             // If adaptive delivery and secure uploads both enabled we have to change all sources to uuids and also change `src` attribute to `data-blink-uuid`.
@@ -162,8 +202,13 @@ class UcFront
             if ($this->adaptiveDelivery === false) {
                 return $this->replaceImageUrl(\sprintf('<img src="%s" />', $result[0]), $resizeParam);
             }
-            $uuid = \pathinfo($result[0], PATHINFO_BASENAME);
+            $uuid = UploadcareMain::getUuid($result[0]);
+            $modifiers = \get_post_meta($post_id, 'uploadcare_url_modifiers', true);
+            if (!empty($modifiers)) {
+                $uuid = \sprintf('%s/%s', $uuid, $modifiers);
+            }
 
+            /** @noinspection RequiredAttributes */
             return \sprintf('<img data-blink-uuid="%s" alt="post-%d">', $uuid, $post_id);
         }
 

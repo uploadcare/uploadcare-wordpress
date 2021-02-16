@@ -1,28 +1,21 @@
 import uploadcare from 'uploadcare-widget/uploadcare'
-import FileInfoResponse from "./FileInfoResponse";
+import FileInfoResponse from './interfaces/FileInfoResponse';
+import UcConfig from './interfaces/UcConfig';
 import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
-
-interface UcConfig {
-    ajaxurl: string;
-    cdnBase: string;
-    previewStep: boolean;
-    public_key: string;
-    secureSignature?: string;
-    secureExpire?: string;
-    tabs: string;
-    imagesOnly: boolean;
-}
+import effectsConfig from './effects'
 
 export default class UcUploader {
     private loadingScreen: HTMLDivElement = document.createElement('div');
     private spinnerBlock: HTMLDivElement = document.createElement('div');
     private errorBlockWrapper: HTMLDivElement = document.createElement('div');
     private errorContent: HTMLParagraphElement = document.createElement('p');
-    private config: UcConfig;
+    private readonly config: UcConfig;
 
     constructor(config: UcConfig) {
         config.previewStep = Boolean(config.previewStep);
+        config.multiple = Boolean(config.multiple);
         this.config = config;
+        uploadcare.start({effects: effectsConfig.config});
 
         this.errorBlockWrapper.classList.add('uc-error');
         this.errorBlockWrapper.classList.add('uploadcare-hidden');
@@ -38,10 +31,10 @@ export default class UcUploader {
     async upload(mediaUrl?: string): Promise<FileInfoResponse> {
         this.loadingScreen.classList.remove('uploadcare-hidden')
         uploadcare.registerTab('preview', uploadcareTabEffects)
-        const dialogPreferences = {
-            multiple: false,
-            imagesOnly: true,
-        }
+        const dialogPreferences = this.config;
+        dialogPreferences.multiple = false;
+        dialogPreferences.imagesOnly = true;
+        dialogPreferences.previewStep = true;
 
         const initFile = mediaUrl ? [uploadcare.fileFrom('uploaded', mediaUrl)] : []
         try {
@@ -58,7 +51,7 @@ export default class UcUploader {
         }
     }
 
-    private makeErrorBlock(errorText: string): void {
+    public makeErrorBlock(errorText: string): void {
         const wrapper = document.querySelector('div.block-editor__typewriter') || document.body;
 
         wrapper.append(this.errorBlockWrapper);
@@ -71,10 +64,11 @@ export default class UcUploader {
         this.errorBlockWrapper.append(errBlock);
     }
 
-    private storeImage(file: FileInfoResponse): Promise<FileInfoResponse> {
+    public storeImage(file: FileInfoResponse): Promise<FileInfoResponse> {
         const data = new FormData();
         data.append('action', 'uploadcare_handle');
-        data.append('file_url', file.cdnUrl as string);
+        data.append('file_url', file.originalUrl as string);
+        data.append('uploadcare_url_modifiers', file.cdnUrlModifiers as string);
 
         return window.fetch(this.config.ajaxurl, {
             method: 'POST',
