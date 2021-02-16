@@ -19,7 +19,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.0.1] — 2020-12-25
 
-Brand new plugin, rewritten from scratch.
+* Fixed issue with plugin activation to prevent malfunction when PHP DOMDocument class is disabled.
+* Various small improvements.
+
+## [3.0.0] — 2020-12-25
+
+* Brand new version, rewritten from scratch.
+* Adaptive image delivery system for auto responsiviness, quality optimization, and lazy loading.
+* Better integration with Media Library and WYSIWYG.
+* Transfer your old files to Uploadcare and back.
+* Updated Settings page.
+* Removed "uploadcare" shortcode that allowed your readers to upload files.
 
 ## [2.7.2] — 2020-05-13
 
