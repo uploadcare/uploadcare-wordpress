@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [3.0.3] — 2021-02-16
 
-* Fix upload button position in "Add media" page;
-* Refactor js for better performance and control;
-* Use Uploadcare Image Editor for modify remote images;
+* Fixed upload button position on "Add media" page.
+* Refactored code for better performance and control.
+* Now you can use Uploadcare Image Editor to modify images from Media Library.
 
 ## [3.0.2] — 2021-01-13
 

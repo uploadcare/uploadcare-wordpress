@@ -128,6 +128,12 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 3.0.3 =
+
+* Fixed upload button position on "Add media" page.
+* Refactored code for better performance and control.
+* Now you can use Uploadcare Image Editor to modify images from Media Library.
+
 = 3.0.2 =
 * Plugin as class.
 * Composer autoload.
