@@ -66,7 +66,6 @@ registerBlockType('uploadcare/image', {
             uploader.upload(mediaUid ? `${cdnBase}/${mediaUid}/${cdnUrlModifiers}`: undefined).then((fileInfo: FileInfoResponse) => onUploadImage(fileInfo)).catch(() => {});
         };
         const onUploadImage = (media: FileInfoResponse) => {
-            console.log(media)
             setAttributes({
                 mediaURL: media.originalUrl,
                 mediaID: media.attach_id,

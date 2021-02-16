@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.3] — 2021-02-16
+
+* Fix upload button position in "Add media" page;
+* Refactor js for better performance and control;
+* Use Uploadcare Image Editor for modify remote images;
+
 ## [3.0.2] — 2021-01-13
 
 * Plugin as class.
