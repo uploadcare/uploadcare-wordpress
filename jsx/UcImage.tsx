@@ -86,7 +86,7 @@ registerBlockType('uploadcare/image', {
             {mediaID ?
                 <div className={'imageWrap'}>
                     <img alt={title} src={`${cdnBase}/${mediaUid}/${cdnUrlModifiers}`} />
-                    <RichText tagName={'figcaption'} value={title} onChange={onChangeTitle} />
+                    <RichText placeholder={ __('Write a caption') } tagName={'figcaption'} value={title} onChange={onChangeTitle} />
                 </div> :
                 <div className={'components-placeholder is-large'}>
                     <div className={'components-placeholder__label'}>
