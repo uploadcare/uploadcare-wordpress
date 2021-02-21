@@ -28,8 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const moveTo = window.location.pathname.split('/').slice(0, window.location.pathname.split('/').length - 1).concat(['upload.php']).join('/');
-        await uploader.upload()
-
-        window.location.pathname = moveTo;
+        Promise.all([uploader.upload()]).finally(() => {
+            const loadingScreen = document.querySelector('.uploadcare-loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('uploadcare-hidden');
+            }
+            window.location.pathname = moveTo;
+        });
     })
 })

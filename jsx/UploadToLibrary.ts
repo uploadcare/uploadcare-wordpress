@@ -19,17 +19,20 @@ export default class UploadToLibrary {
     }
 
     public async upload(): Promise<any> {
+        this.uploader.showLoading();
         try {
-            const data = await uploadcare.openDialog([], null, this.config).done();
-            Promise.all(data.files()).then(files => {
+            const data = await uploadcare.openDialog([], null, this.config).progress((tab) => {
+            }).done();
+
+            return Promise.all(data.files()).then(files => {
                 files.forEach(async f => {
                     await this.uploader.storeImage(f as FileInfoResponse);
                 });
             });
-
-            return;
         } catch (err) {
-            if (err === 'upload') { this.uploader.makeErrorBlock(__('Unable to upload file')) }
+            if (err === 'upload') {
+                this.uploader.makeErrorBlock(__('Unable to upload file'));
+            }
             return Promise.reject(err);
         }
     }
