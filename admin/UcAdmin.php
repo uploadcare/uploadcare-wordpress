@@ -268,7 +268,7 @@ HTML;
     public function uc_get_attachment_url(string $url, int $post_id): string
     {
         $uuid = \get_post_meta($post_id, 'uploadcare_uuid', true);
-        if ($uuid === false) {
+        if (empty($uuid)) {
             $ucUrl = \get_post_meta($post_id, 'uploadcare_url', true);
             if ($ucUrl) {
                 $uuid = UploadcareMain::getUuid($ucUrl);
