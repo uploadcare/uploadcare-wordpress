@@ -110,6 +110,7 @@ class UcAdmin
         \wp_enqueue_script('uploadcare-main');
         \wp_enqueue_style('uploadcare-style');
 
+        \wp_enqueue_script('uploadcare-config');
         \wp_enqueue_script('uc-config');
         \wp_enqueue_script('uploadcare-elements');
         \wp_enqueue_style('uc-editor');
@@ -724,6 +725,7 @@ HTML;
             'tabs' => $tabs,
             'cdnBase' => 'https://'.\get_option('uploadcare_cdn_base', 'ucarecdn.com'),
             'multiple' => true,
+            'imagesOnly' => false,
         ];
         if (null !== \get_option('uploadcare_finetuning', null)) {
             $fineTuning = \json_decode(\stripcslashes(\get_option('uploadcare_finetuning')), true);

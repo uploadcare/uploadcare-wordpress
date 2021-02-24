@@ -15,6 +15,7 @@ export default class UploadToLibrary {
         config.config.multiple = true; // always made a multiple uploader
         uploadcare.registerTab('preview', uploadcareTabEffects);
         this.config = config.config;
+        this.config.imagesOnly = Boolean(config.config.imagesOnly);
         this.uploader = new UcUploader(this.config);
     }
 
