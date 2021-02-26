@@ -18,6 +18,10 @@ export default class UcEditor {
         this.uploader = new UcUploader(this.config);
     }
 
+    public getCDN(): string {
+        return this.config.cdnBase;
+    }
+
     private static registerStyle(): void {
         const customStyle = document.createElement('style');
         customStyle.innerHTML = '.media-modal * { box-sizing: border-box; } .uploadcare--panel { min-height: 88vh; }'

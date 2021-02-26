@@ -2,20 +2,20 @@ import './uc-picker-wrapper.scss';
 import UcEditor from './imageEdit/editorLoader';
 import UploadToLibrary from './UploadToLibrary';
 
-const cdnRegex = new RegExp('ucarecdn.com');
 const wpEditor = window.imageEdit;
 
 wpEditor.init = function(postId) {
     window.imageEdit.postid = postId;
+    const ucEditor = new UcEditor();
     const model = wpEditor._view.model;
 
-    if (!cdnRegex.test(model.attributes.url)) return false;
+    if (!new RegExp(ucEditor.getCDN().replace(/https?:\/\//i, '')).test(model.attributes.url)) return false;
 
     const mediaElement = document.getElementById(`media-head-${postId}`);
     if (mediaElement === null) return false;
 
     const wrapperObject = document.getElementById(`media-head-${postId}`).parentElement.parentElement;
-    (new UcEditor()).showPanel(wrapperObject, model)
+    ucEditor.showPanel(wrapperObject, model)
     .then(() => { window.location.search = ''; })
     .catch(() => {});
 }
