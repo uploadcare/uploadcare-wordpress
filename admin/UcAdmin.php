@@ -161,6 +161,7 @@ class UcAdmin
     {
         global $wpdb;
         $query = \sprintf('SELECT post_id FROM `%s` WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
+        $query = $wpdb->prepare($query);
         $result = $wpdb->get_results($query, ARRAY_A);
 
         if (($postId = ($result[0]['post_id'] ?? null)) === null) {
