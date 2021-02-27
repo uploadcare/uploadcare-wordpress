@@ -128,6 +128,12 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 3.0.4 =
+
+* Added placeholder for Uploadcare Image caption
+* Fixed update process from 2.7.x to 3.x.x
+* Various other fixes
+
 = 3.0.3 =
 
 * Fixed upload button position on "Add media" page.

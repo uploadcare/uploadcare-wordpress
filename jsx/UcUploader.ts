@@ -5,9 +5,9 @@ import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
 import effectsConfig from './effects'
 
 export default class UcUploader {
-    private loadingScreen: HTMLDivElement = document.createElement('div');
-    private spinnerBlock: HTMLDivElement = document.createElement('div');
-    private errorBlockWrapper: HTMLDivElement = document.createElement('div');
+    private loadingScreen: HTMLDivElement = document.querySelector('.uploadcare-loading-screen') || document.createElement('div');
+    private spinnerBlock: HTMLDivElement = document.querySelector('.uc-loader') || document.createElement('div');
+    private errorBlockWrapper: HTMLDivElement = document.querySelector('.uc-error') || document.createElement('div');
     private errorContent: HTMLParagraphElement = document.createElement('p');
     private readonly config: UcConfig;
 
@@ -28,8 +28,16 @@ export default class UcUploader {
         document.body.append(this.loadingScreen);
     }
 
+    public showLoading(): void {
+        this.loadingScreen.classList.remove('uploadcare-hidden');
+    }
+
+    public hideLoading(): void {
+        this.loadingScreen.classList.add('uploadcare-hidden')
+    }
+
     async upload(mediaUrl?: string): Promise<FileInfoResponse> {
-        this.loadingScreen.classList.remove('uploadcare-hidden')
+        this.showLoading();
         uploadcare.registerTab('preview', uploadcareTabEffects)
         const dialogPreferences = this.config;
         dialogPreferences.multiple = false;
@@ -47,7 +55,7 @@ export default class UcUploader {
             }
             return Promise.reject();
         } finally {
-            this.loadingScreen.classList.add('uploadcare-hidden')
+            this.hideLoading();
         }
     }
 

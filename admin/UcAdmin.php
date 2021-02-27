@@ -110,6 +110,7 @@ class UcAdmin
         \wp_enqueue_script('uploadcare-main');
         \wp_enqueue_style('uploadcare-style');
 
+        \wp_enqueue_script('uploadcare-config');
         \wp_enqueue_script('uc-config');
         \wp_enqueue_script('uploadcare-elements');
         \wp_enqueue_style('uc-editor');
@@ -160,6 +161,7 @@ class UcAdmin
     {
         global $wpdb;
         $query = \sprintf('SELECT post_id FROM `%s` WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
+        $query = $wpdb->prepare($query);
         $result = $wpdb->get_results($query, ARRAY_A);
 
         if (($postId = ($result[0]['post_id'] ?? null)) === null) {
@@ -268,7 +270,7 @@ HTML;
     public function uc_get_attachment_url(string $url, int $post_id): string
     {
         $uuid = \get_post_meta($post_id, 'uploadcare_uuid', true);
-        if ($uuid === false) {
+        if (empty($uuid)) {
             $ucUrl = \get_post_meta($post_id, 'uploadcare_url', true);
             if ($ucUrl) {
                 $uuid = UploadcareMain::getUuid($ucUrl);
@@ -724,6 +726,7 @@ HTML;
             'tabs' => $tabs,
             'cdnBase' => 'https://'.\get_option('uploadcare_cdn_base', 'ucarecdn.com'),
             'multiple' => true,
+            'imagesOnly' => false,
         ];
         if (null !== \get_option('uploadcare_finetuning', null)) {
             $fineTuning = \json_decode(\stripcslashes(\get_option('uploadcare_finetuning')), true);

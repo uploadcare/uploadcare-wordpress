@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.4] — 2021-02-26
+
+* Added placeholder for Uploadcare Image caption
+* Fixed update process from 2.7.x to 3.x.x
+* Various other fixes
+
 ## [3.0.3] — 2021-02-16
 
 * Fixed upload button position on "Add media" page.

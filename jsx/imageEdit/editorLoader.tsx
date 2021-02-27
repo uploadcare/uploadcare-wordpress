@@ -6,8 +6,6 @@ import uploadcareTabEffects from 'uploadcare-widget-tab-effects'
 import UcUploader from '../UcUploader';
 import FileInfoResponse from '../interfaces/FileInfoResponse';
 
-config.config.imagesOnly = true;
-
 export default class UcEditor {
     private panelPlaceholder: HTMLDivElement = document.createElement('div');
     private readonly config: UcConfig;
@@ -15,8 +13,13 @@ export default class UcEditor {
 
     constructor() {
         this.config = config.config;
+        this.config.imagesOnly = true;
         this.panelPlaceholder.setAttribute('id', 'uc-panel-placeholder');
         this.uploader = new UcUploader(this.config);
+    }
+
+    public getCDN(): string {
+        return this.config.cdnBase;
     }
 
     private static registerStyle(): void {
