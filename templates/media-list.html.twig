@@ -1,0 +1,81 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <h2>
+        {{ 'Transfer images to uploadcare' | trans }}
+        <small class="text-small text-black-50">{{ 'and vise versa' | trans }}</small>
+    </h2>
+    <p class="alert alert-secondary" role="alert">
+        <strong>Please, note</strong>: if your images already uses in posts, you <strong>will not</strong> see changes in <i>post-edit</i> action as a result of image transfer to Uploadcare.<br>
+        Only client-part (frontend) of post will change: the source of image will be new remote source, and adaptive delivery by Uploadcare will work.
+    </p>
+    <div class="text-end">
+        <button class="btn btn-outline-primary">{{ 'Transfer all images to Uploadcare' | trans }}</button>
+        <p>
+            <small>{{ 'You will see the transfer progress while uploading' | trans }}</small>
+        </p>
+    </div>
+    <div class="progress" id="transferProgress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 0"></div>
+    </div>
+    <hr>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>{{ 'Preview' | trans }}</th>
+                <th>{{ 'Media data' | trans }}</th>
+                <th>{{ 'Transferred' | trans }}</th>
+                <th>{{ 'Actions' | trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in media %}
+                {% set uuid = get_post_meta(post, 'uploadcare_uuid') %}
+                {% set postAuthor = get_post_author(post) %}
+                <tr>
+                    <td>
+                        {% if post.post_mime_type starts with 'image' %}
+                            <img id="image-{{ post.ID }}" src="{{ get_attachment_image(post) }}" alt="{{ post.post_title }}"/>
+                        {% else %}
+                            {{ 'Not an image — unable to preview' | trans }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ post.post_title }}</strong>
+                        <small>{{ post.post_date | date }}</small>
+                        <p>{{ 'Author' | trans }} {{ postAuthor is not empty ? postAuthor.data.display_name : 'Unknown' | trans }}</p>
+                    </td>
+                    <td class="text-center">
+                        <i id="icon-transferred-{{ post.ID }}" class="bi bi-check2-circle text-success {{ uuid is empty ? 'hidden' : '' }}" title="{{ 'Transferred' | trans }}"></i>
+                        <i id="icon-not-transferred-{{ post.ID }}" class="bi bi-circle text-danger {{ uuid is not empty ? 'hidden' : '' }}" title="{{ 'Not transferred' | trans }}"></i>
+                    </td>
+                    <td class="text-nowrap">
+                            <button
+                                id="uc-upload-{{ post.ID }}"
+                                data-action="uc-upload"
+                                data-uuid="{{ uuid }}"
+                                data-post="{{ post.ID }}"
+                                class="btn btn-outline-success btn-sm rounded-circle" {{ uuid is not empty ? 'disabled' : '' }}
+                                title="{{ 'Transfer to Uploadcare' | trans }}"
+                            ><i class="bi bi-upload"></i></button>
+                            <button
+                                id="uc-download-{{ post.ID }}"
+                                data-action="uc-download"
+                                data-uuid="{{ uuid }}"
+                                data-post="{{ post.ID }}"
+                                class="btn btn-outline-dark btn-sm rounded-circle" {{ uuid is empty ? 'disabled' : '' }}
+                                title="{{ 'Download to local library' | trans }}"
+                            ><i class="bi bi-download"></i></button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ add_js('transfer.js') }}
+{% endblock %}

@@ -4,6 +4,7 @@ class UploadcareMain
 {
     public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
     public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
+    public const PREVIEW_TEMPLATE = '%s-/preview/160x160/-/resize/160x/-/scale_crop/160x160/';
     public const UUID_REGEX = '/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/';
 
     /**
@@ -55,6 +56,7 @@ class UploadcareMain
 
     /**
      * Add hooks and actions for frontend.
+     *
      * @return void
      */
     private function defineFrontHooks()
@@ -70,6 +72,7 @@ class UploadcareMain
 
     /**
      * Add hooks and actions for backend.
+     *
      * @return void
      */
     private function define_admin_hooks()
@@ -83,6 +86,8 @@ class UploadcareMain
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
+        $this->loader->add_action('wp_ajax_uploadcare_transfer', $plugin_admin, 'transferUp');
+        $this->loader->add_action('wp_ajax_uploadcare_down', $plugin_admin, 'transferDown');
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
         $this->loader->add_action('delete_attachment', $plugin_admin, 'attachmentDelete', 10, 2);
@@ -92,9 +97,6 @@ class UploadcareMain
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
-//        $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
-//        $this->loader->add_filter('wp_image_editors', $this, 'addImageEditor');
-//        $this->loader->add_filter('image_editor_save_pre', $this, 'savePre', 10, 2);
     }
 
     /**
