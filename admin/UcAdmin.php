@@ -63,7 +63,7 @@ class UcAdmin
      */
     public function plugin_action_links(array $links)
     {
-        $url = \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url().'admin.php'));
+        $url = \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php'));
         $settings_link = \sprintf('<a href=\'%s\'>%s</a>', $url, __('Settings', $this->plugin_name));
 
         $links[] = $settings_link;
@@ -79,15 +79,15 @@ class UcAdmin
      */
     public function uploadcare_plugin_init()
     {
-        $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__).'/uploadcare.php');
+        $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
         \wp_register_script('uploadcare-elements', 'https://uploadcare.dev/elements.js?' . \get_option('uploadcare_public'), [], null, false);
         \wp_register_script('uploadcare-widget', self::WIDGET_URL, ['jquery'], $this->version);
-        \wp_register_script('uploadcare-config', $pluginDirUrl.'js/config.js', ['uploadcare-widget'], $this->version);
+        \wp_register_script('uploadcare-config', $pluginDirUrl . 'js/config.js', ['uploadcare-widget'], $this->version);
         \wp_localize_script('uploadcare-config', 'WP_UC_PARAMS', $this->getJsConfig());
-        \wp_register_script('image-block', $pluginDirUrl.'compiled-js/blocks.js', [], $this->version, true);
+        \wp_register_script('image-block', $pluginDirUrl . 'compiled-js/blocks.js', [], $this->version, true);
         \wp_localize_script('uc-config', 'WP_UC_PARAMS', $this->getJsConfig());
-        \wp_register_style('uploadcare-style', $pluginDirUrl.'css/uploadcare.css', [], $this->version);
-        \wp_register_style('uc-editor', $pluginDirUrl.'compiled-js/blocks.css', [], $this->version);
+        \wp_register_style('uploadcare-style', $pluginDirUrl . 'css/uploadcare.css', [], $this->version);
+        \wp_register_style('uc-editor', $pluginDirUrl . 'compiled-js/blocks.css', [], $this->version);
 
         \wp_register_script('admin-js', $pluginDirUrl . 'compiled-js/admin.js', [
             'image-edit', 'jquery', 'media', 'uploadcare-config',
@@ -122,7 +122,7 @@ class UcAdmin
         if (\in_array($hook, ['post.php', 'post-new.php'], true)) {
             $scr = \get_current_screen();
             if ($scr !== null && \method_exists($scr, 'is_block_editor') && $scr->is_block_editor()) {
-                \wp_enqueue_script('image-block', null, require \dirname(__DIR__).'/compiled-js/blocks.asset.php');
+                \wp_enqueue_script('image-block', null, require \dirname(__DIR__) . '/compiled-js/blocks.asset.php');
             }
         }
     }
@@ -195,7 +195,7 @@ class UcAdmin
         $uuid = $_POST['uuid'] ?? null;
     }
 
-    public function loadPostByUuid(string $uuid): ?\WP_Post
+    public function loadPostByUuid(string $uuid): ?WP_Post
     {
         global $wpdb;
         $query = \sprintf('SELECT post_id FROM `%s` WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
@@ -222,8 +222,8 @@ class UcAdmin
 
         $styleDef = \get_current_screen() !== null ? \get_current_screen()->action : null;
         if (\get_current_screen() !== null && 'add' !== \get_current_screen()->action) {
-            $href = \admin_url().'media-new.php';
-            $sign .= ' <br><strong>'.__('from Wordpress upload page') . '</strong>';
+            $href = \admin_url() . 'media-new.php';
+            $sign .= ' <br><strong>' . __('from Wordpress upload page') . '</strong>';
             $styleDef = 'wrap-margin';
         }
 
@@ -262,7 +262,7 @@ HTML;
 
     public function uploadcare_settings()
     {
-        include \dirname(__DIR__).'/includes/uploadcare_settings.php';
+        include \dirname(__DIR__) . '/includes/uploadcare_settings.php';
     }
 
     /**
@@ -489,8 +489,8 @@ HTML;
         foreach (get_intermediate_image_sizes() as $s) {
             $sizes[$s] = [0, 0];
             if (in_array($s, ['thumbnail', 'medium', 'large'])) {
-                $sizes[$s][0] = get_option($s.'_size_w');
-                $sizes[$s][1] = get_option($s.'_size_h');
+                $sizes[$s][0] = get_option($s . '_size_w');
+                $sizes[$s][1] = get_option($s . '_size_h');
             } else {
                 if (isset($_wp_additional_image_sizes[$s])) {
                     $sizes[$s] = [$_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height']];
@@ -503,7 +503,7 @@ HTML;
 
     /**
      * @param FileInfoInterface $file
-     * @param int|null          $id existing Post ID
+     * @param int|null          $id      existing Post ID
      * @param array             $options
      *
      * @return int|WP_Error
@@ -592,7 +592,7 @@ HTML;
             'previewStep' => true,
             'ajaxurl' => \admin_url('admin-ajax.php'),
             'tabs' => $tabs,
-            'cdnBase' => 'https://'.\get_option('uploadcare_cdn_base', 'ucarecdn.com'),
+            'cdnBase' => 'https://' . \get_option('uploadcare_cdn_base', 'ucarecdn.com'),
             'multiple' => true,
             'imagesOnly' => false,
         ];
@@ -607,9 +607,9 @@ HTML;
             $secureSignature = $this->ucConfig->getSecureSignature();
 
             return \array_merge($baseParams, [
-                    'secureSignature' => $secureSignature->getSignature(),
-                    'secureExpire' => $secureSignature->getExpire()->getTimestamp(),
-                ]);
+                'secureSignature' => $secureSignature->getSignature(),
+                'secureExpire' => $secureSignature->getExpire()->getTimestamp(),
+            ]);
         }
 
         return $baseParams;

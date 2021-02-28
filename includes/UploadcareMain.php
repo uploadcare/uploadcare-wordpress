@@ -100,64 +100,6 @@ class UploadcareMain
     }
 
     /**
-     * @param \WP_Admin_Bar $adminBar
-     */
-    public function adminBar($adminBar)
-    {
-        if (!\current_user_can('manage_options')) {
-            return;
-        }
-
-        $loader = new LocalMediaLoader();
-        $loader->loadMedia();
-
-        if (!$loader->getHasLocalMedia()) {
-            return;
-        }
-        $loaderMediaCount = $loader->getLocalMediaCount();
-
-        $title = \sprintf(
-            _n(
-                'Transfer %d Wordpress image to Uploadcare',
-                'Transfer %d Wordpress images to Uploadcare',
-                $loaderMediaCount, $this->get_plugin_name()
-            ),
-            \number_format_i18n($loaderMediaCount));
-
-        $adminBar->add_menu([
-            'id' => 'uploadcare',
-            'title' => $title,
-            'href' => \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php')),
-        ]);
-    }
-
-    public function runUploadTask()
-    {
-        $loader = new LocalMediaLoader();
-        $process = new UcUploadProcess();
-        if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
-            $loader->loadMedia();
-            foreach ($loader->getPosts() as $post) {
-                $process->push_to_queue($post->ID);
-            }
-            $process->save()->dispatch();
-        }
-    }
-
-    public function runDownloadTask()
-    {
-        $loader = new RemoteMediaLoader();
-        $process = new UcDownloadProcess();
-        if (isset($_POST['uc_download_data']) && $_POST['uc_download_data'] === 'sync') {
-            $loader->loadMedia();
-            foreach ($loader->getFiles() as $file) {
-                $process->push_to_queue($file);
-            }
-            $process->save()->dispatch();
-        }
-    }
-
-    /**
      * @return void
      */
     public function run()

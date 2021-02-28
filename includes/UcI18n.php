@@ -9,6 +9,7 @@ class UcI18n
 
     /**
      * UcI18n constructor.
+     *
      * @param string $pluginName
      */
     public function __construct($pluginName)

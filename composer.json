@@ -6,7 +6,6 @@
     "ext-json": "*",
     "ext-dom": "*",
     "uploadcare/uploadcare-php": "^3.0",
-    "deliciousbrains/wp-background-processing": "^1.0",
     "symfony/dom-crawler": "^3.4",
     "twig/twig": "^2.13|^3.0"
   },

@@ -46,10 +46,11 @@ class UcFront
         \register_post_meta('attachment', 'uploadcare_uuid', $parameters);
     }
 
-    public function prepareAttachment(array $response, \WP_Post $attachment, $meta): array
+    public function prepareAttachment(array $response, WP_Post $attachment, $meta): array
     {
-        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true)))
+        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true))) {
             return $response;
+        }
 
         $response['meta'] = [
             'uploadcare_url_modifiers' => \get_post_meta($attachment->ID, 'uploadcare_url_modifiers', true),
@@ -61,7 +62,8 @@ class UcFront
     }
 
     /**
-     * Calls on `wp_enqueue_scripts`
+     * Calls on `wp_enqueue_scripts`.
+     *
      * @see UploadcareMain::defineFrontHooks()
      */
     public function frontendScripts()
@@ -76,6 +78,7 @@ class UcFront
 
     /**
      * Calls on `render_block`. Loads images and replace `src` to `data-blink-uuid`.
+     *
      * @see UploadcareMain::defineFrontHooks()
      *
      * @param $content
@@ -176,6 +179,7 @@ class UcFront
 
     /**
      * Calls on `post_thumbnail_html`. If thumbnail is an uploadcare image, make it an adaptive delivered.
+     *
      * @see UploadcareMain::defineFrontHooks()
      *
      * @param $html
@@ -218,6 +222,7 @@ class UcFront
     /**
      * @param string $html
      * @param string $size
+     *
      * @return string
      */
     private function replaceImageUrl($html, $size = '2048x2048')

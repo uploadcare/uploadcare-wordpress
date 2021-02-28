@@ -2,7 +2,7 @@
 
 /**
  * Class UcLoader
- * Service class for load actions and filters
+ * Service class for load actions and filters.
  */
 class UcLoader
 {
@@ -26,8 +26,8 @@ class UcLoader
      * @param string $hook
      * @param object $component
      * @param string $callback
-     * @param int $priority
-     * @param int $accepted_args
+     * @param int    $priority
+     * @param int    $accepted_args
      *
      * @return void
      */
@@ -53,12 +53,12 @@ class UcLoader
     }
 
     /**
-     * @param array $hooks
+     * @param array  $hooks
      * @param string $hook
      * @param object $component
      * @param string $callback
-     * @param int $priority
-     * @param int $accepted_args
+     * @param int    $priority
+     * @param int    $accepted_args
      *
      * @return array
      */
@@ -69,7 +69,7 @@ class UcLoader
             'component' => $component,
             'callback' => $callback,
             'priority' => $priority,
-            'accepted_args' => $accepted_args
+            'accepted_args' => $accepted_args,
         ];
 
         return $hooks;
