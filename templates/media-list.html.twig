@@ -2,17 +2,17 @@
 
 {% block body %}
     <h2>
-        {{ 'Transfer images to uploadcare' | trans }}
+        {{ 'Transfer images to Uploadcare' | trans }}
         <small class="text-small text-black-50">{{ 'and vise versa' | trans }}</small>
     </h2>
     <p class="alert alert-secondary" role="alert">
-        <strong>Please, note</strong>: if your images already uses in posts, you <strong>will not</strong> see changes in <i>post-edit</i> action as a result of image transfer to Uploadcare.<br>
-        Only client-part (frontend) of post will change: the source of image will be new remote source, and adaptive delivery by Uploadcare will work.
+        <strong>Please note</strong>: if your images are already used in posts & pages, you <strong>will not</strong> see changes in <i>post-edit</i> action as a result of image transfer to Uploadcare.<br>
+        Only client-part (frontend) of the post will change: the source of your images will be a new remote source, and Adaptive Delivery by Uploadcare will work as expected.
     </p>
     <div class="text-end">
         <button class="btn btn-outline-primary">{{ 'Transfer all images to Uploadcare' | trans }}</button>
         <p>
-            <small>{{ 'You will see the transfer progress while uploading' | trans }}</small>
+            <small>{{ 'You will see the transfer progress while uploading. Please, don't leave this page until transfer is over!' | trans }}</small>
         </p>
     </div>
     <div class="progress" id="transferProgress">
@@ -48,8 +48,8 @@
                         <p>{{ 'Author' | trans }} {{ postAuthor is not empty ? postAuthor.data.display_name : 'Unknown' | trans }}</p>
                     </td>
                     <td class="text-center">
-                        <i id="icon-transferred-{{ post.ID }}" class="bi bi-check2-circle text-success {{ uuid is empty ? 'hidden' : '' }}" title="{{ 'Transferred' | trans }}"></i>
-                        <i id="icon-not-transferred-{{ post.ID }}" class="bi bi-circle text-danger {{ uuid is not empty ? 'hidden' : '' }}" title="{{ 'Not transferred' | trans }}"></i>
+                        <i id="icon-transferred-{{ post.ID }}" class="bi bi-check2-circle text-success {{ uuid is empty ? 'hidden' : '' }}" title="{{ 'Successfully transferred' | trans }}"></i>
+                        <i id="icon-not-transferred-{{ post.ID }}" class="bi bi-circle text-danger {{ uuid is not empty ? 'hidden' : '' }}" title="{{ 'Transfer failed' | trans }}"></i>
                     </td>
                     <td class="text-nowrap">
                             <button
@@ -66,7 +66,7 @@
                                 data-uuid="{{ uuid }}"
                                 data-post="{{ post.ID }}"
                                 class="btn btn-outline-dark btn-sm rounded-circle" {{ uuid is empty ? 'disabled' : '' }}
-                                title="{{ 'Download to local library' | trans }}"
+                                title="{{ 'Download to the local library' | trans }}"
                             ><i class="bi bi-download"></i></button>
                     </td>
                 </tr>
