@@ -40,7 +40,7 @@ class LocalMediaLoader
 
         $query = new WP_Query($queryParams);
         if (!$query->have_posts()) {
-            $this->message = __('No not transferred images found in Media Library');
+            $this->message = __('All media files are transfered to Uploadcare');
 
             return $this->message;
         }
