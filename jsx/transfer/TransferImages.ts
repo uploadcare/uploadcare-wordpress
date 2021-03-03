@@ -56,8 +56,6 @@ export default class TransferImages {
         if (!(target instanceof HTMLButtonElement))
             return;
 
-        alert("I'm do nothing!\nAwesome, right?")
-
         const data = new FormData();
         data.append('action', 'uploadcare_down');
         data.append('uuid', target.dataset.uuid || '')

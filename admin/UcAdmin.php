@@ -193,6 +193,45 @@ class UcAdmin
     {
         $postId = $_POST['postId'] ?? null;
         $uuid = $_POST['uuid'] ?? null;
+        if ($postId === null || $uuid === null) {
+            \wp_die(__('Required parameter is not set', 'uploadcare'), '', 400);
+        }
+
+        $post = \get_post($postId);
+        if (!$post instanceof \WP_Post) {
+            \wp_die(__('Post not found', 'uploadcare'), '', 400);
+        }
+
+        $imageUrl = \get_post_meta($postId, 'uploadcare_url');
+        $ucFile = \file_get_contents($imageUrl);
+
+        $uploadDirData = \wp_upload_dir();
+
+        if (($uploadDirData['path'] ?? null) === null) {
+            $message = $uploadDirData['error'] ?: __('Unable to get upload directory');
+            \wp_die($message, '', 400);
+        }
+        $localFilePath = \rtrim($uploadDirData['path'], '/') . '/' . $post->post_title;
+        \file_put_contents($localFilePath, $ucFile);
+
+        \update_post_meta($postId, '_wp_attached_file', $uploadDirData['url'] . '/' . $post->post_title);
+        \update_post_meta($postId, '_wp_attachment_metadata', \wp_read_image_metadata($localFilePath));
+        \delete_post_meta($postId, 'uploadcare_url');
+        \delete_post_meta($postId, 'uploadcare_uuid');
+        \delete_post_meta($postId, 'uploadcare_url_modifiers');
+
+        $post->guid = $uploadDirData['url'] . '/' . $post->post_title;
+        \wp_update_post($post);
+
+        $result = [
+            'fileUrl' => \wp_get_attachment_image_src($postId),
+            'uploadcare_url_modifiers' => '',
+            'postId' => $postId,
+        ];
+
+        echo \wp_json_encode($result);
+
+        \wp_die();
     }
 
     public function loadPostByUuid(string $uuid): ?WP_Post
