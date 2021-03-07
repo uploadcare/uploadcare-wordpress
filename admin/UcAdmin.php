@@ -498,6 +498,9 @@ HTML;
      */
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
+        if (\strpos(\get_post($id)->post_mime_type, 'image') !== 0) {
+            return false;
+        }
         $uuid = \get_post_meta($id, 'uploadcare_uuid', true);
         if ($uuid === false) {
             $url = \get_post_meta($id, 'uploadcare_url', true);
@@ -541,6 +544,9 @@ HTML;
      */
     public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
     {
+        if (\strpos(\get_post($post_id)->post_mime_type, 'image') !== 0) {
+            return $html;
+        }
         if (!$url = get_post_meta($post_id, 'uploadcare_url', true)) {
             return $html;
         }
@@ -673,14 +679,14 @@ HTML;
             \add_post_meta($attachment_id, 'uploadcare_url', $attached_file, true);
             \add_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid(), true);
             \add_post_meta($attachment_id, 'uploadcare_url_modifiers', ($options['uploadcare_url_modifiers'] ?? ''), true);
-            \add_post_meta($attachment_id, '_wp_attached_file', $attached_file, true);
+            \add_post_meta($attachment_id, '_wp_attached_file', \rtrim($attached_file, '/') . '/' . $file->getOriginalFilename(), true);
             \add_post_meta($attachment_id, '_wp_attachment_metadata', $meta, true);
         }
         if ($id !== null) {
             \update_post_meta($attachment_id, 'uploadcare_url', $attached_file);
             \update_post_meta($attachment_id, 'uploadcare_uuid', $file->getUuid());
             \update_post_meta($attachment_id, 'uploadcare_url_modifiers', ($options['uploadcare_url_modifiers'] ?? ''));
-            \update_post_meta($attachment_id, '_wp_attached_file', $attached_file);
+            \update_post_meta($attachment_id, '_wp_attached_file', \rtrim($attached_file, '/') . '/' . $file->getOriginalFilename());
             \update_post_meta($attachment_id, '_wp_attachment_metadata', $meta);
         }
 
