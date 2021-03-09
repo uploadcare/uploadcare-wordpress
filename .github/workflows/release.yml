@@ -30,7 +30,7 @@ jobs:
                     name: uploadcare-wp
                     path: .
             -   name: WordPress Plugin Deploy
-                uses: 10up/action-wordpress-plugin-deploy@9892395
+                uses: 10up/action-wordpress-plugin-deploy@98923950204e68db278a958aa8b71e3b07904140
                 env:
                     SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                     SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
