@@ -130,9 +130,9 @@ Access all files in your Uploadcare account via Media Library.
 
 = 3.0.4 =
 
-* Added placeholder for Uploadcare Image caption
-* Fixed update process from 2.7.x to 3.x.x
-* Various other fixes
+* Added placeholder for Uploadcare Image caption.
+* Fixed update process from 2.7.x to 3.x.x.
+* Various other fixes.
 
 = 3.0.3 =
 
