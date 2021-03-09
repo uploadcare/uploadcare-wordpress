@@ -124,7 +124,7 @@ class UcFront
             $isLocal = true;
 
             if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
-                $imageUrl = $attachedFile;
+                $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), \get_post_meta($imageId, 'uploadcare_uuid', true));
                 $isLocal = false;
             }
 
