@@ -77,7 +77,7 @@ registerBlockType('uploadcare/image', {
             setAttributes({
                 mediaURL: wpMedia.url,
                 mediaID: wpMedia.id,
-                mediaUid: wpMedia.filename,
+                mediaUid: wpMedia.meta['uploadcare_uuid'] || wpMedia.filename,
                 cdnUrlModifiers: wpMedia.meta['uploadcare_url_modifiers'] || '',
             });
         }
