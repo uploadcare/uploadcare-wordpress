@@ -5,7 +5,7 @@ Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, op
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -130,9 +130,9 @@ Access all files in your Uploadcare account via Media Library.
 
 = 3.0.4 =
 
-* Added placeholder for Uploadcare Image caption
-* Fixed update process from 2.7.x to 3.x.x
-* Various other fixes
+* Added placeholder for Uploadcare Image caption.
+* Fixed update process from 2.7.x to 3.x.x.
+* Various other fixes.
 
 = 3.0.3 =
 

@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0.4] — 2021-02-26
+## [3.0.4] — 2021-03-09
 
-* Added placeholder for Uploadcare Image caption
-* Fixed update process from 2.7.x to 3.x.x
-* Various other fixes
+* Added placeholder for Uploadcare Image caption.
+* Fixed update process from 2.7.x to 3.x.x.
+* Various other fixes.
 
 ## [3.0.3] — 2021-02-16
 
@@ -274,7 +274,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 [uploadcare/uploadcare-php]: https://github.com/uploadcare/uploadcare-php
 
-[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.2..HEAD
+[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.4..HEAD
+[3.0.4]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.3..v3.0.4
+[3.0.3]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.2..v3.0.3
 [3.0.2]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.1..v3.0.2
 [3.0.1]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.7.2..v3.0.1
 [2.7.2]: https://github.com/uploadcare/uploadcare-wordpress/compare/v2.7.1..v2.7.2
