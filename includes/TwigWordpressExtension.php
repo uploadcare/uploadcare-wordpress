@@ -62,7 +62,8 @@ class TwigWordpressExtension extends AbstractExtension
 
     public function getAttachment($post): ?string
     {
-        $img = \wp_get_attachment_image_src($this->getPostId($post));
+        $postId = $this->getPostId($post);
+        $img = \wp_get_attachment_image_src($postId);
 
         $result = $img[0] ?? false;
         if ($result === false) {
@@ -75,7 +76,7 @@ class TwigWordpressExtension extends AbstractExtension
             return \sprintf(UploadcareMain::PREVIEW_TEMPLATE, $result);
         }
 
-        return $result;
+        return \wp_get_attachment_image_url($postId);
     }
 
     public function getPostMeta($post, string $name): ?string

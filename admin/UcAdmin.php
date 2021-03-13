@@ -170,12 +170,14 @@ class UcAdmin
 
         $image = \wp_get_original_image_path($postId, true);
         if ($image === false || !\is_file($image)) {
-            \wp_die(__('Unable to load original image', 'uploadcare'), '', 400);
+            $message = \sprintf('%s %s', __('Unable to load original image', 'uploadcare'), $image);
+            \wp_die($message, '', 400);
         }
         try {
             $uploadedFile = $this->api->uploader()->fromPath($image);
         } catch (\Exception $e) {
-            \wp_die(__('Unable to upload image', 'uploadcare'), '', 400);
+            $message = \sprintf('%s: %s', __('Unable to upload image', 'uploadcare'), $e->getMessage());
+            \wp_die($message, '', 400);
         }
         $this->attach($uploadedFile, $postId);
 
@@ -189,6 +191,9 @@ class UcAdmin
         \wp_die();
     }
 
+    /**
+     * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_down`).
+     */
     public function transferDown(): void
     {
         $postId = $_POST['postId'] ?? null;
@@ -202,8 +207,17 @@ class UcAdmin
             \wp_die(__('Post not found', 'uploadcare'), '', 400);
         }
 
-        $imageUrl = \get_post_meta($postId, 'uploadcare_url');
-        $ucFile = \file_get_contents($imageUrl);
+        $imageId = \get_post_meta($postId, 'uploadcare_uuid', true);
+        try {
+            $ucFile = $this->api->file()->fileInfo($imageId);
+            \ULog($ucFile);
+        } catch (\Exception $e) {
+            \wp_die(__('Unable to get file file info uploadcare', 'uploadcare'), '', 400);
+        }
+        $originalUrl = $ucFile->getOriginalFileUrl();
+        if ($originalUrl === null || ($ucFileContents = \file_get_contents($originalUrl)) === null) {
+            \wp_die(__('Unable to get file from uploadcare', 'uploadcare'), '', 400);
+        }
 
         $uploadDirData = \wp_upload_dir();
 
@@ -212,9 +226,10 @@ class UcAdmin
             \wp_die($message, '', 400);
         }
         $localFilePath = \rtrim($uploadDirData['path'], '/') . '/' . $post->post_title;
-        \file_put_contents($localFilePath, $ucFile);
+        \file_put_contents($localFilePath, $ucFileContents);
 
-        \update_post_meta($postId, '_wp_attached_file', $uploadDirData['url'] . '/' . $post->post_title);
+        $subdir = \ltrim(($uploadDirData['subdir'] ?? ''), '/');
+        \update_post_meta($postId, '_wp_attached_file', sprintf('%s/%s', $subdir, $post->post_title));
         \update_post_meta($postId, '_wp_attachment_metadata', \wp_read_image_metadata($localFilePath));
         \delete_post_meta($postId, 'uploadcare_url');
         \delete_post_meta($postId, 'uploadcare_uuid');
@@ -223,8 +238,15 @@ class UcAdmin
         $post->guid = $uploadDirData['url'] . '/' . $post->post_title;
         \wp_update_post($post);
 
+        $this->makeDefaultImageSizes($post);
+
+        $fileUrl = \wp_get_attachment_image_url($postId);
+        if (!\is_string($fileUrl)) {
+            \wp_die(__('Something wrong with upload to Wordpress', 'uploadcare'), '', 400);
+        }
+
         $result = [
-            'fileUrl' => \wp_get_attachment_image_src($postId),
+            'fileUrl' => $fileUrl,
             'uploadcare_url_modifiers' => '',
             'postId' => $postId,
         ];
@@ -234,10 +256,25 @@ class UcAdmin
         \wp_die();
     }
 
+    private function makeDefaultImageSizes(\WP_Post $post): void
+    {
+        $file = \wp_get_original_image_path($post->ID);
+        if ($file === false) {
+            \wp_die(__('Unable to load uploaded file', 'uploadcare'), '', 400);
+        }
+
+        $meta = \wp_generate_attachment_metadata($post->ID, $file);
+        if (!isset($meta['sizes'])) {
+            $meta['sizes'] = \wp_get_registered_image_subsizes();
+            \wp_update_attachment_metadata($post->ID, $meta);
+        }
+        \wp_create_image_subsizes($file, $post->ID);
+    }
+
     public function loadPostByUuid(string $uuid): ?WP_Post
     {
         global $wpdb;
-        $query = \sprintf('SELECT post_id FROM `%s` WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
+        $query = \sprintf('SELECT post_id FROM %s WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf('%spostmeta', $wpdb->prefix), $uuid);
         $query = $wpdb->prepare($query);
         $result = $wpdb->get_results($query, ARRAY_A);
 

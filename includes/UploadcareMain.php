@@ -75,14 +75,11 @@ class UploadcareMain
      *
      * @return void
      */
-    private function define_admin_hooks()
+    private function define_admin_hooks(): void
     {
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
-//        $this->loader->add_action('admin_bar_menu', $this, 'adminBar', 100, 1);
-//        $this->loader->add_action('plugins_loaded', $this, 'runUploadTask');
-//        $this->loader->add_action('plugins_loaded', $this, 'runDownloadTask');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
