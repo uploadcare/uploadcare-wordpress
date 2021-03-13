@@ -93,16 +93,25 @@ export default class TransferImages {
             TransferImages.setAttributes(data.postId, data.fileUrl)
             this.setProgress(0);
         }).catch((e) => {
-            // todo: show error
             if (e instanceof Promise) {
                 e.then(data => {
-                    console.log(data)
+                    TransferImages.showError(data);
                 })
             } else {
-                console.log(e)
+                console.error(e)
             }
             this.setProgress(0)
         })
+    }
+
+    private static showError(data: string): void {
+        const errorPlace = document.getElementById('uc-error-place');
+        if (!(errorPlace instanceof HTMLElement))
+            return;
+
+        errorPlace.innerText = data;
+        errorPlace.classList.remove('hidden');
+        window.scrollTo(0, 0);
     }
 
     private static setAttributes(postId: number|null, url: string): void {
