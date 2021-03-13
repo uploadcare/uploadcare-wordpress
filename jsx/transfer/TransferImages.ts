@@ -5,6 +5,7 @@ export default class TransferImages {
 
     private uploadButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('button[data-action="uc-upload"]');
     private downloadButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('button[data-action="uc-download"]');
+    private readonly uploadAllButton: HTMLElement|null = document.getElementById('uploadAll');
     private readonly progressBarWrapper: HTMLElement|null = null;
     private readonly progressBar: HTMLElement|null = null;
     private config: UcConfig;
@@ -35,34 +36,66 @@ export default class TransferImages {
         this.downloadButtons.forEach((b: HTMLButtonElement) => {
             b.addEventListener('click', ev => { this.downloadAction(ev); })
         })
+        if (this.uploadAllButton !== null) {
+            this.uploadAllButton.addEventListener('click', ev => { this.uploadAllAction(ev) })
+        }
     }
 
-    private uploadAction(ev: MouseEvent) {
+    private makeFormData(arr: Array<any>): FormData
+    {
+        const data = new FormData();
+        arr.forEach(obj => {
+            data.append(obj.property, obj.value);
+        });
+
+        return data;
+    }
+
+    private uploadAllAction(ev: MouseEvent): void {
+        ev.preventDefault();
+
+        Array.prototype.slice.call(this.uploadButtons).map((b: HTMLButtonElement) => {
+            const postId = b.dataset.post || false;
+            if (postId === false)
+                return false;
+
+            const data = this.makeFormData([
+                {property: 'action', value: 'uploadcare_transfer'},
+                {property: 'postId', value: postId}
+            ]);
+
+            this.fetchAction(data);
+        })
+
+    }
+
+    private uploadAction(ev: MouseEvent): void {
         ev.preventDefault();
         const target = ev.currentTarget;
         if (!(target instanceof HTMLButtonElement))
             return;
 
-        const data = new FormData();
-        data.append('action', 'uploadcare_transfer');
-        data.append('postId', target.dataset.post || '')
+        const data = this.makeFormData([
+            {property: 'action', value: 'uploadcare_transfer'},
+            {property: 'postId', value: target.dataset.post || ''},
+        ])
 
         this.fetchAction(data);
     }
 
-    private downloadAction(ev: MouseEvent) {
+    private downloadAction(ev: MouseEvent): void {
         ev.preventDefault()
         const target = ev.currentTarget;
         if (!(target instanceof HTMLButtonElement))
             return;
 
-        const data = new FormData();
-        data.append('action', 'uploadcare_down');
-        data.append('uuid', target.dataset.uuid || '')
-        data.append('postId', target.dataset.post || '')
+        const data = this.makeFormData([
+            {property: 'action', value: 'uploadcare_down'},
+            {property: 'uuid', value: target.dataset.uuid || ''},
+            {property: 'postId', value: target.dataset.post || ''},
+        ])
 
         this.fetchAction(data);
-        this.setProgress(0)
     }
 
     private setProgress(val: number | null): void {

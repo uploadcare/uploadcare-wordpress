@@ -1,5 +1,6 @@
 <?php
 
+use Twig\Environment;
 use Uploadcare\Api;
 use Uploadcare\Configuration;
 use Uploadcare\Interfaces\File\FileInfoInterface;
@@ -31,6 +32,11 @@ class UcAdmin
     private $ucConfig;
 
     /**
+     * @var Environment
+     */
+    private $twig;
+
+    /**
      * UcAdmin constructor.
      *
      * @param $plugin_name
@@ -43,6 +49,7 @@ class UcAdmin
 
         $this->ucConfig = Configuration::create(\get_option('uploadcare_public'), \get_option('uploadcare_secret'), ['framework' => UploadcareUserAgent()]);
         $this->api = new Api($this->ucConfig);
+        $this->twig = TwigFactory::create();
     }
 
     public function projectInfo(): ProjectInfoInterface
@@ -225,17 +232,18 @@ class UcAdmin
             $message = $uploadDirData['error'] ?: __('Unable to get upload directory');
             \wp_die($message, '', 400);
         }
-        $localFilePath = \rtrim($uploadDirData['path'], '/') . '/' . $post->post_title;
+        $filename = $this->filenameFromPostTitle($post);
+        $localFilePath = \rtrim($uploadDirData['path'], '/') . '/' . $filename;
         \file_put_contents($localFilePath, $ucFileContents);
 
         $subdir = \ltrim(($uploadDirData['subdir'] ?? ''), '/');
-        \update_post_meta($postId, '_wp_attached_file', sprintf('%s/%s', $subdir, $post->post_title));
+        \update_post_meta($postId, '_wp_attached_file', sprintf('%s/%s', $subdir, $filename));
         \update_post_meta($postId, '_wp_attachment_metadata', \wp_read_image_metadata($localFilePath));
         \delete_post_meta($postId, 'uploadcare_url');
         \delete_post_meta($postId, 'uploadcare_uuid');
         \delete_post_meta($postId, 'uploadcare_url_modifiers');
 
-        $post->guid = $uploadDirData['url'] . '/' . $post->post_title;
+        $post->guid = $uploadDirData['url'] . '/' . $filename;
         \wp_update_post($post);
 
         $this->makeDefaultImageSizes($post);
@@ -256,6 +264,33 @@ class UcAdmin
         \wp_die();
     }
 
+    private function filenameFromPostTitle(\WP_Post $post): string
+    {
+        $extensions = [
+            'image/bmp' => 'bmp',
+            'image/gif' => 'gif',
+            'image/jpeg' => 'jpeg',
+            'image/png' => 'png',
+            'image/tiff' => 'tiff',
+        ];
+
+        if (!array_key_exists($post->post_mime_type, $extensions)) {
+            return $post->post_title;
+        }
+        foreach ($extensions as $mimeType => $extension) {
+            if ($post->post_mime_type === $mimeType) {
+                $postExtension = \substr($post->post_title, (0 - \strlen($extension)));
+                if ($postExtension !== $extension) {
+                    $post->post_title = sprintf('%s.%s', $post->post_title, $extension);
+
+                    \wp_update_post($post);
+                }
+            }
+        }
+
+        return $post->post_title;
+    }
+
     private function makeDefaultImageSizes(\WP_Post $post): void
     {
         $file = \wp_get_original_image_path($post->ID);
@@ -264,7 +299,11 @@ class UcAdmin
         }
 
         $meta = \wp_generate_attachment_metadata($post->ID, $file);
-        if (!isset($meta['sizes'])) {
+        if (\strpos($post->post_mime_type, 'image') !== 0) {
+            return;
+        }
+
+        if (!isset($meta['sizes']) || empty($meta['sizes'])) {
             $meta['sizes'] = \wp_get_registered_image_subsizes();
             \wp_update_attachment_metadata($post->ID, $meta);
         }
@@ -322,18 +361,21 @@ HTML;
      * Render the plugin settings menu.
      * Calls on `admin_menu` hook.
      */
-    public function uploadcare_settings_actions()
+    public function uploadcare_settings_actions(): void
     {
         \add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', [$this, 'uploadcare_settings']);
         \add_menu_page('Transfer', 'Transfer files', 'administrator', 'uploadcare-transfer', [$this, 'transferFiles'], \plugins_url('/media/logo.png', __DIR__));
+        //\add_menu_page('Uploadcare Files', 'Uploadcare Files', 'administrator', 'uploadcare-files', [$this, 'ucFiles']);
     }
 
     public function transferFiles(): void
     {
-        $twig = TwigFactory::create();
-        $media = (new MediaDataLoader())->loadMedia();
+        echo $this->twig->render('media-list.html.twig', ['media' => (new MediaDataLoader())->loadMedia()]);
+    }
 
-        echo $twig->render('media-list.html.twig', ['media' => $media]);
+    public function ucFiles(): void
+    {
+        echo $this->twig->render('uploadcare-list.html.twig', ['files' => $this->api->file()->listFiles()]);
     }
 
     public function uploadcare_settings()
