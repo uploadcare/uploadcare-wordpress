@@ -76,6 +76,21 @@
             </tbody>
         </table>
     </div>
+    {% if pagesCount > 1 %}
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            {% for n in 1..pagesCount %}
+                <li class="page-item {{ n == page ? 'active' : null }}">
+                    {% if n == page %}
+                        <span class="page-link">{{ n }}</span>
+                    {% else %}
+                        <a class="page-link" href="?page=uploadcare-transfer&page_number={{ n }}">{{ n }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

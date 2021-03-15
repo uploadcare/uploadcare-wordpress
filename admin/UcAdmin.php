@@ -370,7 +370,21 @@ HTML;
 
     public function transferFiles(): void
     {
-        echo $this->twig->render('media-list.html.twig', ['media' => (new MediaDataLoader())->loadMedia()]);
+        $page = isset($_GET['page_number']) ? (int) $_GET['page_number'] : 1;
+        if ($page < 1) {
+            $page = 1;
+        }
+        $mediaLoader = new MediaDataLoader();
+        $media = $mediaLoader->loadMedia($page);
+        $totalCount = $mediaLoader->getCount();
+
+        echo $this->twig->render('media-list.html.twig', [
+            'media' => $media,
+            'totalCount' => $totalCount,
+            'postPerPage' => MediaDataLoader::POST_PER_PAGE,
+            'page' => $page,
+            'pagesCount' => \ceil($totalCount / MediaDataLoader::POST_PER_PAGE),
+        ]);
     }
 
     public function ucFiles(): void
