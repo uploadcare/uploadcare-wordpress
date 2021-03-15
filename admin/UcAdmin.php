@@ -168,11 +168,25 @@ class UcAdmin
     /**
      * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_transfer`).
      */
-    public function transferUp()
+    public function transferUp(): void
     {
         $postId = $_POST['postId'] ?? null;
         if ($postId === null) {
             \wp_die(__('Required parameter is not set', 'uploadcare'), '', 400);
+        }
+        if (($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
+            try {
+                $this->api->file()->fileInfo($uuid);
+                $result = [
+                    'file_url' => \wp_get_attachment_image_src($postId),
+                    'uploadcare_url_modifiers' => \get_post_meta($postId, 'uploadcare_url_modifiers', true),
+                    'postId' => $postId,
+                ];
+                echo \wp_json_encode($result);
+                \wp_die();
+            } catch (\Exception $e) {
+                // Do nothing
+            }
         }
 
         $image = \wp_get_original_image_path($postId, true);

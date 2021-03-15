@@ -25,6 +25,12 @@ export default class TransferImages {
         this.addActions();
     }
 
+    private checkLocalExists(): boolean {
+        const enabled = Array.prototype.slice.call(this.uploadButtons).filter((b: HTMLButtonElement) => !b.disabled);
+
+        return enabled.length > 0;
+    }
+
     private static getNodeList(selector: string): NodeListOf<HTMLButtonElement> {
         return document.querySelectorAll(selector);
     }
@@ -36,7 +42,7 @@ export default class TransferImages {
         this.downloadButtons.forEach((b: HTMLButtonElement) => {
             b.addEventListener('click', ev => { this.downloadAction(ev); })
         })
-        if (this.uploadAllButton !== null) {
+        if (this.uploadAllButton !== null && this.checkLocalExists()) {
             this.uploadAllButton.addEventListener('click', ev => { this.uploadAllAction(ev) })
         }
     }
@@ -58,6 +64,9 @@ export default class TransferImages {
             const postId = b.dataset.post || false;
             if (postId === false)
                 return false;
+            if (b.disabled) {
+                return false;
+            }
 
             const data = this.makeFormData([
                 {property: 'action', value: 'uploadcare_transfer'},
