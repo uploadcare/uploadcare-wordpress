@@ -2,7 +2,8 @@
 
 class UploadcareMain
 {
-    public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
+    //public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
+    public const SCALE_CROP_TEMPLATE = '%s-/preview/%s/';
     public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
     public const PREVIEW_TEMPLATE = '%s-/preview/160x160/-/resize/160x/-/scale_crop/160x160/';
     public const UUID_REGEX = '/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/';
