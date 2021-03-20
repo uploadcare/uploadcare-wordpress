@@ -57,10 +57,11 @@
                             <button
                                 id="uc-upload-{{ post.ID }}"
                                 data-action="uc-upload"
-                                data-uuid="{{ uuid }}"
+                                data-uuid=""
                                 data-post="{{ post.ID }}"
                                 class="btn btn-success btn-sm rounded-circle" {{ uuid is not empty ? 'disabled' : '' }}
                                 title="{{ 'Transfer to Uploadcare' | trans }}"
+                                style="display: {{ uuid is not empty ? 'none' : 'inline-block' }}"
                             ><i class="bi bi-upload"></i></button>
                             <button
                                 id="uc-download-{{ post.ID }}"
@@ -69,6 +70,7 @@
                                 data-post="{{ post.ID }}"
                                 class="btn btn-dark btn-sm rounded-circle" {{ uuid is empty ? 'disabled' : '' }}
                                 title="{{ 'Download to the local library' | trans }}"
+                                style="display: {{ uuid is empty ? 'none' : 'inline-block' }}"
                             ><i class="bi bi-download"></i></button>
                     </td>
                 </tr>

@@ -206,6 +206,7 @@ class UcAdmin
             'fileUrl' => \wp_get_attachment_image_src($postId),
             'uploadcare_url_modifiers' => '',
             'postId' => $postId,
+            'uploadcare_uuid' => $uploadedFile->getUuid(),
         ];
 
         echo \wp_json_encode($result);
@@ -271,6 +272,7 @@ class UcAdmin
             'fileUrl' => $fileUrl,
             'uploadcare_url_modifiers' => '',
             'postId' => $postId,
+            'uploadcare_uuid' => false,
         ];
 
         echo \wp_json_encode($result);
