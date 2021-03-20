@@ -115,7 +115,7 @@ class UcFront
      *
      * @return string
      */
-    protected function changeContent($content, $imageId)
+    protected function changeContent(string $content, int $imageId): string
     {
         $crawler = new Crawler($content);
         $collation = [];
@@ -129,6 +129,9 @@ class UcFront
             if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
                 $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), \get_post_meta($imageId, 'uploadcare_uuid', true));
                 $isLocal = false;
+            }
+            if ($isLocal && \strpos($imageUrl, \get_option('uploadcare_cdn_base')) !== true) {
+                $imageUrl = \wp_get_attachment_image_url($imageId, 'large');
             }
 
             // If Adaptive delivery is off and we have a remote file — change file url to transformation url
