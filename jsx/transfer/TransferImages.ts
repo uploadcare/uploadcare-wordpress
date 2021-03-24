@@ -79,7 +79,7 @@ export default class TransferImages {
     private uploadAllAction(ev: MouseEvent): void {
         ev.preventDefault();
 
-        Array.prototype.slice.call(this.uploadButtons).map((b: HTMLButtonElement) => {
+        Array.prototype.slice.call(this.uploadButtons).forEach(async (b: HTMLButtonElement) => {
             const postId = b.dataset.post || false;
             if (postId === false)
                 return false;
@@ -92,7 +92,7 @@ export default class TransferImages {
                 {property: 'postId', value: postId}
             ]);
 
-            this.fetchAction(data, b);
+            await this.fetchAction(data, b);
         })
     }
 
@@ -135,6 +135,9 @@ export default class TransferImages {
 
     private fetchAction(data: FormData, target: HTMLButtonElement): void {
         this.setProgress(null);
+        target.setAttribute('disabled', '1');
+        const originalButton = target.innerHTML;
+        target.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
 
         window.fetch(this.config.ajaxurl, {
             method: 'POST',
@@ -169,6 +172,8 @@ export default class TransferImages {
                 console.error(e)
             }
             this.setProgress(0)
+        }).finally(() => {
+            target.innerHTML = originalButton;
         })
     }
 
@@ -194,7 +199,7 @@ export default class TransferImages {
         const notTrIcon = TransferImages.getNotTransferredIcon(postId);
 
         if (upload !== null) {
-            upload.disabled = !upload.disabled;
+            upload.disabled = false;
             if (upload.style.display === 'none') {
                 upload.style.display = 'inline-block';
             } else {
@@ -203,7 +208,7 @@ export default class TransferImages {
         }
 
         if (download !== null) {
-            download.disabled = !download.disabled;
+            download.disabled = false;
             if (download.style.display === 'none') {
                 download.style.display = 'inline-block';
             } else {

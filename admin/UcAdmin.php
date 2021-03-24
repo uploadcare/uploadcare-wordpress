@@ -203,7 +203,7 @@ class UcAdmin
         $this->attach($uploadedFile, $postId);
 
         $result = [
-            'fileUrl' => \wp_get_attachment_image_src($postId),
+            'fileUrl' => \wp_get_attachment_image_src($postId)[0] ?? '',
             'uploadcare_url_modifiers' => '',
             'postId' => $postId,
             'uploadcare_uuid' => $uploadedFile->getUuid(),

@@ -7,12 +7,14 @@ use Twig\TwigFunction;
 class TwigWordpressExtension extends AbstractExtension
 {
     protected const JS_FOLDER = 'compiled-js';
+    protected const FILE_SIZES = ['b', 'Kb', 'Mb', 'Gb'];
 
     public function getFunctions(): array
     {
         $getPostMeta = new TwigFunction('get_post_meta', [$this, 'getPostMeta']);
         $getAttachment = new TwigFunction('get_attachment_image', [$this, 'getAttachment']);
         $getAuthor = new TwigFunction('get_post_author', [$this, 'getPostAuthor']);
+        $getFileSize = new TwigFunction('get_file_size', [$this, 'getFileSize']);
         $addJs = new TwigFunction('add_js', [$this, 'addJavascript']);
 
         return [
@@ -20,6 +22,7 @@ class TwigWordpressExtension extends AbstractExtension
             $getAttachment,
             $getAuthor,
             $addJs,
+            $getFileSize,
         ];
     }
 
@@ -60,6 +63,20 @@ class TwigWordpressExtension extends AbstractExtension
         return $result === false ? null : $result;
     }
 
+    public function getFileSize($post): ?string
+    {
+        $postId = $this->getPostId($post);
+        $file = \get_attached_file($postId);
+        if (!$file || !\is_file($file)) {
+            return null;
+        }
+
+        $fileSize = \filesize($file);
+        $e = \floor(\log($fileSize) / log(1024));
+
+        return \sprintf('%.2f %s', ($fileSize / (1024 ** floor($e))), (self::FILE_SIZES[$e] ?? ''));
+    }
+
     public function getAttachment($post): ?string
     {
         $postId = $this->getPostId($post);
@@ -70,10 +87,10 @@ class TwigWordpressExtension extends AbstractExtension
             return null;
         }
 
-        if (!empty(\get_post_meta('uploadcare_uuid'))) {
-            $result = \sprintf('%s%s', $result, \get_post_meta('uploadcare_url_modifiers'));
+        if (!empty(($uuid = \get_post_meta($postId, 'uploadcare_uuid', true)))) {
+            $result = \sprintf('https://%s/%s/%s', \rtrim(\get_option('uploadcare_cdn_base'), '/'), $uuid, \get_post_meta('uploadcare_url_modifiers'));
 
-            return \sprintf(UploadcareMain::PREVIEW_TEMPLATE, $result);
+            return \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $result, '250x250');
         }
 
         return \wp_get_attachment_image_url($postId);
