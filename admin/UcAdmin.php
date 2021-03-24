@@ -189,15 +189,15 @@ class UcAdmin
             }
         }
 
-        $image = \wp_get_original_image_path($postId, true);
-        if ($image === false || !\is_file($image)) {
-            $message = \sprintf('%s %s', __('Unable to load original image', 'uploadcare'), $image);
+        $file = \get_attached_file($postId, true);
+        if ($file === false || !\is_file($file)) {
+            $message = \sprintf('%s %s', __('Unable to load original file', 'uploadcare'), $file);
             \wp_die($message, '', 400);
         }
         try {
-            $uploadedFile = $this->api->uploader()->fromPath($image);
+            $uploadedFile = $this->api->uploader()->fromPath($file);
         } catch (\Exception $e) {
-            $message = \sprintf('%s: %s', __('Unable to upload image', 'uploadcare'), $e->getMessage());
+            $message = \sprintf('%s: %s', __('Unable to upload file', 'uploadcare'), $e->getMessage());
             \wp_die($message, '', 400);
         }
         $this->attach($uploadedFile, $postId);
