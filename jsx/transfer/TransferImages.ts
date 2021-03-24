@@ -12,6 +12,12 @@ export default class TransferImages {
     private readonly uploadBtnSelector: string = 'uc-upload';
     private readonly downloadBtnSelector: string = 'uc-download';
 
+    private readonly bu = (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+        delete e['returnValue'];
+    };
+
     constructor(uploadBtn: String | null = 'uc-upload', downloadBtn: String | null = 'uc-download') {
         this.config = config.config;
         if (uploadBtn !== null) this.uploadBtnSelector = uploadBtn as string;
@@ -25,6 +31,14 @@ export default class TransferImages {
         }
 
         this.addActions();
+    }
+
+    private addBeforeUnload(): void {
+        window.addEventListener('beforeunload', this.bu);
+    }
+
+    private removeBeforeUnload(): void {
+        window.removeEventListener('beforeunload', this.bu);
     }
 
     private checkLocalExists(): boolean {
@@ -134,6 +148,7 @@ export default class TransferImages {
     }
 
     private fetchAction(data: FormData, target: HTMLButtonElement): void {
+        this.addBeforeUnload();
         this.setProgress(null);
         target.setAttribute('disabled', '1');
         const originalButton = target.innerHTML;
@@ -173,6 +188,7 @@ export default class TransferImages {
             }
             this.setProgress(0)
         }).finally(() => {
+            this.removeBeforeUnload();
             target.innerHTML = originalButton;
         })
     }
