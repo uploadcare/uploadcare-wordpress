@@ -66,11 +66,11 @@ class UcFront
      *
      * @see UploadcareMain::defineFrontHooks()
      */
-    public function frontendScripts()
+    public function frontendScripts(): void
     {
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
         if (!empty(\get_option('uploadcare_public', null))) {
-            \wp_register_script('blink-loader', $pluginDirUrl . '/js/blinkLoader.js', [], $this->pluginVersion, false);
+            \wp_register_script('blink-loader', \trim($pluginDirUrl, '/') . '/js/blinkLoader.js', [], $this->pluginVersion, false);
             \wp_localize_script('blink-loader', 'blinkLoaderConfig', $this->getJsConfig());
             \wp_enqueue_script('blink-loader');
         }
