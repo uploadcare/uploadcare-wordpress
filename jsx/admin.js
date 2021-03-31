@@ -7,16 +7,25 @@ const wpEditor = window.imageEdit;
 wpEditor.init = function(postId) {
     window.imageEdit.postid = postId;
     const ucEditor = new UcEditor();
-    const model = wpEditor._view.model;
 
-    if (!new RegExp(ucEditor.getCDN().replace(/https?:\/\//i, '')).test(model.attributes.url)) return false;
+    let imgSrc = null;
+    let imgSrcObject = document.querySelector('img.thumbnail');
+    if (imgSrcObject !== null) {
+        imgSrc = imgSrcObject.getAttribute('src') || null;
+    }
+    if (typeof wpEditor._view !== 'undefined') {
+        imgSrc = wpEditor._view.model.attributes.url;
+    }
+    if (imgSrc === null) return false;
+
+    if (!new RegExp(ucEditor.getCDN().replace(/https?:\/\//i, '')).test(imgSrc)) return false;
 
     const mediaElement = document.getElementById(`media-head-${postId}`);
     if (mediaElement === null) return false;
 
     const wrapperObject = document.getElementById(`media-head-${postId}`).parentElement.parentElement;
-    ucEditor.showPanel(wrapperObject, model)
-    .then(() => { window.location.search = ''; })
+    ucEditor.showPanel(wrapperObject, imgSrc)
+    .then(() => { window.location.assign('/wp-admin/upload.php'); })
     .catch(() => {});
 }
 

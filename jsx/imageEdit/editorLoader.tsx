@@ -28,7 +28,7 @@ export default class UcEditor {
         document.head.appendChild(customStyle);
     }
 
-    public async showPanel(wrapper: any, model: WpMediaModel) {
+    public async showPanel(wrapper: any, url: string) {
         if (!(wrapper instanceof HTMLDivElement))
             return false;
         uploadcare.registerTab('preview', uploadcareTabEffects);
@@ -38,7 +38,7 @@ export default class UcEditor {
         wrapper.style.padding = '1rem';
         wrapper.appendChild(this.panelPlaceholder);
 
-        const ucFile: FileInfoResponse = uploadcare.fileFrom('uploaded', model.attributes.url);
+        const ucFile: FileInfoResponse = uploadcare.fileFrom('uploaded', url);
 
         const localConfig = this.config;
         localConfig.imagesOnly = true;
