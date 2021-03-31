@@ -44,7 +44,7 @@ export default class TransferImages {
     private checkLocalExists(): boolean {
         const btns = TransferImages.getNodeList(`button[data-action="${this.uploadBtnSelector}"]`);
         const enabled = Array.prototype.slice.call(btns).filter((b: HTMLButtonElement) => {
-                return !b.disabled;
+                return !b.disabled && !b.classList.contains('hidden');
             });
 
         return enabled.length > 0;
@@ -93,6 +93,9 @@ export default class TransferImages {
     private uploadAllAction(ev: MouseEvent): void {
         ev.preventDefault();
 
+        if (this.uploadAllButton instanceof HTMLButtonElement) {
+            this.uploadAllButton.disabled = true;
+        }
         Array.prototype.slice.call(this.uploadButtons).forEach(async (b: HTMLButtonElement) => {
             const postId = b.dataset.post || false;
             if (postId === false)
@@ -108,6 +111,10 @@ export default class TransferImages {
 
             await this.fetchAction(data, b);
         })
+
+        if (this.uploadAllButton instanceof HTMLButtonElement) {
+            this.toggleTransferAllAction()
+        }
     }
 
     private uploadAction(ev: MouseEvent): void {
@@ -239,8 +246,6 @@ export default class TransferImages {
         if (notTrIcon instanceof HTMLElement) {
             notTrIcon.classList.contains('hidden') ? notTrIcon.classList.remove('hidden') : notTrIcon.classList.add('hidden');
         }
-
-        this.toggleTransferAllAction();
     }
 
     private static getTransferredIcon(postId: number): HTMLElement | null {
