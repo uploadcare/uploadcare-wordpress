@@ -9,7 +9,7 @@
         <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
         <hr>
         <p>
-            <small>{{ 'Up to 20 files at once. Please, don\'t leave this page until transfer is over! (WordPress can\'t hande background processes).' | trans }}</small>
+            <small>{{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}</small>
         </p>
     </div>
     <div class="alert alert-danger hidden" id="uc-error-place"></div>
@@ -45,11 +45,11 @@
                         <small>{{ post.post_date | date }}</small>
                         <p>{{ 'Uploaded by' | trans }} {{ postAuthor is not empty ? postAuthor.data.display_name : 'Unknown' | trans }}</p>
                         {% if uuid is empty %}
-                        <p>{{ 'File size on local storage' | trans }}: {{ get_file_size(post) }}</p>
+                        <p>{{ 'File size in WordPress library' | trans }}: {{ get_file_size(post) }}</p>
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <i id="icon-transferred-{{ post.ID }}" class="bi bi-check2-circle text-success {{ uuid is empty ? 'hidden' : '' }}" title="{{ 'Successfully transferred' | trans }}"></i>
+                        <i id="icon-transferred-{{ post.ID }}" class="bi bi-check2-circle text-success {{ uuid is empty ? 'hidden' : '' }}" title="{{ 'All files transfered successfully' | trans }}"></i>
                         <i id="icon-not-transferred-{{ post.ID }}" class="bi bi-circle text-danger {{ uuid is not empty ? 'hidden' : '' }}" title="{{ 'Transfer failed' | trans }}"></i>
                     </td>
                     <td class="text-nowrap text-center">
@@ -68,7 +68,7 @@
                                 data-uuid="{{ uuid }}"
                                 data-post="{{ post.ID }}"
                                 class="btn btn-dark btn-sm rounded-circle" {{ uuid is empty ? 'disabled' : '' }}
-                                title="{{ 'Download to the local library' | trans }}"
+                                title="{{ 'Download files back to WordPress' | trans }}"
                                 style="display: {{ uuid is empty ? 'none' : 'inline-block' }}"
                             ><i class="bi bi-download"></i></button>
                     </td>
@@ -93,7 +93,7 @@
     </nav>
     {% endif %}
     <p class="alert alert-secondary rounded-0" role="alert">
-        <strong>Please note</strong>: if your images are already used in posts & pages, you <strong>will not</strong> see changes in post editor as a result of image transfer to Uploadcare. Only code of the published post will change: the source of your image will become a new remote source, and Adaptive Delivery will work as expected.
+        All image source URLs will be updated in all existing posts & pages automatically, so images are optimized and delivered with Uploadcare CDN.
     </p>
 {% endblock %}
 
