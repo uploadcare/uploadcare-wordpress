@@ -263,7 +263,7 @@ class UcAdmin
 
         $this->makeDefaultImageSizes($post);
 
-        $fileUrl = \wp_get_attachment_image_url($postId);
+        $fileUrl = \wp_attachment_is_image($postId) ? \wp_get_attachment_image_url($postId) : \get_attached_file($postId, true);
         if (!\is_string($fileUrl)) {
             \wp_die(__('Something wrong with upload to Wordpress', 'uploadcare'), '', 400);
         }
@@ -309,6 +309,9 @@ class UcAdmin
 
     private function makeDefaultImageSizes(\WP_Post $post): void
     {
+        if (!\wp_attachment_is_image($post)) {
+            return;
+        }
         $file = \wp_get_original_image_path($post->ID);
         if ($file === false) {
             \wp_die(__('Unable to load uploaded file', 'uploadcare'), '', 400);
