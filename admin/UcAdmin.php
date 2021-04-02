@@ -247,7 +247,8 @@ class UcAdmin
             $message = $uploadDirData['error'] ?: __('Unable to get upload directory');
             \wp_die($message, '', 400);
         }
-        $filename = $this->filenameFromPostTitle($post);
+
+        $filename = $this->filenameFromPostTitle($post, $ucFile->getOriginalFilename());
         $localFilePath = \rtrim($uploadDirData['path'], '/') . '/' . $filename;
         \file_put_contents($localFilePath, $ucFileContents);
 
@@ -280,8 +281,12 @@ class UcAdmin
         \wp_die();
     }
 
-    private function filenameFromPostTitle(\WP_Post $post): string
+    private function filenameFromPostTitle(\WP_Post $post, string $originalName = null): string
     {
+        if ($originalName !== null && ($originalExt = \pathinfo($originalName, PATHINFO_EXTENSION)) !== null) {
+            return $post->post_title . '.' .  $originalExt;
+        }
+
         $extensions = [
             'image/bmp' => 'bmp',
             'image/gif' => 'gif',
