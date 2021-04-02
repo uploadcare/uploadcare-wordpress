@@ -12,6 +12,10 @@ wpEditor.init = function(postId) {
     let imgSrcObject = document.querySelector('img.thumbnail');
     if (imgSrcObject !== null) {
         imgSrc = imgSrcObject.getAttribute('src') || null;
+        const regex = /(https?:\/\/)(.+\..+?\/)([a-z0-9-]+?\/)(.+)/gm;
+        const subst = `$1$2$3`;
+
+        if (imgSrc !== null) imgSrc = imgSrc.replace(regex, subst);
     }
     if (typeof wpEditor._view !== 'undefined') {
         imgSrc = wpEditor._view.model.attributes.url;
