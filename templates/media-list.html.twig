@@ -5,11 +5,10 @@
         {{ 'Transfer files to Uploadcare' | trans }}
         <small class="text-small text-black-50">{{ 'and back' | trans }}</small>
     </h2>
-    <div class="text-end">
+    <div class="text-start">
         <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
-        <hr>
-        <p>
-            <small>{{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}</small>
+        <p class="mt-2">
+            {{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}
         </p>
     </div>
     <div class="alert alert-danger hidden" id="uc-error-place"></div>
@@ -34,11 +33,17 @@
                 {% set postAuthor = get_post_author(post) %}
                 <tr>
                     <td style="width: 150px !important;" class="text-center">
+                        {% set bg = post.post_mime_type starts with 'image' ? get_attachment_image(post) : '/wp-includes/images/media/default.png' %}
+                        <div class="border border-5 border-white shadow-sm rounded"
+                             style="width: 150px; height: 150px; background-image: url('{{ bg }}'); background-position: center center; background-repeat: no-repeat"
+                        ></div>
+                        {#
                         {% if post.post_mime_type starts with 'image' %}
                             <img class="img-fluid img-thumbnail" id="image-{{ post.ID }}" src="{{ get_attachment_image(post) }}" alt="{{ post.post_title }}"/>
                         {% else %}
                             <img class="img-fluid img-thumbnail" src="/wp-includes/images/media/default.png" alt="{{ 'Not an image — unable to preview' | trans }}">
                         {% endif %}
+                        #}
                     </td>
                     <td>
                         <strong>{{ post.post_title }}</strong>
