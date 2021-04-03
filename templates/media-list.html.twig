@@ -46,7 +46,7 @@
                         #}
                     </td>
                     <td>
-                        <strong>{{ post.post_title }}</strong>
+                        <strong>{{ post.post_title }}</strong><br>
                         <small>{{ post.post_date | date }}</small>
                         <p>{{ 'Uploaded by' | trans }} {{ postAuthor is not empty ? postAuthor.data.display_name : 'Unknown' | trans }}</p>
                         {% if uuid is empty %}
