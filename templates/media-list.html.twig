@@ -1,0 +1,107 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <h2>
+        {{ 'Transfer files to Uploadcare' | trans }}
+        <small class="text-small text-black-50">{{ 'and back' | trans }}</small>
+    </h2>
+    <div class="text-start">
+        <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
+        <p class="mt-2">
+            {{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}
+        </p>
+    </div>
+    <div class="alert alert-danger hidden" id="uc-error-place"></div>
+    <div class="progress rounded-0" id="transferProgress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 0"></div>
+    </div>
+    <hr>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>{{ 'Preview' | trans }}</th>
+                <th>{{ 'Media data' | trans }}</th>
+                <th class="text-center">{{ 'Transferred' | trans }}</th>
+                <th class="text-center">{{ 'Actions' | trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in media %}
+                {% set uuid = get_post_meta(post, 'uploadcare_uuid') %}
+                {% set postAuthor = get_post_author(post) %}
+                <tr>
+                    <td style="width: 150px !important;" class="text-center">
+                        {% set bg = post.post_mime_type starts with 'image' ? get_attachment_image(post) : '/wp-includes/images/media/default.png' %}
+                        <div class="border border-5 border-white shadow-sm rounded"
+                             style="width: 150px; height: 150px; background-image: url('{{ bg }}'); background-position: center center; background-repeat: no-repeat"
+                        ></div>
+                        {#
+                        {% if post.post_mime_type starts with 'image' %}
+                            <img class="img-fluid img-thumbnail" id="image-{{ post.ID }}" src="{{ get_attachment_image(post) }}" alt="{{ post.post_title }}"/>
+                        {% else %}
+                            <img class="img-fluid img-thumbnail" src="/wp-includes/images/media/default.png" alt="{{ 'Not an image — unable to preview' | trans }}">
+                        {% endif %}
+                        #}
+                    </td>
+                    <td>
+                        <strong>{{ post.post_title }}</strong><br>
+                        <small>{{ post.post_date | date }}</small>
+                        <p>{{ 'Uploaded by' | trans }} {{ postAuthor is not empty ? postAuthor.data.display_name : 'Unknown' | trans }}</p>
+                        {% if uuid is empty %}
+                        <p>{{ 'File size in WordPress library' | trans }}: {{ get_file_size(post) }}</p>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <i id="icon-transferred-{{ post.ID }}" class="bi bi-check2-circle text-success {{ uuid is empty ? 'hidden' : '' }}" title="{{ 'All files transfered successfully' | trans }}"></i>
+                        <i id="icon-not-transferred-{{ post.ID }}" class="bi bi-circle text-danger {{ uuid is not empty ? 'hidden' : '' }}" title="{{ 'Transfer failed' | trans }}"></i>
+                    </td>
+                    <td class="text-nowrap text-center">
+                            <button
+                                id="uc-upload-{{ post.ID }}"
+                                data-action="uc-upload"
+                                data-uuid=""
+                                data-post="{{ post.ID }}"
+                                class="btn btn-success btn-sm rounded-circle" {{ uuid is not empty ? 'disabled' : '' }}
+                                title="{{ 'Transfer to Uploadcare' | trans }}"
+                                style="display: {{ uuid is not empty ? 'none' : 'inline-block' }}"
+                            ><i class="bi bi-upload"></i></button>
+                            <button
+                                id="uc-download-{{ post.ID }}"
+                                data-action="uc-download"
+                                data-uuid="{{ uuid }}"
+                                data-post="{{ post.ID }}"
+                                class="btn btn-dark btn-sm rounded-circle" {{ uuid is empty ? 'disabled' : '' }}
+                                title="{{ 'Download files back to WordPress' | trans }}"
+                                style="display: {{ uuid is empty ? 'none' : 'inline-block' }}"
+                            ><i class="bi bi-download"></i></button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if pagesCount > 1 %}
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            {% for n in 1..pagesCount %}
+                <li class="page-item {{ n == page ? 'active' : null }}">
+                    {% if n == page %}
+                        <span class="page-link">{{ n }}</span>
+                    {% else %}
+                        <a class="page-link" href="?page=uploadcare-transfer&page_number={{ n }}">{{ n }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+    <p class="alert alert-secondary rounded-0" role="alert">
+        All image source URLs will be updated in all existing posts & pages automatically, so images are optimized and delivered with Uploadcare CDN.
+    </p>
+{% endblock %}
+
+{% block javascripts %}
+    {{ add_js('transfer.js') }}
+{% endblock %}

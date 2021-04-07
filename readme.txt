@@ -3,7 +3,7 @@
 Contributors: andrew72ru, rsedykh
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 7.1
 Stable tag: 3.0.4
 License: GPLv2 or later
@@ -15,6 +15,10 @@ Donate link: https://uploadcare.com/pricing/
 Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert them to WordPress posts and serve responsive lazy loaded images with Uploadcare CDN to improve your WordPress site performance.
 
 This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
+
+[youtube https://www.youtube.com/watch?v=7Nc7GyD6_AE]
+
+[Read integration guide](https://uploadcare.com/docs/guides/wordpress/).
 
 ### Features ###
 
@@ -127,6 +131,11 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.1.0 =
+
+* Now you can copy your WordPress Media Library to Uploadcare cloud storage. Files in Media Library don’t get removed.
+* Image source URLs in posts don’t change. However, when a post is rendered, images get delivered with Uploadcare CDN powered by Adaptive Delivery technology.
 
 = 3.0.4 =
 

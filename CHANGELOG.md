@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] — 2021-04-07
+
+* Now you can copy your WordPress Media Library to Uploadcare cloud storage. Files in Media Library don’t get removed.
+* Image source URLs in posts don’t change. However, when a post is rendered, images get delivered with Uploadcare CDN powered by Adaptive Delivery technology.
+
 ## [3.0.4] — 2021-03-09
 
 * Added placeholder for Uploadcare Image caption.

@@ -2,8 +2,10 @@
 
 class UploadcareMain
 {
-    public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
+    //public const SCALE_CROP_TEMPLATE = '%s-/stretch/off/-/scale_crop/%s/center/';
+    public const SCALE_CROP_TEMPLATE = '%s-/preview/%s/';
     public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
+    public const PREVIEW_TEMPLATE = '%s-/preview/160x160/-/resize/160x/-/scale_crop/160x160/';
     public const UUID_REGEX = '/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/';
 
     /**
@@ -55,6 +57,7 @@ class UploadcareMain
 
     /**
      * Add hooks and actions for frontend.
+     *
      * @return void
      */
     private function defineFrontHooks()
@@ -70,19 +73,19 @@ class UploadcareMain
 
     /**
      * Add hooks and actions for backend.
+     *
      * @return void
      */
-    private function define_admin_hooks()
+    private function define_admin_hooks(): void
     {
         $plugin_admin = new UcAdmin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('admin_head', $plugin_admin, 'loadAdminCss');
-//        $this->loader->add_action('admin_bar_menu', $this, 'adminBar', 100, 1);
-        $this->loader->add_action('plugins_loaded', $this, 'runUploadTask');
-        $this->loader->add_action('plugins_loaded', $this, 'runDownloadTask');
         $this->loader->add_action('init', $plugin_admin, 'uploadcare_plugin_init');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'add_uploadcare_js_to_admin');
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
+        $this->loader->add_action('wp_ajax_uploadcare_transfer', $plugin_admin, 'transferUp');
+        $this->loader->add_action('wp_ajax_uploadcare_down', $plugin_admin, 'transferDown');
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
         $this->loader->add_action('delete_attachment', $plugin_admin, 'attachmentDelete', 10, 2);
@@ -92,67 +95,6 @@ class UploadcareMain
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
-//        $this->loader->add_filter('wp_save_image_editor_file', $plugin_admin, 'uc_save_image_editor_file', 10, 5);
-//        $this->loader->add_filter('wp_image_editors', $this, 'addImageEditor');
-//        $this->loader->add_filter('image_editor_save_pre', $this, 'savePre', 10, 2);
-    }
-
-    /**
-     * @param \WP_Admin_Bar $adminBar
-     */
-    public function adminBar($adminBar)
-    {
-        if (!\current_user_can('manage_options')) {
-            return;
-        }
-
-        $loader = new LocalMediaLoader();
-        $loader->loadMedia();
-
-        if (!$loader->getHasLocalMedia()) {
-            return;
-        }
-        $loaderMediaCount = $loader->getLocalMediaCount();
-
-        $title = \sprintf(
-            _n(
-                'Transfer %d Wordpress image to Uploadcare',
-                'Transfer %d Wordpress images to Uploadcare',
-                $loaderMediaCount, $this->get_plugin_name()
-            ),
-            \number_format_i18n($loaderMediaCount));
-
-        $adminBar->add_menu([
-            'id' => 'uploadcare',
-            'title' => $title,
-            'href' => \esc_url(\add_query_arg('page', 'uploadcare', \get_admin_url() . 'admin.php')),
-        ]);
-    }
-
-    public function runUploadTask()
-    {
-        $loader = new LocalMediaLoader();
-        $process = new UcUploadProcess();
-        if (isset($_POST['uc_sync_data']) && $_POST['uc_sync_data'] === 'sync') {
-            $loader->loadMedia();
-            foreach ($loader->getPosts() as $post) {
-                $process->push_to_queue($post->ID);
-            }
-            $process->save()->dispatch();
-        }
-    }
-
-    public function runDownloadTask()
-    {
-        $loader = new RemoteMediaLoader();
-        $process = new UcDownloadProcess();
-        if (isset($_POST['uc_download_data']) && $_POST['uc_download_data'] === 'sync') {
-            $loader->loadMedia();
-            foreach ($loader->getFiles() as $file) {
-                $process->push_to_queue($file);
-            }
-            $process->save()->dispatch();
-        }
     }
 
     /**

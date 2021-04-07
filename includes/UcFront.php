@@ -46,10 +46,11 @@ class UcFront
         \register_post_meta('attachment', 'uploadcare_uuid', $parameters);
     }
 
-    public function prepareAttachment(array $response, \WP_Post $attachment, $meta): array
+    public function prepareAttachment(array $response, WP_Post $attachment, $meta): array
     {
-        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true)))
+        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true))) {
             return $response;
+        }
 
         $response['meta'] = [
             'uploadcare_url_modifiers' => \get_post_meta($attachment->ID, 'uploadcare_url_modifiers', true),
@@ -61,14 +62,15 @@ class UcFront
     }
 
     /**
-     * Calls on `wp_enqueue_scripts`
+     * Calls on `wp_enqueue_scripts`.
+     *
      * @see UploadcareMain::defineFrontHooks()
      */
-    public function frontendScripts()
+    public function frontendScripts(): void
     {
         $pluginDirUrl = \plugin_dir_url(\dirname(__DIR__) . '/uploadcare.php');
         if (!empty(\get_option('uploadcare_public', null))) {
-            \wp_register_script('blink-loader', $pluginDirUrl . '/js/blinkLoader.js', [], $this->pluginVersion, false);
+            \wp_register_script('blink-loader', \trim($pluginDirUrl, '/') . '/js/blinkLoader.js', [], $this->pluginVersion, false);
             \wp_localize_script('blink-loader', 'blinkLoaderConfig', $this->getJsConfig());
             \wp_enqueue_script('blink-loader');
         }
@@ -76,6 +78,7 @@ class UcFront
 
     /**
      * Calls on `render_block`. Loads images and replace `src` to `data-blink-uuid`.
+     *
      * @see UploadcareMain::defineFrontHooks()
      *
      * @param $content
@@ -112,7 +115,7 @@ class UcFront
      *
      * @return string
      */
-    protected function changeContent($content, $imageId)
+    protected function changeContent(string $content, int $imageId): string
     {
         $crawler = new Crawler($content);
         $collation = [];
@@ -126,6 +129,9 @@ class UcFront
             if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
                 $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), \get_post_meta($imageId, 'uploadcare_uuid', true));
                 $isLocal = false;
+            }
+            if ($isLocal && \strpos($imageUrl, \get_option('uploadcare_cdn_base')) !== true) {
+                $imageUrl = \wp_get_attachment_image_url($imageId, 'large');
             }
 
             // If Adaptive delivery is off and we have a remote file — change file url to transformation url
@@ -176,6 +182,7 @@ class UcFront
 
     /**
      * Calls on `post_thumbnail_html`. If thumbnail is an uploadcare image, make it an adaptive delivered.
+     *
      * @see UploadcareMain::defineFrontHooks()
      *
      * @param $html
@@ -218,6 +225,7 @@ class UcFront
     /**
      * @param string $html
      * @param string $size
+     *
      * @return string
      */
     private function replaceImageUrl($html, $size = '2048x2048')
