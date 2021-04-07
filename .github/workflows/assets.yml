@@ -26,9 +26,9 @@ jobs:
                     yarn --version
                     yarn && yarn run build
                     rm -rf node_modules
-#            -   name: WordPress.org plugin asset/readme update
-#                uses: 10up/action-wordpress-plugin-asset-update@458ceae
-#                env:
-#                    SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-#                    SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-#                    SLUG: uploadcare
+            -   name: WordPress.org plugin asset/readme update
+                uses: 10up/action-wordpress-plugin-asset-update@458ceae
+                env:
+                    SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                    SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                    SLUG: uploadcare
