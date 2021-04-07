@@ -132,6 +132,11 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
+= 3.1.0 =
+
+* Now you can copy your WordPress Media Library to Uploadcare cloud storage. Files in Media Library don’t get removed.
+* Image source URLs in posts don’t change. However, when a post is rendered, images get delivered with Uploadcare CDN powered by Adaptive Delivery technology.
+
 = 3.0.4 =
 
 * Added placeholder for Uploadcare Image caption.
