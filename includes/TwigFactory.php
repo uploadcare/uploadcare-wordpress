@@ -24,7 +24,7 @@ class TwigFactory
 
     private static function setDebug(Environment $twig): void
     {
-        $debug = \filter_var(\getenv('APP_DEBUG'), FILTER_VALIDATE_BOOL);
+        $debug = \filter_var(\getenv('APP_DEBUG'), FILTER_VALIDATE_BOOLEAN);
         if ($debug === false) {
             return;
         }
