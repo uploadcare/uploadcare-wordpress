@@ -13,7 +13,6 @@ jobs:
             -   name: Install dependencies
                 uses: php-actions/composer@v5
                 with:
-                    command: update
                     php_version: 7.1
                     dev: no
             -   name: Install npm dependencies
