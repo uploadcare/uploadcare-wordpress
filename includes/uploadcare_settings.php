@@ -131,7 +131,10 @@ try {
                 value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
 
-        <h4><?= __('3. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
+        <h4><?= __('3. Whitelist your domain', 'uploadcare')?></h4>
+        <p><?= \sprintf(__('At <a href="https://uploadcare.com/dashboard/" target="_blank">Uploadcare Dashboard</a>, go to your project (e.g. "New project") — Delivery — Content delivery settings, and click “Integrate” Adaptive Delivery. Scroll to Step 2 and add your domain to the whitelist. Click Done. That will enable Adaptive Delivery for you website.', 'uploadcare')) ?></p>
+
+        <h4><?= __('4. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
         <?php
         foreach ($tabs as $tn => $tab) {
             ?>
@@ -144,7 +147,7 @@ try {
         }
         ?>
 
-        <h4><?= __('4. Start uploading', 'uploadcare') ?></h4>
+        <h4><?= __('5. Start uploading', 'uploadcare') ?></h4>
         <?php
         $mediaNew = \get_site_url(null, '/wp-admin/media-new.php');
         $editPost = \get_site_url(null, '/wp-admin/edit.php');
