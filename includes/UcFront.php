@@ -4,7 +4,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class UcFront
 {
-    const IMAGE_REGEX = '/(<img\s?.+)(src=\")(.[^\"]+)(.+)/m';
+    public const IMAGE_REGEX = '/(<img\s?.+)(src=\")(.[^\"]+)(.+)/m';
 
     /**
      * @var string
@@ -48,14 +48,20 @@ class UcFront
 
     public function prepareAttachment(array $response, WP_Post $attachment, $meta): array
     {
-        if (empty(\get_post_meta($attachment->ID, 'uploadcare_url', true))) {
+        $ucUrl = \get_post_meta($attachment->ID, 'uploadcare_url_modifiers', true);
+        if ($ucUrl) {
             return $response;
+        }
+
+        $uuid = \get_post_meta($attachment->ID, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
+            $uuid = UploadcareMain::getUuid($ucUrl);
         }
 
         $response['meta'] = [
             'uploadcare_url_modifiers' => \get_post_meta($attachment->ID, 'uploadcare_url_modifiers', true),
-            'uploadcare_url' => \get_post_meta($attachment->ID, 'uploadcare_url', true),
-            'uploadcare_uuid' => \get_post_meta($attachment->ID, 'uploadcare_uuid', true),
+            'uploadcare_url' => $ucUrl,
+            'uploadcare_uuid' => $uuid,
         ];
 
         return $response;
@@ -122,15 +128,13 @@ class UcFront
         $modifiers = \get_post_meta($imageId, 'uploadcare_url_modifiers', true);
 
         $crawler->filterXPath('//img')->each(function (Crawler $node) use (&$collation, $imageId, $modifiers) {
-            $imageUrl = $node->attr('src');
             $attachedFile = \get_post_meta($imageId, '_wp_attached_file', true);
             $isLocal = true;
 
             if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
-                $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), \get_post_meta($imageId, 'uploadcare_uuid', true));
+                $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $this->getUuid($imageId));
                 $isLocal = false;
-            }
-            if ($isLocal && \strpos($imageUrl, \get_option('uploadcare_cdn_base')) !== true) {
+            } else {
                 $imageUrl = \wp_get_attachment_image_url($imageId, 'large');
             }
 
@@ -140,15 +144,7 @@ class UcFront
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
-                $uuid = \get_post_meta($imageId, 'uploadcare_uuid', true);
-                if (!$uuid) {
-                    $uuid = UploadcareMain::getUuid(\get_post_meta($imageId, 'uploadcare_url', true));
-                    if ($uuid !== null) {
-                        \update_post_meta($imageId, 'uploadcare_uuid', $uuid);
-                    }
-                }
-
-                $imageUrl = !$isLocal ? $uuid : null;
+                $imageUrl = !$isLocal ? $this->getUuid($imageId) : null;
             }
             if ($imageUrl !== null && $isLocal === false) {
                 $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
@@ -178,6 +174,17 @@ class UcFront
         }
 
         return $content;
+    }
+
+    protected function getUuid(int $postId): string
+    {
+        $uuid = \get_post_meta($postId, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
+            $uuid = UploadcareMain::getUuid(\get_post_meta($postId, 'uploadcare_url', true));
+            \update_post_meta($postId, 'uploadcare_uuid', $uuid);
+        }
+
+        return $uuid;
     }
 
     /**

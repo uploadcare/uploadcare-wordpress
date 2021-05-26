@@ -3,9 +3,9 @@
 Contributors: andrew72ru, rsedykh
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.1
-Stable tag: 3.0.5
+Stable tag: 3.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -131,6 +131,11 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.0.6 =
+
+* Fixed an issue with missing UUIDs for previously uploaded images, which led to an error while rendering images.
+* Various fixes and improvements.
 
 = 3.0.5 =
 
