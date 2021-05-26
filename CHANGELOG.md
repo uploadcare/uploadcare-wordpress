@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] — 2021-04-07
+## [3.0.6] — 2021-05-26
+
+* Fixed an issue with missing UUIDs for previously uploaded images, which led to an error while rendering images.
+* Various fixes and improvements.
+
+## [3.0.5] — 2021-04-07
 
 * Now you can copy your WordPress Media Library to Uploadcare cloud storage. Files in Media Library don’t get removed.
 * Image source URLs in posts don’t change. However, when a post is rendered, images get delivered with Uploadcare CDN powered by Adaptive Delivery technology.
@@ -279,7 +284,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 [uploadcare/uploadcare-php]: https://github.com/uploadcare/uploadcare-php
 
-[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.4..HEAD
+[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.6..HEAD
+[3.0.6]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.5..v3.0.6
+[3.0.5]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.4..v3.0.5
 [3.0.4]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.3..v3.0.4
 [3.0.3]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.2..v3.0.3
 [3.0.2]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.1..v3.0.2

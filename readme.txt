@@ -3,9 +3,9 @@
 Contributors: andrew72ru, rsedykh
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.1
-Stable tag: 3.0.4
+Stable tag: 3.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -132,7 +132,12 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
-= 3.1.0 =
+= 3.0.6 =
+
+* Fixed an issue with missing UUIDs for previously uploaded images, which led to an error while rendering images.
+* Various fixes and improvements.
+
+= 3.0.5 =
 
 * Now you can copy your WordPress Media Library to Uploadcare cloud storage. Files in Media Library don’t get removed.
 * Image source URLs in posts don’t change. However, when a post is rendered, images get delivered with Uploadcare CDN powered by Adaptive Delivery technology.
