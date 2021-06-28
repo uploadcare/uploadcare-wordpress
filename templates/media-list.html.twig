@@ -84,7 +84,7 @@
         </table>
     </div>
     {% if pagesCount > 1 %}
-    <nav aria-label="Pagination">
+    <nav aria-label="Pagination" class="mw-100 overflow-scroll">
         <ul class="pagination justify-content-center">
             {% for n in 1..pagesCount %}
                 <li class="page-item {{ n == page ? 'active' : null }}">
