@@ -45,14 +45,14 @@ registerBlockType('uploadcare/image', {
             title: __('Uploadcare', 'uploadcare'),
             mediaURL: 'https://ucarecdn.com/6c5b97ee-4ce9-490f-92e9-50cba0271917/intelligence.svg',
             mediaID: '0000',
-            mediaUid: 'no-uuid',
+            mediaUid: '6c5b97ee-4ce9-490f-92e9-50cba0271917',
             cdnUrlModifiers: '',
         },
     },
     edit(props) {
         const {className, attributes: {title, mediaID, mediaUid, cdnUrlModifiers}, setAttributes} = props;
 
-        if (mediaID) {
+        if (mediaID && mediaID !== '0000') {
             UcMediaMeta.fetch(mediaID).then(data => {
                 if (data.uploadcare_url_modifiers.length > 0) {
                     setAttributes({cdnUrlModifiers: data.uploadcare_url_modifiers[0]})
