@@ -2,13 +2,12 @@
 
 {% block body %}
     <h2>
-        {{ 'Transfer files to Uploadcare' | trans }}
-        <small class="text-small text-black-50">{{ 'and back' | trans }}</small>
+        "{{ parentPost.post_title }}" {{ 'from' }} {{ parentPost.date | date }}<br>
     </h2>
     <div class="text-start">
         <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
         <p class="mt-2">
-            {{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}
+            {{ 'Transfer files for post' | trans }}
         </p>
     </div>
     <div class="alert alert-danger hidden" id="uc-error-place"></div>
@@ -16,7 +15,6 @@
         <div class="progress-bar bg-success" role="progressbar" style="width: 0"></div>
     </div>
     <hr>
-
     <div class="table-responsive">
         <table class="table table-striped align-middle">
             <thead>
@@ -34,24 +32,6 @@
             </tbody>
         </table>
     </div>
-    {% if pagesCount > 1 %}
-    <nav aria-label="Pagination">
-        <ul class="pagination justify-content-center">
-            {% for n in 1..pagesCount %}
-                <li class="page-item {{ n == page ? 'active' : null }}">
-                    {% if n == page %}
-                        <span class="page-link">{{ n }}</span>
-                    {% else %}
-                        <a class="page-link" href="?page=uploadcare-transfer&page_number={{ n }}">{{ n }}</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    </nav>
-    {% endif %}
-    <p class="alert alert-secondary rounded-0" role="alert">
-        All image source URLs will be updated in all existing posts & pages automatically, so images are optimized and delivered with Uploadcare CDN.
-    </p>
 {% endblock %}
 
 {% block javascripts %}

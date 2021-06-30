@@ -89,12 +89,16 @@ class UploadcareMain
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
         $this->loader->add_action('delete_attachment', $plugin_admin, 'attachmentDelete', 10, 2);
+        $this->loader->add_action('manage_post_posts_custom_column', $plugin_admin, 'manageImagesColumn', 10, 2);
+        $this->loader->add_action('manage_page_posts_custom_column', $plugin_admin, 'manageImagesColumn', 10, 2);
 
         $this->loader->add_filter('plugin_action_links_uploadcare/uploadcare.php', $plugin_admin, 'plugin_action_links');
         $this->loader->add_filter('load_image_to_edit_attachmenturl', $plugin_admin, 'uc_load', 10, 2);
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
+        $this->loader->add_filter('manage_post_posts_columns', $plugin_admin, 'addImagesColumn', 10, 1);
+        $this->loader->add_filter('manage_page_posts_columns', $plugin_admin, 'addImagesColumn', 10, 1);
     }
 
     /**

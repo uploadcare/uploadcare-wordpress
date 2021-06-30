@@ -11,6 +11,40 @@ class MediaDataLoader
         return $this->query($params);
     }
 
+    public function loadMediaForPost(int $postId): iterable
+    {
+        $parameters = $this->imagesQueryParams(1, -1);
+        $parameters['post_parent'] = $postId;
+
+        return $this->query($parameters);
+    }
+
+    public function countMediaForPost(int $postId): array
+    {
+        $parameters = $this->imagesQueryParams(1, -1);
+        $parameters['post_parent'] = $postId;
+        $totalCount = (new \WP_Query($parameters))->found_posts;
+
+        $parameters['meta_query'] = [
+            'relation' => 'AND',
+            [
+                'key' => 'uploadcare_uuid',
+                'compare' => 'EXISTS',
+            ],
+            [
+                'key' => 'uploadcare_uuid',
+                'value' => null,
+                'compare' => '!=',
+            ]
+        ];
+        $ucCount = (new \WP_Query($parameters))->found_posts;
+
+        return [
+            'total' => $totalCount,
+            'uploadcare' => $ucCount,
+        ];
+    }
+
     protected function query(array $params): iterable
     {
         $query = new \WP_Query($params);

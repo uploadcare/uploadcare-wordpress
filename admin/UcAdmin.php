@@ -134,6 +134,39 @@ class UcAdmin
         }
     }
 
+    public function addImagesColumn(array $columns): array
+    {
+        $columns['uploadcare_images'] = __('Local / remote images');
+        return $columns;
+    }
+
+    public function manageImagesColumn(string $columnId, int $postId): void
+    {
+        if ($columnId !== 'uploadcare_images') {
+            return;
+        }
+        $link = \admin_url(\sprintf('/admin.php?page=transfer-by-post&postId=%d', $postId));
+        $count = (new MediaDataLoader())->countMediaForPost($postId);
+
+        $localImages = 0;
+        if (($count['total'] ?? 0) > 0) {
+            $localImages = $count['total'] - ($count['uploadcare'] ?? 0);
+        }
+        $ucImages = $count['uploadcare'] ?? 0;
+        if ($localImages <= 0 && $ucImages > 0) {
+            echo \sprintf('All %d images transferred', $ucImages);
+            return;
+        }
+
+        if ($localImages <= 0 && $ucImages <= 0) {
+            echo 'No images in post';
+            return;
+        }
+
+        /** @noinspection HtmlUnknownTarget */
+        echo \sprintf('%d / %d <a href="%s">Transfer to remote</a>', $localImages, $ucImages, $link);
+    }
+
     /**
      * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_handle`).
      *
@@ -389,7 +422,26 @@ HTML;
     {
         \add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', [$this, 'uploadcare_settings']);
         \add_menu_page('Transfer', 'Transfer files', 'administrator', 'uploadcare-transfer', [$this, 'transferFiles'], \plugins_url('/media/logo.png', __DIR__));
+        \add_submenu_page(null, 'Transfer by post', null, 'administrator', 'transfer-by-post', [$this, 'transferByPost']);
         //\add_menu_page('Uploadcare Files', 'Uploadcare Files', 'administrator', 'uploadcare-files', [$this, 'ucFiles']);
+    }
+
+    public function transferByPost(): void
+    {
+        $postId = $_GET['postId'] ?? null;
+        \ULog($postId);
+        if ($postId === null || !\is_numeric($postId)) {
+            /** @noinspection HtmlUnknownTarget */
+            echo $this->twig->render('error.html.twig', [
+                'message' => \sprintf('Post undefined. <a href="%s">Go back.</a>', \admin_url()),
+            ]);
+            return;
+        }
+
+        echo $this->twig->render('transfer-by-post.html.twig', [
+            'parentPost' => \get_post($postId),
+            'media' => (new MediaDataLoader())->loadMediaForPost((int) $postId),
+        ]);
     }
 
     public function transferFiles(): void
