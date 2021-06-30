@@ -7,7 +7,8 @@
     <div class="text-start">
         <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
         <p class="mt-2">
-            {{ 'Transfer files for post' | trans }}
+            {{ 'Transfer files for post.' | trans }}<br>
+            {% include '_includes/console_utility_link.html.twig' %}
         </p>
     </div>
     <div class="alert alert-danger hidden" id="uc-error-place"></div>
