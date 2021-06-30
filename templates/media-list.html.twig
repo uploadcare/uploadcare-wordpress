@@ -8,7 +8,8 @@
     <div class="text-start">
         <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
         <p class="mt-2">
-            {{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}
+            {{ 'It\'ll tranfer files in bulk. Don\'t close this tab until transfer is complete.' | trans }}<br>
+            {{ 'Only files on <strong>this</strong> page will be transferred. Switch pages to transfer another files.' | trans | raw }}
         </p>
     </div>
     <div class="alert alert-danger hidden" id="uc-error-place"></div>
@@ -35,7 +36,7 @@
         </table>
     </div>
     {% if pagesCount > 1 %}
-    <nav aria-label="Pagination">
+    <nav aria-label="Pagination" class="mw-100 overflow-scroll">
         <ul class="pagination justify-content-center">
             {% for n in 1..pagesCount %}
                 <li class="page-item {{ n == page ? 'active' : null }}">

@@ -33,6 +33,17 @@ wpEditor.init = function(postId) {
     .catch(() => {});
 }
 
+window.ucb_click = function (el) {
+    const uploader = new UploadToLibrary();
+    uploader.upload().finally(() => {
+        const loadingScreen = document.querySelector('.uploadcare-loading-screen');
+        if (loadingScreen) loadingScreen.classList.add('uploadcare-hidden');
+
+        // const mlButton = document.getElementById('menu-item-browse');
+        // if (mlButton) mlButton.click();
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const uploader = new UploadToLibrary();
     if (document.getElementById('uploadcare-post-upload-ui-btn') === null) return false;
