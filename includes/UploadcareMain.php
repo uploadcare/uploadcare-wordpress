@@ -86,6 +86,7 @@ class UploadcareMain
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
         $this->loader->add_action('wp_ajax_uploadcare_transfer', $plugin_admin, 'transferUp');
         $this->loader->add_action('wp_ajax_uploadcare_down', $plugin_admin, 'transferDown');
+        $this->loader->add_action('wp_ajax_uploadcare_upload_multiply', $plugin_admin, 'transferMultiplyUp');
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
         $this->loader->add_action('delete_attachment', $plugin_admin, 'attachmentDelete', 10, 2);

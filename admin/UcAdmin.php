@@ -134,12 +134,26 @@ class UcAdmin
         }
     }
 
+    /**
+     * Add column to posts / pages table.
+     * Calls by `manage_{$type}_posts_columns` filter (`manage_post_posts_columns` and `manage_page_posts_columns` in this case)
+     *
+     * @param array $columns
+     * @return array
+     */
     public function addImagesColumn(array $columns): array
     {
         $columns['uploadcare_images'] = __('Local / remote images');
         return $columns;
     }
 
+    /**
+     * Add content to transfer column.
+     * Calls by `manage_{$type}_posts_custom_column` action (`manage_post_posts_columns` and `manage_page_posts_columns` in this case)
+     *
+     * @param string $columnId
+     * @param int $postId
+     */
     public function manageImagesColumn(string $columnId, int $postId): void
     {
         if ($columnId !== 'uploadcare_images') {
@@ -207,16 +221,38 @@ class UcAdmin
         if ($postId === null) {
             \wp_die(__('Required parameter is not set', 'uploadcare'), '', 400);
         }
+        $result = $this->transferPostUp((int) $postId);
+        echo \wp_json_encode($result);
+        \wp_die();
+    }
+
+    public function transferMultiplyUp(): void
+    {
+        $posts = $_POST['posts'] ?? null;
+        if ($posts === null) {
+            \wp_die(__('Required parameter is not set', 'uploadcare'), '', 400);
+        }
+        // JS sends array as `posts=1,2,3`
+        $posts = \explode(',', $posts);
+
+        $result = [];
+        foreach ($posts as $postId) {
+            $result[] = $this->transferPostUp((int) $postId);
+        }
+        echo \wp_json_encode($result);
+        \wp_die();
+    }
+
+    private function transferPostUp(int $postId): array
+    {
         if (($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
             try {
                 $this->api->file()->fileInfo($uuid);
-                $result = [
+                return [
                     'file_url' => \wp_get_attachment_image_src($postId),
                     'uploadcare_url_modifiers' => \get_post_meta($postId, 'uploadcare_url_modifiers', true),
                     'postId' => $postId,
                 ];
-                echo \wp_json_encode($result);
-                \wp_die();
             } catch (\Exception $e) {
                 // Do nothing
             }
@@ -235,15 +271,12 @@ class UcAdmin
         }
         $this->attach($uploadedFile, $postId);
 
-        $result = [
+        return [
             'fileUrl' => \wp_get_attachment_image_src($postId)[0] ?? '',
             'uploadcare_url_modifiers' => '',
             'postId' => $postId,
             'uploadcare_uuid' => $uploadedFile->getUuid(),
         ];
-
-        echo \wp_json_encode($result);
-        \wp_die();
     }
 
     /**
@@ -265,7 +298,6 @@ class UcAdmin
         $imageId = \get_post_meta($postId, 'uploadcare_uuid', true);
         try {
             $ucFile = $this->api->file()->fileInfo($imageId);
-            \ULog($ucFile);
         } catch (\Exception $e) {
             \wp_die(__('Unable to get file file info uploadcare', 'uploadcare'), '', 400);
         }
@@ -430,7 +462,6 @@ HTML;
     public function transferByPost(): void
     {
         $postId = $_GET['postId'] ?? null;
-        \ULog($postId);
         if ($postId === null || !\is_numeric($postId)) {
             /** @noinspection HtmlUnknownTarget */
             echo $this->twig->render('error.html.twig', [

@@ -90,27 +90,31 @@ export default class TransferImages {
         return data;
     }
 
-    private uploadAllAction(ev: MouseEvent): void {
+    private async uploadAllAction(ev: MouseEvent): Promise<any> {
+        const target = ev.currentTarget;
+        if (!(target instanceof HTMLButtonElement))
+            return;
         ev.preventDefault();
+        target.setAttribute('disabled', '1');
 
         if (this.uploadAllButton instanceof HTMLButtonElement) {
             this.uploadAllButton.disabled = true;
         }
-        Array.prototype.slice.call(this.uploadButtons).forEach(async (b: HTMLButtonElement) => {
+        const postsArray: Array<number> = [];
+        Array.prototype.slice.call(this.uploadButtons).forEach((b: HTMLButtonElement) => {
             const postId = b.dataset.post || false;
             if (postId === false)
-                return false;
+                return;
             if ((b.dataset.uuid || '').length > 0) {
-                return false;
+                return;
             }
-
-            const data = this.makeFormData([
-                {property: 'action', value: 'uploadcare_transfer'},
-                {property: 'postId', value: postId}
-            ]);
-
-            await this.fetchAction(data, b);
-        })
+            postsArray.push(parseInt(postId));
+        });
+        const data = this.makeFormData([
+            {property: 'action', value: 'uploadcare_upload_multiply'},
+            {property: 'posts', value: postsArray},
+        ]);
+        await this.fetchAction(data, target)
 
         if (this.uploadAllButton instanceof HTMLButtonElement) {
             this.toggleTransferAllAction()
@@ -173,18 +177,13 @@ export default class TransferImages {
 
             return r.json();
         }).then(data => {
-            if (!data.hasOwnProperty('fileUrl') || !data.hasOwnProperty('postId')) return;
-            const remoteUuid = data.hasOwnProperty('uploadcare_uuid') ? data.uploadcare_uuid : '';
-            const targetBtn = document.getElementById(`uc-download-${data.postId}`) || document.createElement('button');
-
-            if (typeof remoteUuid === "string" && remoteUuid.length > 0) {
-                targetBtn.dataset.uuid = remoteUuid
-            } else {
-                targetBtn.dataset.uuid = '';
+            if (data.hasOwnProperty('fileUrl')) {
+                this.changeAttributes(data);
+            }
+            if (data instanceof Array) {
+                data.forEach(obj => this.changeAttributes(obj));
             }
 
-            this.setAttributes(data.postId, data.fileUrl)
-            this.setProgress(0);
         }).catch((e) => {
             if (e instanceof Promise) {
                 e.then(data => {
@@ -200,6 +199,22 @@ export default class TransferImages {
         })
     }
 
+    private changeAttributes(data: any): void
+    {
+        if (!data.hasOwnProperty('fileUrl') || !data.hasOwnProperty('postId')) return;
+        const remoteUuid = data.hasOwnProperty('uploadcare_uuid') ? data.uploadcare_uuid : '';
+        const targetBtn = document.getElementById(`uc-download-${data.postId}`) || document.createElement('button');
+
+        if (typeof remoteUuid === "string" && remoteUuid.length > 0) {
+            targetBtn.dataset.uuid = remoteUuid
+        } else {
+            targetBtn.dataset.uuid = '';
+        }
+
+        TransferImages.setAttributes(data.postId, data.fileUrl)
+        this.setProgress(0);
+    }
+
     private static showError(data: string): void {
         const errorPlace = document.getElementById('uc-error-place');
         if (!(errorPlace instanceof HTMLElement))
@@ -210,7 +225,7 @@ export default class TransferImages {
         window.scrollTo(0, 0);
     }
 
-    private setAttributes(postId: number | null, url: string): void {
+    private static setAttributes(postId: number | null, url: string): void {
         if (postId === null) return;
 
         const image = document.getElementById(`image-${postId}`);
