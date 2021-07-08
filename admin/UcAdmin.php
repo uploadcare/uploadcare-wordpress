@@ -468,10 +468,17 @@ HTML;
             ]);
             return;
         }
+        $post = \get_post($postId);
+        $path = 'edit.php';
+        if ($post->post_type === 'page') {
+            $path .= '?post_type=page';
+        }
+        $linkBack = \admin_url($path);
 
         echo $this->twig->render('transfer-by-post.html.twig', [
             'parentPost' => \get_post($postId),
             'media' => (new MediaDataLoader())->loadMediaForPost((int) $postId),
+            'linkBack' => $linkBack,
         ]);
     }
 

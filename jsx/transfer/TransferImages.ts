@@ -44,7 +44,7 @@ export default class TransferImages {
     private checkLocalExists(): boolean {
         const btns = TransferImages.getNodeList(`button[data-action="${this.uploadBtnSelector}"]`);
         const enabled = Array.prototype.slice.call(btns).filter((b: HTMLButtonElement) => {
-                return !b.disabled && !b.classList.contains('hidden');
+                return b.style.display !== 'none';
             });
 
         return enabled.length > 0;
@@ -70,14 +70,35 @@ export default class TransferImages {
 
     private toggleTransferAllAction(): void {
         if (this.uploadAllButton === null) return;
+        const lb = document.getElementById('linkBack');
 
         if (this.checkLocalExists()) {
             this.uploadAllButton.removeAttribute('disabled');
             this.uploadAllButton.addEventListener('click', ev => {
-                this.uploadAllAction(ev)
-            })
+                this.uploadAllAction(ev).then(() => {
+                    if (this.uploadAllButton instanceof HTMLButtonElement) {
+                        this.toggleTransferAllAction()
+                    }
+                })
+            });
+            this.uploadAllButton.style.display = 'inline-block'
+            if (lb instanceof HTMLElement) {
+                lb.style.display = 'none'
+            }
         } else {
             this.uploadAllButton.setAttribute('disabled', '1');
+
+            const btnData = this.uploadAllButton.dataset;
+            if (btnData.hasOwnProperty('linkBack')) {
+                const linkBack = btnData['linkBack'];
+
+                if (linkBack != null) {
+                    this.uploadAllButton.style.display = 'none'
+                    if (lb instanceof HTMLElement) {
+                        lb.style.display = 'inline-block'
+                    }
+                }
+            }
         }
     }
 
@@ -114,11 +135,9 @@ export default class TransferImages {
             {property: 'action', value: 'uploadcare_upload_multiply'},
             {property: 'posts', value: postsArray},
         ]);
-        await this.fetchAction(data, target)
+        await this.fetchAction(data, target);
 
-        if (this.uploadAllButton instanceof HTMLButtonElement) {
-            this.toggleTransferAllAction()
-        }
+        return Promise.resolve();
     }
 
     private uploadAction(ev: MouseEvent): void {
@@ -196,6 +215,10 @@ export default class TransferImages {
         }).finally(() => {
             this.removeBeforeUnload();
             target.innerHTML = originalButton;
+
+            if (this.uploadAllButton instanceof HTMLButtonElement) {
+                this.toggleTransferAllAction()
+            }
         })
     }
 
@@ -213,6 +236,10 @@ export default class TransferImages {
 
         TransferImages.setAttributes(data.postId, data.fileUrl)
         this.setProgress(0);
+
+        if (this.uploadAllButton instanceof HTMLButtonElement) {
+            this.toggleTransferAllAction()
+        }
     }
 
     private static showError(data: string): void {

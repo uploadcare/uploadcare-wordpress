@@ -5,7 +5,8 @@
         "{{ parentPost.post_title }}" {{ 'from' }} {{ parentPost.date | date }}<br>
     </h2>
     <div class="text-start">
-        <button id="uploadAll" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
+        <button id="uploadAll" data-link-back="{{ linkBack }}" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
+        <a id="linkBack" href="{{ linkBack }}" class="btn btn-outline-primary rounded-0" style="display: none">{{ 'Back to list' | trans }}</a>
         <p class="mt-2">
             {{ 'Transfer files for post.' | trans }}<br>
             {% include '_includes/console_utility_link.html.twig' %}
