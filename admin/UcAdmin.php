@@ -434,13 +434,12 @@ class UcAdmin
         echo <<<HTML
 <div class="uc-picker-wrapper $styleDef">
     <p class="uploadcare-picker">
-        <button id="uploadcare-post-upload-ui-btn"
-           onclick="ucb_click(this)"
+        <a id="uploadcare-post-upload-ui-btn"
            class="button button-hero"
            style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
-           href="#">
+           href="$href">
             $btn
-        </button>
+        </a>
     </p>
     <p class="max-upload-size">$sign</p>
 </div>
