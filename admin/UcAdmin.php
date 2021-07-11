@@ -475,9 +475,10 @@ HTML;
         }
         $linkBack = \admin_url($path);
 
+        $loader = new MediaDataLoader();
         echo $this->twig->render('transfer-by-post.html.twig', [
             'parentPost' => \get_post($postId),
-            'media' => (new MediaDataLoader())->loadMediaForPost((int) $postId),
+            'media' => $loader->loadMediaForPost((int) $postId),
             'linkBack' => $linkBack,
         ]);
     }
@@ -498,6 +499,8 @@ HTML;
             'postPerPage' => MediaDataLoader::POST_PER_PAGE,
             'page' => $page,
             'pagesCount' => \ceil($totalCount / MediaDataLoader::POST_PER_PAGE),
+            'localCount' => $mediaLoader->countImageType(true),
+            'remoteCount' => $mediaLoader->countImageType(false),
         ]);
     }
 

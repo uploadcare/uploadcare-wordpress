@@ -61,6 +61,42 @@ class MediaDataLoader
         return $result;
     }
 
+    public function countImageType(bool $local = false): int
+    {
+        $parameters = $this->imagesQueryParams(1, -1);
+        $metaQuery = [
+            'relation' => 'AND',
+            [
+                'key' => 'uploadcare_uuid',
+                'compare' => 'EXISTS',
+            ],
+            [
+                'key' => 'uploadcare_uuid',
+                'value' => null,
+                'compare' => '!=',
+            ],
+        ];
+
+        if ($local === true) {
+            $metaQuery = [
+                'relation' => 'OR',
+                [
+                    'key' => 'uploadcare_uuid',
+                    'compare' => 'NOT EXISTS',
+                    'value' => '',
+                ],
+                [
+                    'key' => 'uploadcare_uuid',
+                    'value' => null,
+                    'compare' => '=',
+                ]
+            ];
+        }
+        $parameters['meta_query'] = $metaQuery;
+
+        return (new \WP_Query($parameters))->found_posts;
+    }
+
     public function getCount(): int
     {
         return (new \WP_Query(['post_type' => 'attachment', 'post_status' => 'any', 'posts_per_page' => -1]))->found_posts;
