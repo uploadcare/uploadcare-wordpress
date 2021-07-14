@@ -50,7 +50,7 @@ class PluginFileTest extends LoadedPluginTestCase
     public function testUlogFunction(): void
     {
         self::assertTrue(\function_exists('ULog'));
-        \ini_set( 'error_log', $this->logPath);
+        \ini_set('error_log', $this->logPath);
         ULog('foo', 'bar', 'baz');
         $contents = \file_get_contents($this->logPath);
         self::assertStringContainsString('[LOG::Ulog]', $contents);
@@ -61,7 +61,7 @@ class PluginFileTest extends LoadedPluginTestCase
 
     public function testUlogWithoutArguments(): void
     {
-        \ini_set( 'error_log', $this->logPath);
+        \ini_set('error_log', $this->logPath);
         ULog();
         self::assertFalse(\is_file($this->logPath));
     }

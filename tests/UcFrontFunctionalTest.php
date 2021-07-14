@@ -2,19 +2,17 @@
 
 namespace Tests;
 
-use UcFront;
-
 class UcFrontFunctionalTest extends LoadedPluginTestCase
 {
     /**
-     * @var UcFront|\WP_UnitTest_Factory|null
+     * @var \UcFront|\WP_UnitTest_Factory|null
      */
     private $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new UcFront('uploadcare', \UPLOADCARE_VERSION);
+        $this->service = new \UcFront('uploadcare', \UPLOADCARE_VERSION);
     }
 
     public static function getParagraph(): array
@@ -76,7 +74,7 @@ class UcFrontFunctionalTest extends LoadedPluginTestCase
 
     public function testClassExists(): void
     {
-        self::assertInstanceOf(UcFront::class, $this->service);
+        self::assertInstanceOf(\UcFront::class, $this->service);
         $pluginName = (new \ReflectionObject($this->service))->getProperty('pluginName');
         $pluginName->setAccessible(true);
         self::assertEquals('uploadcare', $pluginName->getValue($this->service));

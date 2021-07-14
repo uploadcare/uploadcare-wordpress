@@ -61,6 +61,7 @@ class UcAdminTest extends \WP_UnitTestCase
 
     /**
      * @dataProvider provideRegisteredScripts
+     *
      * @param string $handle
      */
     public function testInitAction(string $handle): void

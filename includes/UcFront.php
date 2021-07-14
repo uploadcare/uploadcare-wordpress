@@ -26,12 +26,17 @@ class UcFront
      */
     private $secureUploads;
 
-    public function __construct($pluginName, $pluginVersion)
+    public function __construct(string $pluginName, string $pluginVersion)
     {
         $this->pluginName = $pluginName;
         $this->pluginVersion = $pluginVersion;
         $this->adaptiveDelivery = (bool) \get_option('uploadcare_adaptive_delivery');
         $this->secureUploads = (bool) \get_option('uploadcare_upload_lifetime', 0) > 0;
+    }
+
+    public function getPluginName(): string
+    {
+        return $this->pluginName;
     }
 
     public function editorPostMeta(): void
@@ -80,6 +85,74 @@ class UcFront
             \wp_localize_script('blink-loader', 'blinkLoaderConfig', $this->getJsConfig());
             \wp_enqueue_script('blink-loader');
         }
+    }
+
+    public function imageSrcSet(array $sources, array $sizeArray, string $src, array $imageMeta, int $attachmentId): array
+    {
+        if (empty(\get_post_meta($attachmentId, 'uploadcare_uuid', true))) {
+            return $sources;
+        }
+
+        $up = \wp_get_upload_dir();
+        if (($baseUrl = $up['baseurl'] ?? null) === null) {
+            return $sources;
+        }
+        $cdnUrl = \sprintf('https://%s', \get_option('uploadcare_cdn_base'));
+        foreach ($sources as $sourceKey => $source) {
+            $url = $source['url'] ?? null;
+            if ($url === null) {
+                continue;
+            }
+
+            $url = \str_replace([$baseUrl, $cdnUrl], '', $url);
+
+            $sources[$sourceKey]['url'] = \sprintf('%s/%s', $cdnUrl, \ltrim($url, '/'));
+        }
+
+        return $sources;
+    }
+
+    public function imageAttachmentMetadata(array $data, int $attachmentId): array
+    {
+        if (($data['sizes'] ?? null) !== null || $this->adaptiveDelivery) {
+            return $data;
+        }
+
+        $item = \get_post($attachmentId);
+        if (!$item instanceof \WP_Post || $item->post_type !== 'attachment') {
+            return $data;
+        }
+
+        $uuid = \get_post_meta($attachmentId, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
+            return $data;
+        }
+
+        $sizes = \wp_get_registered_image_subsizes();
+        $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $uuid);
+        foreach ($sizes as $definition => $sizeArray) {
+            $w = $sizeArray['width'] ?? '1024';
+            $wh = \sprintf('%sx', $w);
+            $modifiedUrl = \sprintf(UploadcareMain::SMART_TEMPLATE, $imageUrl, $wh);
+            $sizes[$definition]['file'] = $modifiedUrl;
+        }
+        $data['sizes'] = $sizes;
+        $data['file'] = $imageUrl;
+
+        return $data;
+    }
+
+    public function imageGetDimensions($dimensions, string $src, array $imageMeta, int $attachmentId)
+    {
+        if (empty(\get_post_meta($attachmentId, 'uploadcare_uuid', true))) {
+            return $dimensions;
+        }
+        $sizes = $imageMeta['sizes'] ?? null;
+        if ($sizes === null) {
+            return $dimensions;
+        }
+
+        return [1024, 1024];
     }
 
     /**
@@ -143,7 +216,7 @@ class UcFront
 
             // If Adaptive delivery is off and we have a remote file — change file url to transformation url
             if (!$this->adaptiveDelivery) {
-                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::RESIZE_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048') : null;
+                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::SMART_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x') : null;
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
@@ -152,7 +225,6 @@ class UcFront
             if ($imageUrl !== null && $isLocal === false) {
                 $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
             }
-            $srcSet = \wp_get_attachment_image_srcset($imageId);
 
             $collation[$node->attr('src')] = $imageUrl;
         });
@@ -243,7 +315,7 @@ class UcFront
     {
         return \preg_replace_callback(self::IMAGE_REGEX, static function (array $data) use ($size) {
             if (\strpos($data[3], 'scale_crop') === false) {
-                $data[3] = \sprintf(UploadcareMain::RESIZE_TEMPLATE, $data[3], $size);
+                $data[3] = \sprintf(UploadcareMain::SMART_TEMPLATE, $data[3], $size);
             }
 
             return $data[1] . $data[2] . $data[3] . $data[4];

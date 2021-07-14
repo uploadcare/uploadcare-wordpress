@@ -9,7 +9,7 @@ use Uploadcare\Interfaces\Response\ProjectInfoInterface;
 
 class UcAdmin
 {
-    const WIDGET_URL = 'https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js';
+    public const WIDGET_URL = 'https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js';
 
     /**
      * @var string
@@ -136,23 +136,25 @@ class UcAdmin
 
     /**
      * Add column to posts / pages table.
-     * Calls by `manage_{$type}_posts_columns` filter (`manage_post_posts_columns` and `manage_page_posts_columns` in this case)
+     * Calls by `manage_{$type}_posts_columns` filter (`manage_post_posts_columns` and `manage_page_posts_columns` in this case).
      *
      * @param array $columns
+     *
      * @return array
      */
     public function addImagesColumn(array $columns): array
     {
         $columns['uploadcare_images'] = __('Local / remote images');
+
         return $columns;
     }
 
     /**
      * Add content to transfer column.
-     * Calls by `manage_{$type}_posts_custom_column` action (`manage_post_posts_columns` and `manage_page_posts_columns` in this case)
+     * Calls by `manage_{$type}_posts_custom_column` action (`manage_post_posts_columns` and `manage_page_posts_columns` in this case).
      *
      * @param string $columnId
-     * @param int $postId
+     * @param int    $postId
      */
     public function manageImagesColumn(string $columnId, int $postId): void
     {
@@ -169,11 +171,13 @@ class UcAdmin
         $ucImages = $count['uploadcare'] ?? 0;
         if ($localImages <= 0 && $ucImages > 0) {
             echo \sprintf('All %d images transferred', $ucImages);
+
             return;
         }
 
         if ($localImages <= 0 && $ucImages <= 0) {
             echo 'No images in post';
+
             return;
         }
 
@@ -248,6 +252,7 @@ class UcAdmin
         if (($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
             try {
                 $this->api->file()->fileInfo($uuid);
+
                 return [
                     'file_url' => \wp_get_attachment_image_src($postId),
                     'uploadcare_url_modifiers' => \get_post_meta($postId, 'uploadcare_url_modifiers', true),
@@ -346,10 +351,10 @@ class UcAdmin
         \wp_die();
     }
 
-    private function filenameFromPostTitle(\WP_Post $post, string $originalName = null): string
+    private function filenameFromPostTitle(WP_Post $post, string $originalName = null): string
     {
         if ($originalName !== null && ($originalExt = \pathinfo($originalName, PATHINFO_EXTENSION)) !== null) {
-            return $post->post_title . '.' .  $originalExt;
+            return $post->post_title . '.' . $originalExt;
         }
 
         $extensions = [
@@ -377,7 +382,7 @@ class UcAdmin
         return $post->post_title;
     }
 
-    private function makeDefaultImageSizes(\WP_Post $post): void
+    private function makeDefaultImageSizes(WP_Post $post): void
     {
         if (!\wp_attachment_is_image($post)) {
             return;
@@ -466,6 +471,7 @@ HTML;
             echo $this->twig->render('error.html.twig', [
                 'message' => \sprintf('Post undefined. <a href="%s">Go back.</a>', \admin_url()),
             ]);
+
             return;
         }
         $post = \get_post($postId);

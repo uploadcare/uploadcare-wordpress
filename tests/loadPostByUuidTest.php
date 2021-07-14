@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use UcAdmin;
-
 class loadPostByUuidTest extends LoadedPluginTestCase
 {
     /**
@@ -32,7 +30,7 @@ class loadPostByUuidTest extends LoadedPluginTestCase
 
     public function testLoadIdFromUuid(): void
     {
-        $admin = new UcAdmin('uploadcare', 'TEST_VERSION');
+        $admin = new \UcAdmin('uploadcare', 'TEST_VERSION');
         $post = $admin->loadPostByUuid(self::UUID);
         self::assertEquals($this->post, $post->ID);
     }

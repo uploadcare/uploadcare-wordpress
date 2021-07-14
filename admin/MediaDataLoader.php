@@ -35,7 +35,7 @@ class MediaDataLoader
                 'key' => 'uploadcare_uuid',
                 'value' => null,
                 'compare' => '!=',
-            ]
+            ],
         ];
         $ucCount = (new \WP_Query($parameters))->found_posts;
 
@@ -89,7 +89,7 @@ class MediaDataLoader
                     'key' => 'uploadcare_uuid',
                     'value' => null,
                     'compare' => '=',
-                ]
+                ],
             ];
         }
         $parameters['meta_query'] = $metaQuery;

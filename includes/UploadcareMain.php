@@ -6,6 +6,7 @@ class UploadcareMain
     public const SCALE_CROP_TEMPLATE = '%s-/preview/%s/';
     public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
     public const PREVIEW_TEMPLATE = '%s-/preview/160x160/-/resize/160x/-/scale_crop/160x160/';
+    public const SMART_TEMPLATE = '%s-/format/auto/-/quality/smart/-/resize/%s/';
     public const UUID_REGEX = '/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/';
 
     /**
@@ -50,7 +51,7 @@ class UploadcareMain
         return $matches[0] ?? null;
     }
 
-    private function set_locale()
+    private function set_locale(): void
     {
         $this->loader->add_action('plugins_loaded', new UcI18n($this->plugin_name), 'load_plugin_textdomain');
     }
@@ -60,7 +61,7 @@ class UploadcareMain
      *
      * @return void
      */
-    private function defineFrontHooks()
+    private function defineFrontHooks(): void
     {
         $ucFront = new UcFront($this->get_plugin_name(), $this->get_version());
 
@@ -69,6 +70,9 @@ class UploadcareMain
         $this->loader->add_action('wp_enqueue_scripts', $ucFront, 'frontendScripts');
         $this->loader->add_filter('render_block', $ucFront, 'renderBlock', 0, 2);
         $this->loader->add_filter('post_thumbnail_html', $ucFront, 'postFeaturedImage', 10, 5);
+        $this->loader->add_filter('wp_calculate_image_srcset', $ucFront, 'imageSrcSet', 10, 5);
+        $this->loader->add_filter('wp_get_attachment_metadata', $ucFront, 'imageAttachmentMetadata', 10, 2);
+        $this->loader->add_filter('wp_image_src_get_dimensions', $ucFront, 'imageGetDimensions', 10, 4);
     }
 
     /**
