@@ -107,7 +107,10 @@ class UcFront
         $blocks = ['core/image', 'uploadcare/image'];
 
         if (\in_array($block['blockName'], $blocks, true)) {
-            $itemId = $block['blockName'] === 'core/image' ? $block['attrs']['id'] : $block['attrs']['mediaID'];
+            $itemId = $block['blockName'] === 'core/image' ? ($block['attrs']['id'] ?? null) : ($block['attrs']['mediaID'] ?? null);
+            if ($itemId === null) {
+                return $content;
+            }
 
             return $this->changeContent($content, (int) $itemId);
         }
@@ -149,6 +152,7 @@ class UcFront
             if ($imageUrl !== null && $isLocal === false) {
                 $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
             }
+            $srcSet = \wp_get_attachment_image_srcset($imageId);
 
             $collation[$node->attr('src')] = $imageUrl;
         });
