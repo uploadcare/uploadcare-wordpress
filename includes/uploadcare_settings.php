@@ -65,7 +65,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_blink_loader      = \trim(get_option('uploadcare_blink_loader'));
     $uploadcare_source_tabs       = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_upload_lifetime   = get_option('uploadcare_upload_lifetime', '0');
-    $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
+    $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', false);
 }
 
 $admin = new UcAdmin('uploadcare', defined('UPLOADCARE_VERSION') ? UPLOADCARE_VERSION : '3.0.0');
@@ -147,7 +147,18 @@ try {
         }
         ?>
 
-        <h4><?= __('5. Start uploading', 'uploadcare') ?></h4>
+        <h4>5. <?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
+        <p>
+            <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
+                   value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
+            >
+            <label for="uc_uploadcare_adaptive_delivery">
+                <?= __("Use Adaptive Delivery whenever possible. Uncheck only to force disable it.") ?>
+            </label>
+        </p>
+        <p><?= __('Note: when disabled, a standard CDN option will be used instead, and images won\'t be responsive to screen sizes.', 'uploadcare')?></p>
+
+        <h3><?= __('Start uploading', 'uploadcare') ?></h3>
         <?php
         $mediaNew = \get_site_url(null, '/wp-admin/media-new.php');
         $editPost = \get_site_url(null, '/wp-admin/edit.php');
@@ -178,17 +189,6 @@ try {
                        value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
             </p>
             <p><?= __('Note: this feature will disable Adaptive Delivery for files that are not hosted with Uploadcare.', 'uploadcare')?></p>
-
-            <h4><?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
-            <p>
-                <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
-                       value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
-                >
-                <label for="uc_uploadcare_adaptive_delivery">
-                    <?= __("Use Adaptive Delivery whenever possible. Uncheck only to force disable it.") ?>
-                </label>
-            </p>
-            <p><?= __('Note: when disabled, a standard CDN option will be used instead, and images won\'t be responsive to screen sizes.', 'uploadcare')?></p>
 
             <!-- <h4><?= __('Adaptive Delivery options', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/#adaptive-integrate-sdk">[?]</a></h4>
             <p>
