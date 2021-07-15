@@ -19,7 +19,7 @@
  */
 class Uploadcare_Wordpress_Plugin
 {
-    public const UPLOADCARE_VERSION = '3.0.6';
+    public const UPLOADCARE_VERSION = '3.0.7';
 
     public function __construct()
     {

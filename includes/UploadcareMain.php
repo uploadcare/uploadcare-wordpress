@@ -109,7 +109,7 @@ class UploadcareMain
     /**
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $this->loader->run();
     }
@@ -117,7 +117,7 @@ class UploadcareMain
     /**
      * @return string
      */
-    public function get_plugin_name()
+    public function get_plugin_name(): string
     {
         return $this->plugin_name;
     }
@@ -125,7 +125,7 @@ class UploadcareMain
     /**
      * @return string
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     }
@@ -133,7 +133,7 @@ class UploadcareMain
     /**
      * @return UcLoader
      */
-    public function get_loader()
+    public function get_loader(): UcLoader
     {
         return $this->loader;
     }
