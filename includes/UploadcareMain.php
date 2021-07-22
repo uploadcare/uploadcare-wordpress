@@ -73,6 +73,7 @@ class UploadcareMain
         $this->loader->add_filter('wp_calculate_image_srcset', $ucFront, 'imageSrcSet', 10, 5);
         $this->loader->add_filter('wp_get_attachment_metadata', $ucFront, 'imageAttachmentMetadata', 10, 2);
         $this->loader->add_filter('wp_image_src_get_dimensions', $ucFront, 'imageGetDimensions', 10, 4);
+        $this->loader->add_filter('wp_get_attachment_image_src', $ucFront, 'getImageSrc', 10, 4);
     }
 
     /**

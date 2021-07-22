@@ -87,6 +87,17 @@ class UcFront
         }
     }
 
+    /**
+     * Calls on `wp_calculate_image_srcset`
+     * @see UploadcareMain::defineFrontHooks()
+     *
+     * @param array $sources
+     * @param array $sizeArray
+     * @param string $src
+     * @param array $imageMeta
+     * @param int $attachmentId
+     * @return array
+     */
     public function imageSrcSet(array $sources, array $sizeArray, string $src, array $imageMeta, int $attachmentId): array
     {
         if (empty(\get_post_meta($attachmentId, 'uploadcare_uuid', true))) {
@@ -112,6 +123,14 @@ class UcFront
         return $sources;
     }
 
+    /**
+     * Calls on `wp_get_attachment_metadata`
+     * @see UploadcareMain::defineFrontHooks()
+     *
+     * @param array $data
+     * @param int $attachmentId
+     * @return array
+     */
     public function imageAttachmentMetadata(array $data, int $attachmentId): array
     {
         if (($data['sizes'] ?? null) !== null || $this->adaptiveDelivery) {
@@ -142,6 +161,16 @@ class UcFront
         return $data;
     }
 
+    /**
+     * Calls on `wp_image_src_get_dimensions`
+     * @see UploadcareMain::defineFrontHooks()
+     *
+     * @param $dimensions
+     * @param string $src
+     * @param array $imageMeta
+     * @param int $attachmentId
+     * @return int[]|mixed
+     */
     public function imageGetDimensions($dimensions, string $src, array $imageMeta, int $attachmentId)
     {
         if (empty(\get_post_meta($attachmentId, 'uploadcare_uuid', true))) {
@@ -153,6 +182,43 @@ class UcFront
         }
 
         return [1024, 1024];
+    }
+
+    /**
+     * Calls on `wp_get_attachment_image_src`
+     *
+     * @param $image
+     * @param int $attachmentId
+     * @param $size
+     * @param bool $icon
+     * @return array|mixed
+     */
+    public function getImageSrc($image, int $attachmentId, $size, bool $icon)
+    {
+        if (!\is_array($image)) {
+            return $image;
+        }
+
+        $src = $image[0] ?? null;
+        if ($src === null || \strpos($src, \get_option('uploadcare_cdn_base')) === false) {
+            return $image;
+        }
+
+        $currentWidth = $image[1] ?? null;
+        if ($currentWidth !== null && (int) $currentWidth !== 0) {
+            return $image;
+        }
+
+        $meta = \wp_get_attachment_metadata($attachmentId);
+        $existingMeta = $meta['sizes'][$size] ?? null;
+        if ($existingMeta === null) {
+            $existingMeta = ['width' => $meta['width'] ?? 0, 'height' => $meta['height'] ?? 0];
+        }
+
+        $image[1] = $existingMeta['width'] ?? 0;
+        $image[2] = $existingMeta['height'] ?? 0;
+
+        return $image;
     }
 
     /**
@@ -247,6 +313,9 @@ class UcFront
                 $content = (string) \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
                 $content = (string) \preg_replace('/src=/mu', 'data-blink-uuid=', $content);
             }
+        }
+        if (!$this->adaptiveDelivery) {
+            $content = \wp_image_add_srcset_and_sizes($content, \wp_get_attachment_metadata($imageId), $imageId);
         }
 
         return $content;
