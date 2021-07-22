@@ -429,8 +429,10 @@ class UcAdmin
         $btn = __('Upload via Uploadcare', $this->plugin_name);
         $href = '#';
 
-        $styleDef = \get_current_screen() !== null ? \get_current_screen()->action : null;
-        if (\get_current_screen() !== null && 'add' !== \get_current_screen()->action) {
+        $scr = \get_current_screen();
+        $isMediaAdd = $scr instanceof \WP_Screen && $scr->base === 'media' && $scr->action === 'add';
+        $styleDef = 'add';
+        if (!$isMediaAdd) {
             $href = \admin_url() . 'media-new.php';
             $sign .= ' <br><strong>' . __('from Wordpress upload page') . '</strong>';
             $styleDef = 'wrap-margin';
