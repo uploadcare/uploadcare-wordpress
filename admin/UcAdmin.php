@@ -835,14 +835,13 @@ HTML;
     {
         $tab_options = get_option('uploadcare_source_tabs', [
             'file',
+            'camera',
             'url',
+            'dropbox',
             'facebook',
             'instagram',
-            'flickr',
             'gdrive',
-            'evernote',
-            'box',
-            'skydrive',
+            'gphotos',
         ]);
         if (in_array('all', $tab_options, true)) {
             $tabs = 'all';
