@@ -141,7 +141,7 @@ try {
         }
         ?>
 
-        <h4><?= __('4. Start uploading', 'uploadcare') ?></h3>
+        <h4><?= __('4. Start uploading', 'uploadcare') ?></h4>
         <?php
         $mediaNew = \get_site_url(null, '/wp-admin/media-new.php');
         $editPost = \get_site_url(null, '/wp-admin/edit.php');
