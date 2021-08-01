@@ -150,8 +150,7 @@ class UcFront
         $sizes = \wp_get_registered_image_subsizes();
         $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $uuid);
         foreach ($sizes as $definition => $sizeArray) {
-            $w = $sizeArray['width'] ?? '1024';
-            $wh = \sprintf('%sx', $w);
+            $wh = \sprintf('%sx%s', ($sizeArray['width'] ?? '1024'), ($sizeArray['height'] ?? '1024'));
             $modifiedUrl = \sprintf(UploadcareMain::SMART_TEMPLATE, $imageUrl, $wh);
             $sizes[$definition]['file'] = $modifiedUrl;
         }
@@ -282,7 +281,7 @@ class UcFront
 
             // If Adaptive delivery is off and we have a remote file — change file url to transformation url
             if (!$this->adaptiveDelivery) {
-                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::SMART_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x') : null;
+                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::SMART_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048') : null;
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
@@ -345,7 +344,7 @@ class UcFront
      *
      * @return string
      */
-    public function postFeaturedImage($html, $post_id, $post_thumbnail_id, $size, $attr)
+    public function postFeaturedImage($html, $post_id, $post_thumbnail_id, $size, $attr): string
     {
         global $wpdb;
         $resizeParam = '2048x2048';
@@ -380,7 +379,7 @@ class UcFront
      *
      * @return string
      */
-    private function replaceImageUrl($html, $size = '2048x2048')
+    private function replaceImageUrl(string $html, string $size = '2048x2048'): string
     {
         return \preg_replace_callback(self::IMAGE_REGEX, static function (array $data) use ($size) {
             if (\strpos($data[3], 'scale_crop') === false) {
@@ -391,7 +390,7 @@ class UcFront
         }, $html);
     }
 
-    private function getJsConfig()
+    private function getJsConfig(): array
     {
         $baseParams = [
             'pubkey' => \get_option('uploadcare_public'),
