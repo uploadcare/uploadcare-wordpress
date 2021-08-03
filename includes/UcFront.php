@@ -148,11 +148,12 @@ class UcFront
         }
 
         $sizes = \wp_get_registered_image_subsizes();
+        $transform = (string) \get_post_meta($attachmentId, 'uploadcare_url_modifiers', true);
         $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $uuid);
         foreach ($sizes as $definition => $sizeArray) {
             $wh = \sprintf('%sx%s', ($sizeArray['width'] ?? '1024'), ($sizeArray['height'] ?? '1024'));
             $modifiedUrl = \sprintf(UploadcareMain::SMART_TEMPLATE, $imageUrl, $wh);
-            $sizes[$definition]['file'] = $modifiedUrl;
+            $sizes[$definition]['file'] = $modifiedUrl . $transform;
         }
         $data['sizes'] = $sizes;
         $data['file'] = $imageUrl;
