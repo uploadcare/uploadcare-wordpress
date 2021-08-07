@@ -149,10 +149,11 @@ class UcFront
 
         $sizes = \wp_get_registered_image_subsizes();
         $transform = (string) \get_post_meta($attachmentId, 'uploadcare_url_modifiers', true);
-        $imageUrl = \sprintf('https://%s/%s/%s/', \get_option('uploadcare_cdn_base'), $uuid, $transform);
+        $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $uuid);
         foreach ($sizes as $definition => $sizeArray) {
             $wh = \sprintf('%sx%s', ($sizeArray['width'] ?? '1024'), ($sizeArray['height'] ?? '1024'));
-            $sizes[$definition]['file'] = \sprintf(UploadcareMain::SMART_TEMPLATE, $imageUrl, $wh);
+            $transformed = $imageUrl . ($transform ?? '');
+            $sizes[$definition]['file'] = \sprintf(UploadcareMain::SMART_TEMPLATE, $transformed, $wh);
         }
         $data['sizes'] = $sizes;
         $data['file'] = $imageUrl;
@@ -273,22 +274,19 @@ class UcFront
             $isLocal = true;
 
             if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
-                $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $this->getUuid($imageId));
+                $imageUrl = \sprintf('https://%s/%s/%s', \get_option('uploadcare_cdn_base'), $this->getUuid($imageId), $modifiers);
                 $isLocal = false;
             } else {
                 $imageUrl = \wp_get_attachment_image_url($imageId, 'large');
             }
 
-            // If Adaptive delivery is off and we have a remote file — change file url to transformation url
+            // If Adaptive delivery is off, and we have a remote file — change file url to transformation url
             if (!$this->adaptiveDelivery) {
                 $imageUrl = !$isLocal ? \sprintf(UploadcareMain::SMART_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048') : null;
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
                 $imageUrl = !$isLocal ? $this->getUuid($imageId) : null;
-            }
-            if ($imageUrl !== null && $isLocal === false) {
-                $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
             }
 
             $collation[$node->attr('src')] = $imageUrl;
