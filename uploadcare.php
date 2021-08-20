@@ -17,17 +17,17 @@
  * Text Domain:       uploadcare
  * Domain Path:       /languages
  */
-class Uploadcare_Wordpress_Plugin {
-
-    public const UPLOADCARE_VERSION = '3.0.6';
+class Uploadcare_Wordpress_Plugin
+{
+    public const UPLOADCARE_VERSION = '3.0.7';
 
     public function __construct()
     {
         if (!\defined('WPINC')) {
-            die();
+            exit();
         }
         if (PHP_VERSION_ID < 70100) {
-            exit("Uploadcare plugin requires PHP version <b>7.1+</b>, you've got <b>" . PHP_VERSION . "</b>");
+            exit("Uploadcare plugin requires PHP version <b>7.1+</b>, you've got <b>" . PHP_VERSION . '</b>');
         }
         \defined('UPLOADCARE_VERSION') or \define('UPLOADCARE_VERSION', self::UPLOADCARE_VERSION);
 
@@ -82,6 +82,7 @@ function ULog(...$args)
 function UploadcareUserAgent(): array
 {
     global $wp_version;
+
     return ['Uploadcare-wordpress', \sprintf('%s,%s', $wp_version, Uploadcare_Wordpress_Plugin::UPLOADCARE_VERSION)];
 }
 

@@ -20,14 +20,11 @@ $tab_defaults = [
     'file',
     'camera',
     'url',
+    'dropbox',
     'facebook',
+    'instagram',
     'gdrive',
     'gphotos',
-    'dropbox',
-    'instagram',
-    'evernote',
-    'flickr',
-    'onedrive',
 ];
 
 $saved = false;
@@ -65,7 +62,7 @@ if (isset($_POST['uploadcare_hidden']) && $_POST['uploadcare_hidden'] === 'Y') {
     $uploadcare_blink_loader      = \trim(get_option('uploadcare_blink_loader'));
     $uploadcare_source_tabs       = get_option('uploadcare_source_tabs', $tab_defaults);
     $uploadcare_upload_lifetime   = get_option('uploadcare_upload_lifetime', '0');
-    $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', true);
+    $uploadcare_adaptive_delivery = get_option('uploadcare_adaptive_delivery', false);
 }
 
 $admin = new UcAdmin('uploadcare', defined('UPLOADCARE_VERSION') ? UPLOADCARE_VERSION : '3.0.0');
@@ -131,10 +128,7 @@ try {
                 value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
 
-        <h4><?= __('3. Whitelist your domain', 'uploadcare')?></h4>
-        <p><?= \sprintf(__('At <a href="https://uploadcare.com/dashboard/" target="_blank">Uploadcare Dashboard</a>, go to your project (e.g. "New project") — Delivery — Content delivery settings, and click “Integrate” Adaptive Delivery. Scroll to Step 2 and add your domain to the whitelist. Click Done. That will enable Adaptive Delivery for you website.', 'uploadcare')) ?></p>
-
-        <h4><?= __('4. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
+        <h4><?= __('3. Select Upload Sources', 'uploadcare') ?> <a href="https://uploadcare.com/docs/uploads/file_uploader/#upload-sources" target="_blank">[?]</a></h4>
         <?php
         foreach ($tabs as $tn => $tab) {
             ?>
@@ -147,17 +141,28 @@ try {
         }
         ?>
 
-        <h4><?= __('5. Start uploading', 'uploadcare') ?></h4>
+        <h4><?= __('4. Start uploading', 'uploadcare') ?></h4>
         <?php
         $mediaNew = \get_site_url(null, '/wp-admin/media-new.php');
         $editPost = \get_site_url(null, '/wp-admin/edit.php');
         $editPage = \get_site_url(null, '/wp-admin/edit.php?post_type=page');
         ?>
-        <p><?= \sprintf(__('Upload any file in <a href="%s" target="_blank">Media Library</a>, or choose Uploadcare Image when editing a <a href="%s" target="_blank">post</a> or a <a href="%s" target="_blank">page</a>.', 'uploadcare'),
+        <p><?= \sprintf(__('Upload any file in <a href="%s" target="_blank">Media Library</a>, or choose <strong>Uploadcare Image</strong> when editing a <a href="%s" target="_blank">post</a> or a <a href="%s" target="_blank">page</a>.', 'uploadcare'),
             $mediaNew, $editPost, $editPage) ?></p>
 
         <h3 id="uc-collapse-toggle" class="uc-show-hide uc-toggle"><?= __('Advanced options', 'uploadcare')?></h3>
         <div id="uc-advanced-options" data-toggle="uc-collapse-toggle" class="uc-collapsed hide">
+            <h4><?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
+            <p>
+                <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
+                    value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
+                >
+                <label for="uc_uploadcare_adaptive_delivery">
+                    <?= __("Turn Adaptive Delivery ON.") ?>
+                </label>
+            </p>
+            <p><?= \sprintf(__('Instead of regular responsive images, you can try our experimental technology. It adapts images to user context: screen size, browser, location, and other parameters. The optimization includes lazy loading, smart compression, WebP, responsive images, and retina display support. Add your domain to the list of allowed domains at <a href="https://uploadcare.com/dashboard/" target="_blank">Uploadcare Dashboard</a>, go to your project (e.g. "New project") — Delivery — Content delivery settings, and click “Integrate” Adaptive Delivery. Scroll to Step 2 and add your domain to the list of allowed domains. Click Done. That will enable Adaptive Delivery on your website.', 'uploadcare')) ?></p>
+
             <h4><?= __('Backup', 'uploadcare')?> <a href="https://uploadcare.com/docs/start/settings/#project-settings-advanced-backup" target="_blank">[?]</a></h4>
             <p><?= __('All your Uploadcare files are backed up automatically. Additionally, you can configure backups to your Amazong S3 Bucket in <a href="https://uploadcare.com/dashboard/" target="_blank">Dashboard</a>, Uploading settings.', 'uploadcare')?></p>
 
@@ -178,17 +183,6 @@ try {
                        value="<?php echo $uploadcare_upload_lifetime; ?>" size="20">
             </p>
             <p><?= __('Note: this feature will disable Adaptive Delivery for files that are not hosted with Uploadcare.', 'uploadcare')?></p>
-
-            <h4><?= __('Adaptive Delivery', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/" target="_blank">[?]</a></h4>
-            <p>
-                <input name="uploadcare_adaptive_delivery" id="uc_uploadcare_adaptive_delivery" type="checkbox"
-                       value="1" <?= $uploadcare_adaptive_delivery ? 'checked' : null ?>
-                >
-                <label for="uc_uploadcare_adaptive_delivery">
-                    <?= __("Use Adaptive Delivery whenever possible. Uncheck only to force disable it.") ?>
-                </label>
-            </p>
-            <p><?= __('Note: when disabled, a standard CDN option will be used instead, and images won\'t be responsive to screen sizes.', 'uploadcare')?></p>
 
             <!-- <h4><?= __('Adaptive Delivery options', 'uploadcare')?> <a href="https://uploadcare.com/docs/delivery/adaptive_delivery/#adaptive-integrate-sdk">[?]</a></h4>
             <p>

@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <h2>
+        "{{ parentPost.post_title }}" {{ 'from' }} {{ parentPost.date | date }}<br>
+    </h2>
+    <div class="text-start">
+        <button id="uploadAll" data-link-back="{{ linkBack }}" class="btn btn-outline-primary rounded-0">{{ 'Transfer all files to Uploadcare' | trans }}</button>
+        <a id="linkBack" href="{{ linkBack }}" class="btn btn-outline-primary rounded-0" style="display: none">{{ 'Back to list' | trans }}</a>
+        <p class="mt-2">
+            {{ 'Transfer files for post.' | trans }}<br>
+            {% include '_includes/console_utility_link.html.twig' %}
+        </p>
+    </div>
+    <div class="alert alert-danger hidden" id="uc-error-place"></div>
+    <div class="progress rounded-0" id="transferProgress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 0"></div>
+    </div>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>{{ 'Preview' | trans }}</th>
+                <th>{{ 'Media data' | trans }}</th>
+                <th class="text-center">{{ 'Transferred' | trans }}</th>
+                <th class="text-center">{{ 'Actions' | trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in media %}
+                {% include '_includes/_table_row.html.twig' with { 'post': post } %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ add_js('transfer.js') }}
+{% endblock %}

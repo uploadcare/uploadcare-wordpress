@@ -6,6 +6,7 @@ class UploadcareMain
     public const SCALE_CROP_TEMPLATE = '%s-/preview/%s/';
     public const RESIZE_TEMPLATE = '%s-/preview/%s/-/quality/lightest/-/format/auto/';
     public const PREVIEW_TEMPLATE = '%s-/preview/160x160/-/resize/160x/-/scale_crop/160x160/';
+    public const SMART_TEMPLATE = '%s-/format/auto/-/quality/smart/-/preview/%s/';
     public const UUID_REGEX = '/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/';
 
     /**
@@ -50,7 +51,7 @@ class UploadcareMain
         return $matches[0] ?? null;
     }
 
-    private function set_locale()
+    private function set_locale(): void
     {
         $this->loader->add_action('plugins_loaded', new UcI18n($this->plugin_name), 'load_plugin_textdomain');
     }
@@ -60,7 +61,7 @@ class UploadcareMain
      *
      * @return void
      */
-    private function defineFrontHooks()
+    private function defineFrontHooks(): void
     {
         $ucFront = new UcFront($this->get_plugin_name(), $this->get_version());
 
@@ -69,6 +70,10 @@ class UploadcareMain
         $this->loader->add_action('wp_enqueue_scripts', $ucFront, 'frontendScripts');
         $this->loader->add_filter('render_block', $ucFront, 'renderBlock', 0, 2);
         $this->loader->add_filter('post_thumbnail_html', $ucFront, 'postFeaturedImage', 10, 5);
+        $this->loader->add_filter('wp_calculate_image_srcset', $ucFront, 'imageSrcSet', 10, 5);
+        $this->loader->add_filter('wp_get_attachment_metadata', $ucFront, 'imageAttachmentMetadata', 10, 2);
+        $this->loader->add_filter('wp_image_src_get_dimensions', $ucFront, 'imageGetDimensions', 10, 4);
+        $this->loader->add_filter('wp_get_attachment_image_src', $ucFront, 'getImageSrc', 10, 4);
     }
 
     /**
@@ -86,21 +91,26 @@ class UploadcareMain
         $this->loader->add_action('wp_ajax_uploadcare_handle', $plugin_admin, 'uploadcare_handle');
         $this->loader->add_action('wp_ajax_uploadcare_transfer', $plugin_admin, 'transferUp');
         $this->loader->add_action('wp_ajax_uploadcare_down', $plugin_admin, 'transferDown');
+        $this->loader->add_action('wp_ajax_uploadcare_upload_multiply', $plugin_admin, 'transferMultiplyUp');
         $this->loader->add_action('post-upload-ui', $plugin_admin, 'uploadcare_media_upload');
         $this->loader->add_action('admin_menu', $plugin_admin, 'uploadcare_settings_actions');
         $this->loader->add_action('delete_attachment', $plugin_admin, 'attachmentDelete', 10, 2);
+        $this->loader->add_action('manage_post_posts_custom_column', $plugin_admin, 'manageImagesColumn', 10, 2);
+        $this->loader->add_action('manage_page_posts_custom_column', $plugin_admin, 'manageImagesColumn', 10, 2);
 
         $this->loader->add_filter('plugin_action_links_uploadcare/uploadcare.php', $plugin_admin, 'plugin_action_links');
         $this->loader->add_filter('load_image_to_edit_attachmenturl', $plugin_admin, 'uc_load', 10, 2);
         $this->loader->add_filter('wp_get_attachment_url', $plugin_admin, 'uc_get_attachment_url', 8, 2);
         $this->loader->add_filter('image_downsize', $plugin_admin, 'uploadcare_image_downsize', 9, 3);
         $this->loader->add_filter('post_thumbnail_html', $plugin_admin, 'uploadcare_post_thumbnail_html', 10, 5);
+        $this->loader->add_filter('manage_post_posts_columns', $plugin_admin, 'addImagesColumn', 10, 1);
+        $this->loader->add_filter('manage_page_posts_columns', $plugin_admin, 'addImagesColumn', 10, 1);
     }
 
     /**
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $this->loader->run();
     }
@@ -108,7 +118,7 @@ class UploadcareMain
     /**
      * @return string
      */
-    public function get_plugin_name()
+    public function get_plugin_name(): string
     {
         return $this->plugin_name;
     }
@@ -116,7 +126,7 @@ class UploadcareMain
     /**
      * @return string
      */
-    public function get_version()
+    public function get_version(): string
     {
         return $this->version;
     }
@@ -124,7 +134,7 @@ class UploadcareMain
     /**
      * @return UcLoader
      */
-    public function get_loader()
+    public function get_loader(): UcLoader
     {
         return $this->loader;
     }

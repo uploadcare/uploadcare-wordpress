@@ -12,9 +12,9 @@ Donate link: https://uploadcare.com/pricing/
 
 == Description ==
 
-Uploadcare, all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from many sources including social media and cloud services. Insert them to WordPress posts and serve responsive lazy loaded images with Uploadcare CDN to improve your WordPress site performance.
+Uploadcare, an all-round media upload, storage, management, and delivery solution, breaks many WordPress Media Library limitations. Upload large files from various sources, including social media and cloud services. Insert them into WordPress posts and serve optimized, responsive images with Uploadcare CDN to improve your WordPress site performance.
 
-This plugin allows WordPress authors upload images and other files with Uploadcare File Uploader while creating posts and pages. You can migrate your current Media Library to your Uploadcare storage, use Adaptive Delivery and other Uploadcare features.
+This plugin allows WordPress authors to upload images and other files with Uploadcare File Uploader while creating posts and pages. All files hosted on Uploadcare CDN are served with smart format and quality optimizations to ensure the smallest file size while preserving the visual quality. You can migrate your existing Media Library to Uploadcare and use various other features.
 
 [youtube https://www.youtube.com/watch?v=7Nc7GyD6_AE]
 
@@ -131,6 +131,14 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.0.7 =
+
+* Changed plugin responsive images default mechanism to leverage default WordPress "srcset" behavior improved with our smart image quality and auto format features.
+* Returned Uploadcare upload button to a default upload option.
+* Added an option to transfer files to Uploadcare storage post by post.
+* Created console utility to transfer all files at once.
+* Minor bug fixes and improvements.
 
 = 3.0.6 =
 

@@ -44,7 +44,7 @@ export default class TransferImages {
     private checkLocalExists(): boolean {
         const btns = TransferImages.getNodeList(`button[data-action="${this.uploadBtnSelector}"]`);
         const enabled = Array.prototype.slice.call(btns).filter((b: HTMLButtonElement) => {
-                return !b.disabled && !b.classList.contains('hidden');
+                return b.style.display !== 'none';
             });
 
         return enabled.length > 0;
@@ -70,14 +70,35 @@ export default class TransferImages {
 
     private toggleTransferAllAction(): void {
         if (this.uploadAllButton === null) return;
+        const lb = document.getElementById('linkBack');
 
         if (this.checkLocalExists()) {
             this.uploadAllButton.removeAttribute('disabled');
             this.uploadAllButton.addEventListener('click', ev => {
-                this.uploadAllAction(ev)
-            })
+                this.uploadAllAction(ev).then(() => {
+                    if (this.uploadAllButton instanceof HTMLButtonElement) {
+                        this.toggleTransferAllAction()
+                    }
+                })
+            });
+            this.uploadAllButton.style.display = 'inline-block'
+            if (lb instanceof HTMLElement) {
+                lb.style.display = 'none'
+            }
         } else {
             this.uploadAllButton.setAttribute('disabled', '1');
+
+            const btnData = this.uploadAllButton.dataset;
+            if (btnData.hasOwnProperty('linkBack')) {
+                const linkBack = btnData['linkBack'];
+
+                if (linkBack != null) {
+                    this.uploadAllButton.style.display = 'none'
+                    if (lb instanceof HTMLElement) {
+                        lb.style.display = 'inline-block'
+                    }
+                }
+            }
         }
     }
 
@@ -90,31 +111,33 @@ export default class TransferImages {
         return data;
     }
 
-    private uploadAllAction(ev: MouseEvent): void {
+    private async uploadAllAction(ev: MouseEvent): Promise<any> {
+        const target = ev.currentTarget;
+        if (!(target instanceof HTMLButtonElement))
+            return;
         ev.preventDefault();
+        target.setAttribute('disabled', '1');
 
         if (this.uploadAllButton instanceof HTMLButtonElement) {
             this.uploadAllButton.disabled = true;
         }
-        Array.prototype.slice.call(this.uploadButtons).forEach(async (b: HTMLButtonElement) => {
+        const postsArray: Array<number> = [];
+        Array.prototype.slice.call(this.uploadButtons).forEach((b: HTMLButtonElement) => {
             const postId = b.dataset.post || false;
             if (postId === false)
-                return false;
+                return;
             if ((b.dataset.uuid || '').length > 0) {
-                return false;
+                return;
             }
+            postsArray.push(parseInt(postId));
+        });
+        const data = this.makeFormData([
+            {property: 'action', value: 'uploadcare_upload_multiply'},
+            {property: 'posts', value: postsArray},
+        ]);
+        await this.fetchAction(data, target);
 
-            const data = this.makeFormData([
-                {property: 'action', value: 'uploadcare_transfer'},
-                {property: 'postId', value: postId}
-            ]);
-
-            await this.fetchAction(data, b);
-        })
-
-        if (this.uploadAllButton instanceof HTMLButtonElement) {
-            this.toggleTransferAllAction()
-        }
+        return Promise.resolve();
     }
 
     private uploadAction(ev: MouseEvent): void {
@@ -173,18 +196,13 @@ export default class TransferImages {
 
             return r.json();
         }).then(data => {
-            if (!data.hasOwnProperty('fileUrl') || !data.hasOwnProperty('postId')) return;
-            const remoteUuid = data.hasOwnProperty('uploadcare_uuid') ? data.uploadcare_uuid : '';
-            const targetBtn = document.getElementById(`uc-download-${data.postId}`) || document.createElement('button');
-
-            if (typeof remoteUuid === "string" && remoteUuid.length > 0) {
-                targetBtn.dataset.uuid = remoteUuid
-            } else {
-                targetBtn.dataset.uuid = '';
+            if (data.hasOwnProperty('fileUrl')) {
+                this.changeAttributes(data);
+            }
+            if (data instanceof Array) {
+                data.forEach(obj => this.changeAttributes(obj));
             }
 
-            this.setAttributes(data.postId, data.fileUrl)
-            this.setProgress(0);
         }).catch((e) => {
             if (e instanceof Promise) {
                 e.then(data => {
@@ -197,7 +215,31 @@ export default class TransferImages {
         }).finally(() => {
             this.removeBeforeUnload();
             target.innerHTML = originalButton;
+
+            if (this.uploadAllButton instanceof HTMLButtonElement) {
+                this.toggleTransferAllAction()
+            }
         })
+    }
+
+    private changeAttributes(data: any): void
+    {
+        if (!data.hasOwnProperty('fileUrl') || !data.hasOwnProperty('postId')) return;
+        const remoteUuid = data.hasOwnProperty('uploadcare_uuid') ? data.uploadcare_uuid : '';
+        const targetBtn = document.getElementById(`uc-download-${data.postId}`) || document.createElement('button');
+
+        if (typeof remoteUuid === "string" && remoteUuid.length > 0) {
+            targetBtn.dataset.uuid = remoteUuid
+        } else {
+            targetBtn.dataset.uuid = '';
+        }
+
+        TransferImages.setAttributes(data.postId, data.fileUrl)
+        this.setProgress(0);
+
+        if (this.uploadAllButton instanceof HTMLButtonElement) {
+            this.toggleTransferAllAction()
+        }
     }
 
     private static showError(data: string): void {
@@ -210,7 +252,7 @@ export default class TransferImages {
         window.scrollTo(0, 0);
     }
 
-    private setAttributes(postId: number | null, url: string): void {
+    private static setAttributes(postId: number | null, url: string): void {
         if (postId === null) return;
 
         const image = document.getElementById(`image-${postId}`);

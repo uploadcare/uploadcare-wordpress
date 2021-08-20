@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use Exception;
-use UcAdmin;
 use Uploadcare\Interfaces\Api\FileApiInterface;
 use Uploadcare\Interfaces\File\FileInfoInterface;
 
@@ -12,18 +10,18 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase
     private $logPath = __DIR__ . '/_output/error.log';
 
     /**
-     * @var UcAdmin|\WP_UnitTest_Factory|null
+     * @var \UcAdmin|\WP_UnitTest_Factory|null
      */
     private $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new UcAdmin('uploadcare', 'UPLOADCARE_TEST');
+        $this->service = new \UcAdmin('uploadcare', 'UPLOADCARE_TEST');
         if (\is_file($this->logPath)) {
             \unlink($this->logPath);
         }
-        \ini_set( 'error_log', $this->logPath);
+        \ini_set('error_log', $this->logPath);
     }
 
     protected function getLog(): ?string
@@ -72,7 +70,7 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase
         $fileApi = $this->getMockBuilder(FileApiInterface::class)
                         ->getMock();
         $fileApi->expects(self::once())->method('deleteFile')
-            ->willThrowException(new Exception())
+            ->willThrowException(new \Exception())
         ;
         $api = $this->getMockBuilder(\Uploadcare\Api::class)
                     ->disableOriginalConstructor()

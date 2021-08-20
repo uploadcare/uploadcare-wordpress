@@ -9,7 +9,7 @@ use Uploadcare\Interfaces\Response\ProjectInfoInterface;
 
 class UcAdmin
 {
-    const WIDGET_URL = 'https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js';
+    public const WIDGET_URL = 'https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js';
 
     /**
      * @var string
@@ -135,6 +135,57 @@ class UcAdmin
     }
 
     /**
+     * Add column to posts / pages table.
+     * Calls by `manage_{$type}_posts_columns` filter (`manage_post_posts_columns` and `manage_page_posts_columns` in this case).
+     *
+     * @param array $columns
+     *
+     * @return array
+     */
+    public function addImagesColumn(array $columns): array
+    {
+        $columns['uploadcare_images'] = __('Local / remote images');
+
+        return $columns;
+    }
+
+    /**
+     * Add content to transfer column.
+     * Calls by `manage_{$type}_posts_custom_column` action (`manage_post_posts_columns` and `manage_page_posts_columns` in this case).
+     *
+     * @param string $columnId
+     * @param int    $postId
+     */
+    public function manageImagesColumn(string $columnId, int $postId): void
+    {
+        if ($columnId !== 'uploadcare_images') {
+            return;
+        }
+        $link = \admin_url(\sprintf('/admin.php?page=transfer-by-post&postId=%d', $postId));
+        $count = (new MediaDataLoader())->countMediaForPost($postId);
+
+        $localImages = 0;
+        if (($count['total'] ?? 0) > 0) {
+            $localImages = $count['total'] - ($count['uploadcare'] ?? 0);
+        }
+        $ucImages = $count['uploadcare'] ?? 0;
+        if ($localImages <= 0 && $ucImages > 0) {
+            echo \sprintf('All %d images transferred', $ucImages);
+
+            return;
+        }
+
+        if ($localImages <= 0 && $ucImages <= 0) {
+            echo 'No images in post';
+
+            return;
+        }
+
+        /** @noinspection HtmlUnknownTarget */
+        echo \sprintf('%d / %d <a href="%s">Transfer to remote</a>', $localImages, $ucImages, $link);
+    }
+
+    /**
      * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_handle`).
      *
      * @see https://developer.wordpress.org/reference/hooks/wp_ajax_action/
@@ -174,16 +225,39 @@ class UcAdmin
         if ($postId === null) {
             \wp_die(__('Required parameter is not set', 'uploadcare'), '', 400);
         }
+        $result = $this->transferPostUp((int) $postId);
+        echo \wp_json_encode($result);
+        \wp_die();
+    }
+
+    public function transferMultiplyUp(): void
+    {
+        $posts = $_POST['posts'] ?? null;
+        if ($posts === null) {
+            \wp_die(__('Required parameter is not set', 'uploadcare'), '', 400);
+        }
+        // JS sends array as `posts=1,2,3`
+        $posts = \explode(',', $posts);
+
+        $result = [];
+        foreach ($posts as $postId) {
+            $result[] = $this->transferPostUp((int) $postId);
+        }
+        echo \wp_json_encode($result);
+        \wp_die();
+    }
+
+    private function transferPostUp(int $postId): array
+    {
         if (($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
             try {
                 $this->api->file()->fileInfo($uuid);
-                $result = [
+
+                return [
                     'file_url' => \wp_get_attachment_image_src($postId),
                     'uploadcare_url_modifiers' => \get_post_meta($postId, 'uploadcare_url_modifiers', true),
                     'postId' => $postId,
                 ];
-                echo \wp_json_encode($result);
-                \wp_die();
             } catch (\Exception $e) {
                 // Do nothing
             }
@@ -202,15 +276,12 @@ class UcAdmin
         }
         $this->attach($uploadedFile, $postId);
 
-        $result = [
+        return [
             'fileUrl' => \wp_get_attachment_image_src($postId)[0] ?? '',
             'uploadcare_url_modifiers' => '',
             'postId' => $postId,
             'uploadcare_uuid' => $uploadedFile->getUuid(),
         ];
-
-        echo \wp_json_encode($result);
-        \wp_die();
     }
 
     /**
@@ -232,7 +303,6 @@ class UcAdmin
         $imageId = \get_post_meta($postId, 'uploadcare_uuid', true);
         try {
             $ucFile = $this->api->file()->fileInfo($imageId);
-            \ULog($ucFile);
         } catch (\Exception $e) {
             \wp_die(__('Unable to get file file info uploadcare', 'uploadcare'), '', 400);
         }
@@ -281,10 +351,10 @@ class UcAdmin
         \wp_die();
     }
 
-    private function filenameFromPostTitle(\WP_Post $post, string $originalName = null): string
+    private function filenameFromPostTitle(WP_Post $post, string $originalName = null): string
     {
         if ($originalName !== null && ($originalExt = \pathinfo($originalName, PATHINFO_EXTENSION)) !== null) {
-            return $post->post_title . '.' .  $originalExt;
+            return $post->post_title . '.' . $originalExt;
         }
 
         $extensions = [
@@ -312,7 +382,7 @@ class UcAdmin
         return $post->post_title;
     }
 
-    private function makeDefaultImageSizes(\WP_Post $post): void
+    private function makeDefaultImageSizes(WP_Post $post): void
     {
         if (!\wp_attachment_is_image($post)) {
             return;
@@ -359,8 +429,10 @@ class UcAdmin
         $btn = __('Upload via Uploadcare', $this->plugin_name);
         $href = '#';
 
-        $styleDef = \get_current_screen() !== null ? \get_current_screen()->action : null;
-        if (\get_current_screen() !== null && 'add' !== \get_current_screen()->action) {
+        $scr = \get_current_screen();
+        $isMediaAdd = $scr instanceof \WP_Screen && $scr->base === 'media' && $scr->action === 'add';
+        $styleDef = 'add';
+        if (!$isMediaAdd) {
             $href = \admin_url() . 'media-new.php';
             $sign .= ' <br><strong>' . __('from Wordpress upload page') . '</strong>';
             $styleDef = 'wrap-margin';
@@ -389,7 +461,34 @@ HTML;
     {
         \add_options_page('Uploadcare', 'Uploadcare', 'upload_files', 'uploadcare', [$this, 'uploadcare_settings']);
         \add_menu_page('Transfer', 'Transfer files', 'administrator', 'uploadcare-transfer', [$this, 'transferFiles'], \plugins_url('/media/logo.png', __DIR__));
+        \add_submenu_page(null, 'Transfer by post', null, 'administrator', 'transfer-by-post', [$this, 'transferByPost']);
         //\add_menu_page('Uploadcare Files', 'Uploadcare Files', 'administrator', 'uploadcare-files', [$this, 'ucFiles']);
+    }
+
+    public function transferByPost(): void
+    {
+        $postId = $_GET['postId'] ?? null;
+        if ($postId === null || !\is_numeric($postId)) {
+            /** @noinspection HtmlUnknownTarget */
+            echo $this->twig->render('error.html.twig', [
+                'message' => \sprintf('Post undefined. <a href="%s">Go back.</a>', \admin_url()),
+            ]);
+
+            return;
+        }
+        $post = \get_post($postId);
+        $path = 'edit.php';
+        if ($post->post_type === 'page') {
+            $path .= '?post_type=page';
+        }
+        $linkBack = \admin_url($path);
+
+        $loader = new MediaDataLoader();
+        echo $this->twig->render('transfer-by-post.html.twig', [
+            'parentPost' => \get_post($postId),
+            'media' => $loader->loadMediaForPost((int) $postId),
+            'linkBack' => $linkBack,
+        ]);
     }
 
     public function transferFiles(): void
@@ -408,6 +507,8 @@ HTML;
             'postPerPage' => MediaDataLoader::POST_PER_PAGE,
             'page' => $page,
             'pagesCount' => \ceil($totalCount / MediaDataLoader::POST_PER_PAGE),
+            'localCount' => $mediaLoader->countImageType(true),
+            'remoteCount' => $mediaLoader->countImageType(false),
         ]);
     }
 
@@ -447,8 +548,7 @@ HTML;
 
     protected function makeModifiedUrl(int $postId, string $modifiers = ''): ?string
     {
-        $uuid = \get_post_meta($postId, 'uploadcare_uuid', true);
-        if (empty($uuid)) {
+        if (empty($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
             return null;
         }
 
@@ -457,7 +557,7 @@ HTML;
             $base = \sprintf('https://%s', $base);
         }
 
-        return \sprintf('%s/%s/%s', $base, $uuid, $modifiers);
+        return \rtrim(\sprintf('%s/%s/%s', $base, $uuid, $modifiers), '/') . '/';
     }
 
     // filters
@@ -513,46 +613,28 @@ HTML;
 
     /**
      * Calls on `image_downsize` hook.
+     * @see image_downsize()
      *
      * @param $value
      * @param $id
-     * @param string $size
+     * @param string|int[] $size
      *
      * @return array|false
      */
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
-        if (\strpos(\get_post($id)->post_mime_type, 'image') !== 0) {
+        if (!\wp_attachment_is_image($id) || empty(\get_post_meta($id, 'uploadcare_uuid', true))) {
             return false;
         }
-        $uuid = \get_post_meta($id, 'uploadcare_uuid', true);
-        if ($uuid === false) {
-            $url = \get_post_meta($id, 'uploadcare_url', true);
-            if ($url === false) {
-                return false;
-            }
 
-            $uuid = UploadcareMain::getUuid($url);
-        }
-
-        if (empty($uuid)) {
+        $resize = $this->getResizeArray($size);
+        if ($resize === null) {
             return false;
         }
-        $baseUrl = $this->makeModifiedUrl($id, \get_post_meta($id, 'uploadcare_url_modifiers', true));
+        [$width, $height] = $resize;
+        $url = $this->getFullUploadcareUrl((int) $id, \is_array($size) ? \implode('x', $size) : $size);
 
-        $sz = $this->thumbnailSize($size);
-        if ($sz) {
-            $url = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $baseUrl, $sz);
-        } else {
-            $url = $baseUrl;
-        }
-
-        return [
-            $url,
-            0, // width
-            0, // height
-            true,
-        ];
+        return [$url, $width, $height, true];
     }
 
     /**
@@ -566,24 +648,61 @@ HTML;
      *
      * @return string
      */
-    public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
+    public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr): string
     {
-        if (\strpos(\get_post($post_id)->post_mime_type, 'image') !== 0) {
+        if (!\wp_attachment_is_image($post_thumbnail_id) || empty(\get_post_meta($post_thumbnail_id, 'uploadcare_uuid', true))) {
             return $html;
         }
-        if (!$url = get_post_meta($post_id, 'uploadcare_url', true)) {
+        $url = $this->getFullUploadcareUrl((int) $post_thumbnail_id, $size);
+        if (empty($url)) {
             return $html;
         }
 
-        $sz = $this->thumbnailSize($size);
-        if ($sz) {
-            $src = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $url, $sz);
-        } else {
-            $src = $url;
-        }
+        $attributes = (new \Symfony\Component\DomCrawler\Crawler($html))->filterXPath('//img')->extract(['style', 'class']);
+        $style = $attributes[0][0] ?? '';
+        $class = $attributes[0][1] ?? '';
 
+        $originalPost = \get_post($post_id);
+        $alt = '';
+        if ($originalPost instanceof \WP_Post) {
+            $alt = $originalPost->post_title;
+        }
+        $url = \sprintf('%s/', \rtrim($url, '/'));
         /* @noinspection HtmlUnknownTarget */
-        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
+        $html = \sprintf('<img src="%s" style="%s" class="%s" alt="%s">', $url, $style, $class, $alt);
+
+        return $html;
+    }
+
+    private function getFullUploadcareUrl(int $postId, string $size): ?string
+    {
+        $baseUrl = $this->makeModifiedUrl($postId, \get_post_meta($postId, 'uploadcare_url_modifiers', true));
+        $resize = $this->getResizeArray($size);
+        if ($resize === null) {
+            return false;
+        }
+        [$width, $height] = $resize;
+        $wh = \sprintf('%dx%d', $width, $height);
+
+        return \sprintf(UploadcareMain::SMART_TEMPLATE, $baseUrl, $wh);
+    }
+
+    private function getResizeArray($size): ?array
+    {
+        if (\is_array($size)) {
+            $size = \implode('x', $size);
+        }
+
+        $sizes = \wp_get_registered_image_subsizes();
+        $target = $sizes[$size] ?? null;
+        if ($target === null) {
+            return null;
+        }
+        [$width, $height] = [$target['width'] ?? 2048, $target['height'] ?? 2048];
+        $width = $width === 9999 ? 2048 : $width;
+        $height = $height === 9999 ? 2048 : $height;
+
+        return [$width, $height];
     }
 
     /**
@@ -591,76 +710,13 @@ HTML;
      *
      * @return string
      */
-    private function fileId($url)
+    private function fileId($url): string
     {
         if (($spl = \strpos($url, '/-')) !== false) {
             $url = \substr($url, 0, $spl);
         }
 
         return (string) \pathinfo(\rtrim($url, '/') . '/', PATHINFO_BASENAME);
-    }
-
-    private function thumbnailSize($size = 'thumbnail')
-    {
-        $arr = $this->getSizeArray($size);
-        if (empty($arr)) {
-            return false;
-        }
-
-        return \implode('x', $arr);
-    }
-
-    private function getSizeArray($size)
-    {
-        if (\is_array($size)) {
-            return $size;
-        }
-
-        $sizes = $this->getSizes();
-        if (\array_key_exists($size, $sizes)) {
-            $arr = $sizes[$size];
-
-            // handle "unlimited" width
-            // 9999 -> 2048
-            // WP uses 9999 to indicate unlimited width for images,
-            // at the moment max width for ucarecdn operaions is 2048
-            if (9999 === $arr[1]) {
-                $arr[1] = 2048;
-            }
-            if (!isset($arr[0]) || (int) $arr[0] === 0) {
-                if (isset($arr[1])) {
-                    $arr[0] = $arr[1];
-                }
-            }
-            if (!isset($arr[1]) || (int) $arr[1] === 0) {
-                if (isset($arr[0])) {
-                    $arr[1] = $arr[0];
-                }
-            }
-
-            return $arr;
-        }
-
-        return [];
-    }
-
-    private function getSizes()
-    {
-        global $_wp_additional_image_sizes;
-        $sizes = [];
-        foreach (get_intermediate_image_sizes() as $s) {
-            $sizes[$s] = [0, 0];
-            if (in_array($s, ['thumbnail', 'medium', 'large'])) {
-                $sizes[$s][0] = get_option($s . '_size_w');
-                $sizes[$s][1] = get_option($s . '_size_h');
-            } else {
-                if (isset($_wp_additional_image_sizes[$s])) {
-                    $sizes[$s] = [$_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height']];
-                }
-            }
-        }
-
-        return $sizes;
     }
 
     /**
@@ -717,7 +773,7 @@ HTML;
         return $attachment_id;
     }
 
-    private function getFinalDim(FileInfoInterface $file)
+    private function getFinalDim(FileInfoInterface $file): array
     {
         $imageInfo = $file->getImageInfo();
         if (!$imageInfo instanceof ImageInfoInterface) {
@@ -730,18 +786,17 @@ HTML;
         ];
     }
 
-    private function getJsConfig()
+    private function getJsConfig(): array
     {
         $tab_options = get_option('uploadcare_source_tabs', [
             'file',
+            'camera',
             'url',
+            'dropbox',
             'facebook',
             'instagram',
-            'flickr',
             'gdrive',
-            'evernote',
-            'box',
-            'skydrive',
+            'gphotos',
         ]);
         if (in_array('all', $tab_options, true)) {
             $tabs = 'all';

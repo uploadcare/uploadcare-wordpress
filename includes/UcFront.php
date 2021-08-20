@@ -26,12 +26,17 @@ class UcFront
      */
     private $secureUploads;
 
-    public function __construct($pluginName, $pluginVersion)
+    public function __construct(string $pluginName, string $pluginVersion)
     {
         $this->pluginName = $pluginName;
         $this->pluginVersion = $pluginVersion;
         $this->adaptiveDelivery = (bool) \get_option('uploadcare_adaptive_delivery');
         $this->secureUploads = (bool) \get_option('uploadcare_upload_lifetime', 0) > 0;
+    }
+
+    public function getPluginName(): string
+    {
+        return $this->pluginName;
     }
 
     public function editorPostMeta(): void
@@ -83,6 +88,162 @@ class UcFront
     }
 
     /**
+     * Calls on `wp_calculate_image_srcset`
+     * @see UploadcareMain::defineFrontHooks()
+     * @see wp_calculate_image_srcset
+     *
+     * @param array $sources
+     * @param array $sizeArray
+     * @param string $src
+     * @param array $imageMeta
+     * @param int $attachmentId
+     * @return array
+     */
+    public function imageSrcSet(array $sources, array $sizeArray, string $src, array $imageMeta, int $attachmentId): array
+    {
+        if (empty(\get_post_meta($attachmentId, 'uploadcare_uuid', true))) {
+            return $sources;
+        }
+
+        $up = \wp_get_upload_dir();
+        if (($baseUrl = $up['baseurl'] ?? null) === null) {
+            return $sources;
+        }
+        $cdnUrl = \sprintf('https://%s', \get_option('uploadcare_cdn_base'));
+        foreach ($sources as $sourceKey => $source) {
+            $url = $source['url'] ?? null;
+            if ($url === null) {
+                continue;
+            }
+
+            $url = \str_replace([$baseUrl, $cdnUrl], '', $url);
+            $resultUrl = \sprintf('%s/%s', $cdnUrl, \ltrim($url, '/'));
+
+            $sources[$sourceKey]['url'] = \rtrim($resultUrl, '/') . '/';
+        }
+
+        return $sources;
+    }
+
+    /**
+     * Calls on `wp_get_attachment_metadata`
+     * @see UploadcareMain::defineFrontHooks()
+     * @see wp_get_attachment_metadata
+     *
+     * @param array $data
+     * @param int $attachmentId
+     * @return array
+     */
+    public function imageAttachmentMetadata(array $data, int $attachmentId): array
+    {
+        if (($data['sizes'] ?? null) !== null || $this->adaptiveDelivery) {
+            return $data;
+        }
+
+        $item = \get_post($attachmentId);
+        if (!$item instanceof \WP_Post || $item->post_type !== 'attachment') {
+            return $data;
+        }
+
+        $uuid = \get_post_meta($attachmentId, 'uploadcare_uuid', true);
+        if (empty($uuid)) {
+            return $data;
+        }
+
+        $sizes = \wp_get_registered_image_subsizes();
+        $transform = (string) \get_post_meta($attachmentId, 'uploadcare_url_modifiers', true);
+        $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $uuid);
+        foreach ($sizes as $definition => $sizeArray) {
+            $width = ($sizeArray['width'] ?? '1024');
+            $height = ($sizeArray['height'] ?? '1024');
+            if ($width === 9999) {
+                $width = 2048;
+                $sizes[$definition]['width'] = $width;
+            }
+            if ($height === 9999) {
+                $height = 2048;
+                $sizes[$definition]['height'] = $height;
+            }
+
+            $wh = \sprintf('%sx%s', $width, $height);
+            $transformed = $imageUrl . ($transform ?? '');
+            $sizes[$definition]['file'] = \sprintf(UploadcareMain::SMART_TEMPLATE, $transformed, $wh);
+        }
+        $data['sizes'] = $sizes;
+        $data['file'] = $imageUrl;
+
+        return $data;
+    }
+
+    /**
+     * Calls on `wp_image_src_get_dimensions`
+     * @see UploadcareMain::defineFrontHooks()
+     * @see wp_image_src_get_dimensions
+     *
+     * @param $dimensions
+     * @param string $src
+     * @param array $imageMeta
+     * @param int $attachmentId
+     * @return int[]|mixed
+     */
+    public function imageGetDimensions($dimensions, string $src, array $imageMeta, int $attachmentId)
+    {
+        if (empty(\get_post_meta($attachmentId, 'uploadcare_uuid', true))) {
+            return $dimensions;
+        }
+        $sizes = $imageMeta['sizes'] ?? null;
+        if ($sizes === null) {
+            return $dimensions;
+        }
+
+        return [1024, 1024];
+    }
+
+    /**
+     * Calls on `wp_get_attachment_image_src`
+     * @see wp_get_attachment_image_src
+     *
+     * @param $image
+     * @param int $attachmentId
+     * @param $size
+     * @param bool $icon
+     * @return array|mixed
+     */
+    public function getImageSrc($image, int $attachmentId, $size, bool $icon)
+    {
+        if (!\is_array($image)) {
+            return $image;
+        }
+
+        $cdnBase = \get_option('uploadcare_cdn_base');
+        $httpCdnBase = \sprintf('https://%s/', $cdnBase);
+        $src = $image[0] ?? null;
+        if ($src === null || \strpos($src, $cdnBase) === false) {
+            return $image;
+        }
+        if (\strpos($src, $httpCdnBase . $httpCdnBase) === 0) {
+            $image[0] = \str_replace($httpCdnBase . $httpCdnBase, $httpCdnBase, $src);
+        }
+        $image[0] = \sprintf('%s/', \rtrim($image[0], '/'));
+
+        $currentWidth = $image[1] ?? null;
+        if ($currentWidth !== null && (int) $currentWidth !== 0) {
+            return $image;
+        }
+
+        $meta = \wp_get_attachment_metadata($attachmentId);
+        $existingMeta = $meta['sizes'][$size] ?? null;
+        if ($existingMeta === null) {
+            $existingMeta = ['width' => $meta['width'] ?? 0, 'height' => $meta['height'] ?? 0];
+        }
+
+        $image[1] = $existingMeta['width'] ?? 0;
+        $image[2] = $existingMeta['height'] ?? 0;
+
+        return $image;
+    }
+
+    /**
      * Calls on `render_block`. Loads images and replace `src` to `data-blink-uuid`.
      *
      * @see UploadcareMain::defineFrontHooks()
@@ -107,7 +268,10 @@ class UcFront
         $blocks = ['core/image', 'uploadcare/image'];
 
         if (\in_array($block['blockName'], $blocks, true)) {
-            $itemId = $block['blockName'] === 'core/image' ? $block['attrs']['id'] : $block['attrs']['mediaID'];
+            $itemId = $block['blockName'] === 'core/image' ? ($block['attrs']['id'] ?? null) : ($block['attrs']['mediaID'] ?? null);
+            if ($itemId === null) {
+                return $content;
+            }
 
             return $this->changeContent($content, (int) $itemId);
         }
@@ -132,22 +296,19 @@ class UcFront
             $isLocal = true;
 
             if (\strpos($attachedFile, \get_option('uploadcare_cdn_base')) !== false) {
-                $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $this->getUuid($imageId));
+                $imageUrl = \sprintf('https://%s/%s/%s', \get_option('uploadcare_cdn_base'), $this->getUuid($imageId), $modifiers);
                 $isLocal = false;
             } else {
                 $imageUrl = \wp_get_attachment_image_url($imageId, 'large');
             }
 
-            // If Adaptive delivery is off and we have a remote file — change file url to transformation url
+            // If Adaptive delivery is off, and we have a remote file — change file url to transformation url
             if (!$this->adaptiveDelivery) {
-                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::RESIZE_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048') : null;
+                $imageUrl = !$isLocal ? \sprintf(UploadcareMain::SMART_TEMPLATE, (\rtrim($imageUrl, '/') . '/'), '2048x2048') : null;
             }
             // If Adaptive delivery is on and Secure uploads is on too we have to change url to uuid and ignore all local files
             if ($this->adaptiveDelivery && $this->secureUploads) {
                 $imageUrl = !$isLocal ? $this->getUuid($imageId) : null;
-            }
-            if ($imageUrl !== null && $isLocal === false) {
-                $imageUrl = \sprintf('%s/%s', \rtrim($imageUrl, '/'), $modifiers);
             }
 
             $collation[$node->attr('src')] = $imageUrl;
@@ -171,6 +332,9 @@ class UcFront
                 $content = (string) \preg_replace('/' . \preg_quote($src, '/') . '/mu', $target, $content);
                 $content = (string) \preg_replace('/src=/mu', 'data-blink-uuid=', $content);
             }
+        }
+        if (!$this->adaptiveDelivery) {
+            $content = \wp_image_add_srcset_and_sizes($content, \wp_get_attachment_metadata($imageId), $imageId);
         }
 
         return $content;
@@ -200,33 +364,14 @@ class UcFront
      *
      * @return string
      */
-    public function postFeaturedImage($html, $post_id, $post_thumbnail_id, $size, $attr)
+    public function postFeaturedImage($html, $post_id, $post_thumbnail_id, $size, $attr): string
     {
-        global $wpdb;
-        $resizeParam = '2048x2048';
-        if (\in_array($size, \get_intermediate_image_sizes(), true)) {
-            $resizeParam = \get_option(\sprintf('%s_size_w', $size), '2048') . 'x' . \get_option(\sprintf('%s_size_h', $size), '2048');
+        if ($this->adaptiveDelivery) {
+            return \str_replace('src=', 'data-blink-src=', $html);
         }
 
-        // It is impossible to direct get post meta for a featured image
-        $q = \sprintf('SELECT meta_value FROM `%s` WHERE meta_key=\'uploadcare_url\' AND post_id=%d', \sprintf('%spostmeta', $wpdb->prefix), $post_thumbnail_id);
-        $result = $wpdb->get_col($q);
-
-        if (\array_key_exists(0, $result) && \strpos($result[0], \get_option('uploadcare_cdn_base')) !== false) {
-            if ($this->adaptiveDelivery === false) {
-                return $this->replaceImageUrl(\sprintf('<img src="%s" />', $result[0]), $resizeParam);
-            }
-            $uuid = UploadcareMain::getUuid($result[0]);
-            $modifiers = \get_post_meta($post_id, 'uploadcare_url_modifiers', true);
-            if (!empty($modifiers)) {
-                $uuid = \sprintf('%s/%s', $uuid, $modifiers);
-            }
-
-            /** @noinspection RequiredAttributes */
-            return \sprintf('<img data-blink-uuid="%s" alt="post-%d">', $uuid, $post_id);
-        }
-
-        return $html;
+        $meta = \wp_get_attachment_metadata($post_thumbnail_id);
+        return \wp_image_add_srcset_and_sizes($html, $meta, $post_thumbnail_id);
     }
 
     /**
@@ -235,18 +380,18 @@ class UcFront
      *
      * @return string
      */
-    private function replaceImageUrl($html, $size = '2048x2048')
+    private function replaceImageUrl(string $html, string $size = '2048x2048'): string
     {
         return \preg_replace_callback(self::IMAGE_REGEX, static function (array $data) use ($size) {
             if (\strpos($data[3], 'scale_crop') === false) {
-                $data[3] = \sprintf(UploadcareMain::RESIZE_TEMPLATE, $data[3], $size);
+                $data[3] = \sprintf(UploadcareMain::SMART_TEMPLATE, $data[3], $size);
             }
 
             return $data[1] . $data[2] . $data[3] . $data[4];
         }, $html);
     }
 
-    private function getJsConfig()
+    private function getJsConfig(): array
     {
         $baseParams = [
             'pubkey' => \get_option('uploadcare_public'),
