@@ -292,7 +292,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 [uploadcare/uploadcare-php]: https://github.com/uploadcare/uploadcare-php
 
-[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.6..HEAD
+[Unreleased]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.7..HEAD
+[3.0.7]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.7..v3.0.7
 [3.0.6]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.5..v3.0.6
 [3.0.5]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.4..v3.0.5
 [3.0.4]: https://github.com/uploadcare/uploadcare-wordpress/compare/v3.0.3..v3.0.4
