@@ -117,8 +117,9 @@ class UcFront
             }
 
             $url = \str_replace([$baseUrl, $cdnUrl], '', $url);
+            $resultUrl = \sprintf('%s/%s', $cdnUrl, \ltrim($url, '/'));
 
-            $sources[$sourceKey]['url'] = \sprintf('%s/%s', $cdnUrl, \ltrim($url, '/'));
+            $sources[$sourceKey]['url'] = \rtrim($resultUrl, '/') . '/';
         }
 
         return $sources;

@@ -654,7 +654,7 @@ HTML;
             return $html;
         }
         $url = $this->getFullUploadcareUrl((int) $post_thumbnail_id, $size);
-        if ($url === null) {
+        if (empty($url)) {
             return $html;
         }
 
