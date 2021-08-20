@@ -201,6 +201,7 @@ class UcFront
 
     /**
      * Calls on `wp_get_attachment_image_src`
+     * @see wp_get_attachment_image_src
      *
      * @param $image
      * @param int $attachmentId
