@@ -687,8 +687,12 @@ HTML;
         return \sprintf(UploadcareMain::SMART_TEMPLATE, $baseUrl, $wh);
     }
 
-    private function getResizeArray(string $size): ?array
+    private function getResizeArray($size): ?array
     {
+        if (\is_array($size)) {
+            $size = \implode('x', $size);
+        }
+
         $sizes = \wp_get_registered_image_subsizes();
         $target = $sizes[$size] ?? null;
         if ($target === null) {
