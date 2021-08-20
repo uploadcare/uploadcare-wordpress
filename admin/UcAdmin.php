@@ -548,8 +548,7 @@ HTML;
 
     protected function makeModifiedUrl(int $postId, string $modifiers = ''): ?string
     {
-        $uuid = \get_post_meta($postId, 'uploadcare_uuid', true);
-        if (empty($uuid)) {
+        if (empty($uuid = \get_post_meta($postId, 'uploadcare_uuid', true))) {
             return null;
         }
 
@@ -558,7 +557,7 @@ HTML;
             $base = \sprintf('https://%s', $base);
         }
 
-        return \sprintf('%s/%s/%s', $base, $uuid, $modifiers);
+        return \rtrim(\sprintf('%s/%s/%s', $base, $uuid, $modifiers), '/') . '/';
     }
 
     // filters
@@ -614,46 +613,28 @@ HTML;
 
     /**
      * Calls on `image_downsize` hook.
+     * @see image_downsize()
      *
      * @param $value
      * @param $id
-     * @param string $size
+     * @param string|int[] $size
      *
      * @return array|false
      */
     public function uploadcare_image_downsize($value, $id, $size = 'medium')
     {
-        if (\strpos(\get_post($id)->post_mime_type, 'image') !== 0) {
+        if (!\wp_attachment_is_image($id) || empty(\get_post_meta($id, 'uploadcare_uuid', true))) {
             return false;
         }
-        $uuid = \get_post_meta($id, 'uploadcare_uuid', true);
-        if ($uuid === false) {
-            $url = \get_post_meta($id, 'uploadcare_url', true);
-            if ($url === false) {
-                return false;
-            }
 
-            $uuid = UploadcareMain::getUuid($url);
-        }
-
-        if (empty($uuid)) {
+        $resize = $this->getResizeArray($size);
+        if ($resize === null) {
             return false;
         }
-        $baseUrl = $this->makeModifiedUrl($id, \get_post_meta($id, 'uploadcare_url_modifiers', true));
+        [$width, $height] = $resize;
+        $url = $this->getFullUploadcareUrl((int) $id, \is_array($size) ? \implode('x', $size) : $size);
 
-        $sz = $this->thumbnailSize($size);
-        if ($sz) {
-            $url = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $baseUrl, $sz);
-        } else {
-            $url = $baseUrl;
-        }
-
-        return [
-            $url,
-            0, // width
-            0, // height
-            true,
-        ];
+        return [$url, $width, $height, true];
     }
 
     /**
@@ -667,24 +648,57 @@ HTML;
      *
      * @return string
      */
-    public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
+    public function uploadcare_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr): string
     {
-        if (\strpos(\get_post($post_id)->post_mime_type, 'image') !== 0) {
+        if (!\wp_attachment_is_image($post_thumbnail_id) || empty(\get_post_meta($post_thumbnail_id, 'uploadcare_uuid', true))) {
             return $html;
         }
-        if (!$url = get_post_meta($post_id, 'uploadcare_url', true)) {
+        $url = $this->getFullUploadcareUrl((int) $post_thumbnail_id, $size);
+        if ($url === null) {
             return $html;
         }
 
-        $sz = $this->thumbnailSize($size);
-        if ($sz) {
-            $src = \sprintf(UploadcareMain::SCALE_CROP_TEMPLATE, $url, $sz);
-        } else {
-            $src = $url;
-        }
+        $attributes = (new \Symfony\Component\DomCrawler\Crawler($html))->filterXPath('//img')->extract(['style', 'class']);
+        $style = $attributes[0][0] ?? '';
+        $class = $attributes[0][1] ?? '';
 
+        $originalPost = \get_post($post_id);
+        $alt = '';
+        if ($originalPost instanceof \WP_Post) {
+            $alt = $originalPost->post_title;
+        }
+        $url = \sprintf('%s/', \rtrim($url, '/'));
         /* @noinspection HtmlUnknownTarget */
-        return \sprintf(\sprintf('<img src="%s" alt="%s">', $src, __('Preview', $this->plugin_name)));
+        $html = \sprintf('<img src="%s" style="%s" class="%s" alt="%s">', $url, $style, $class, $alt);
+
+        return $html;
+    }
+
+    private function getFullUploadcareUrl(int $postId, string $size): ?string
+    {
+        $baseUrl = $this->makeModifiedUrl($postId, \get_post_meta($postId, 'uploadcare_url_modifiers', true));
+        $resize = $this->getResizeArray($size);
+        if ($resize === null) {
+            return false;
+        }
+        [$width, $height] = $resize;
+        $wh = \sprintf('%dx%d', $width, $height);
+
+        return \sprintf(UploadcareMain::SMART_TEMPLATE, $baseUrl, $wh);
+    }
+
+    private function getResizeArray(string $size): ?array
+    {
+        $sizes = \wp_get_registered_image_subsizes();
+        $target = $sizes[$size] ?? null;
+        if ($target === null) {
+            return null;
+        }
+        [$width, $height] = [$target['width'] ?? 2048, $target['height'] ?? 2048];
+        $width = $width === 9999 ? 2048 : $width;
+        $height = $height === 9999 ? 2048 : $height;
+
+        return [$width, $height];
     }
 
     /**
@@ -692,76 +706,13 @@ HTML;
      *
      * @return string
      */
-    private function fileId($url)
+    private function fileId($url): string
     {
         if (($spl = \strpos($url, '/-')) !== false) {
             $url = \substr($url, 0, $spl);
         }
 
         return (string) \pathinfo(\rtrim($url, '/') . '/', PATHINFO_BASENAME);
-    }
-
-    private function thumbnailSize($size = 'thumbnail')
-    {
-        $arr = $this->getSizeArray($size);
-        if (empty($arr)) {
-            return false;
-        }
-
-        return \implode('x', $arr);
-    }
-
-    private function getSizeArray($size)
-    {
-        if (\is_array($size)) {
-            return $size;
-        }
-
-        $sizes = $this->getSizes();
-        if (\array_key_exists($size, $sizes)) {
-            $arr = $sizes[$size];
-
-            // handle "unlimited" width
-            // 9999 -> 2048
-            // WP uses 9999 to indicate unlimited width for images,
-            // at the moment max width for ucarecdn operaions is 2048
-            if (9999 === $arr[1]) {
-                $arr[1] = 2048;
-            }
-            if (!isset($arr[0]) || (int) $arr[0] === 0) {
-                if (isset($arr[1])) {
-                    $arr[0] = $arr[1];
-                }
-            }
-            if (!isset($arr[1]) || (int) $arr[1] === 0) {
-                if (isset($arr[0])) {
-                    $arr[1] = $arr[0];
-                }
-            }
-
-            return $arr;
-        }
-
-        return [];
-    }
-
-    private function getSizes()
-    {
-        global $_wp_additional_image_sizes;
-        $sizes = [];
-        foreach (get_intermediate_image_sizes() as $s) {
-            $sizes[$s] = [0, 0];
-            if (in_array($s, ['thumbnail', 'medium', 'large'])) {
-                $sizes[$s][0] = get_option($s . '_size_w');
-                $sizes[$s][1] = get_option($s . '_size_h');
-            } else {
-                if (isset($_wp_additional_image_sizes[$s])) {
-                    $sizes[$s] = [$_wp_additional_image_sizes[$s]['width'], $_wp_additional_image_sizes[$s]['height']];
-                }
-            }
-        }
-
-        return $sizes;
     }
 
     /**
@@ -818,7 +769,7 @@ HTML;
         return $attachment_id;
     }
 
-    private function getFinalDim(FileInfoInterface $file)
+    private function getFinalDim(FileInfoInterface $file): array
     {
         $imageInfo = $file->getImageInfo();
         if (!$imageInfo instanceof ImageInfoInterface) {
@@ -831,7 +782,7 @@ HTML;
         ];
     }
 
-    private function getJsConfig()
+    private function getJsConfig(): array
     {
         $tab_options = get_option('uploadcare_source_tabs', [
             'file',

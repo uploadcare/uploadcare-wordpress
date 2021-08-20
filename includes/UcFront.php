@@ -90,6 +90,7 @@ class UcFront
     /**
      * Calls on `wp_calculate_image_srcset`
      * @see UploadcareMain::defineFrontHooks()
+     * @see wp_calculate_image_srcset
      *
      * @param array $sources
      * @param array $sizeArray
@@ -126,6 +127,7 @@ class UcFront
     /**
      * Calls on `wp_get_attachment_metadata`
      * @see UploadcareMain::defineFrontHooks()
+     * @see wp_get_attachment_metadata
      *
      * @param array $data
      * @param int $attachmentId
@@ -151,7 +153,18 @@ class UcFront
         $transform = (string) \get_post_meta($attachmentId, 'uploadcare_url_modifiers', true);
         $imageUrl = \sprintf('https://%s/%s/', \get_option('uploadcare_cdn_base'), $uuid);
         foreach ($sizes as $definition => $sizeArray) {
-            $wh = \sprintf('%sx%s', ($sizeArray['width'] ?? '1024'), ($sizeArray['height'] ?? '1024'));
+            $width = ($sizeArray['width'] ?? '1024');
+            $height = ($sizeArray['height'] ?? '1024');
+            if ($width === 9999) {
+                $width = 2048;
+                $sizes[$definition]['width'] = $width;
+            }
+            if ($height === 9999) {
+                $height = 2048;
+                $sizes[$definition]['height'] = $height;
+            }
+
+            $wh = \sprintf('%sx%s', $width, $height);
             $transformed = $imageUrl . ($transform ?? '');
             $sizes[$definition]['file'] = \sprintf(UploadcareMain::SMART_TEMPLATE, $transformed, $wh);
         }
@@ -164,6 +177,7 @@ class UcFront
     /**
      * Calls on `wp_image_src_get_dimensions`
      * @see UploadcareMain::defineFrontHooks()
+     * @see wp_image_src_get_dimensions
      *
      * @param $dimensions
      * @param string $src
@@ -199,10 +213,16 @@ class UcFront
             return $image;
         }
 
+        $cdnBase = \get_option('uploadcare_cdn_base');
+        $httpCdnBase = \sprintf('https://%s/', $cdnBase);
         $src = $image[0] ?? null;
-        if ($src === null || \strpos($src, \get_option('uploadcare_cdn_base')) === false) {
+        if ($src === null || \strpos($src, $cdnBase) === false) {
             return $image;
         }
+        if (\strpos($src, $httpCdnBase . $httpCdnBase) === 0) {
+            $image[0] = \str_replace($httpCdnBase . $httpCdnBase, $httpCdnBase, $src);
+        }
+        $image[0] = \sprintf('%s/', \rtrim($image[0], '/'));
 
         $currentWidth = $image[1] ?? null;
         if ($currentWidth !== null && (int) $currentWidth !== 0) {
@@ -344,31 +364,12 @@ class UcFront
      */
     public function postFeaturedImage($html, $post_id, $post_thumbnail_id, $size, $attr): string
     {
-        global $wpdb;
-        $resizeParam = '2048x2048';
-        if (\in_array($size, \get_intermediate_image_sizes(), true)) {
-            $resizeParam = \get_option(\sprintf('%s_size_w', $size), '2048') . 'x' . \get_option(\sprintf('%s_size_h', $size), '2048');
+        if ($this->adaptiveDelivery) {
+            return \str_replace('src=', 'data-blink-src=', $html);
         }
 
-        // It is impossible to direct get post meta for a featured image
-        $q = \sprintf('SELECT meta_value FROM `%s` WHERE meta_key=\'uploadcare_url\' AND post_id=%d', \sprintf('%spostmeta', $wpdb->prefix), $post_thumbnail_id);
-        $result = $wpdb->get_col($q);
-
-        if (\array_key_exists(0, $result) && \strpos($result[0], \get_option('uploadcare_cdn_base')) !== false) {
-            if ($this->adaptiveDelivery === false) {
-                return $this->replaceImageUrl(\sprintf('<img src="%s" />', $result[0]), $resizeParam);
-            }
-            $uuid = UploadcareMain::getUuid($result[0]);
-            $modifiers = \get_post_meta($post_id, 'uploadcare_url_modifiers', true);
-            if (!empty($modifiers)) {
-                $uuid = \sprintf('%s/%s', $uuid, $modifiers);
-            }
-
-            /** @noinspection RequiredAttributes */
-            return \sprintf('<img data-blink-uuid="%s" alt="post-%d">', $uuid, $post_id);
-        }
-
-        return $html;
+        $meta = \wp_get_attachment_metadata($post_thumbnail_id);
+        return \wp_image_add_srcset_and_sizes($html, $meta, $post_thumbnail_id);
     }
 
     /**
