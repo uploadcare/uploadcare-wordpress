@@ -134,11 +134,11 @@ Access all files in your Uploadcare account via Media Library.
 
 = 3.0.7 =
 
-* Changed plugin responsive images default mechanism to leverage default WordPress "srcset" behavior improved with our smart image quality and auto-format features.
+* Changed plugin responsive images default mechanism to leverage default WordPress "srcset" behavior improved with our smart image quality and auto format features.
 * Returned Uploadcare upload button to a default upload option.
-* Added an option to transfer files to Uploadcare post by post.
-* Created console util to transfer all files at once.
-* Various bug fixes and improvements.
+* Added an option to transfer files to Uploadcare storage post by post.
+* Created console utility to transfer all files at once.
+* Minor bug fixes and improvements.
 
 = 3.0.6 =
 

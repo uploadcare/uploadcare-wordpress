@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0.7] — 2021-08-09
+## [3.0.7] — 2021-08-20
 
-* Changed plugin responsive images default mechanism to leverage default WordPress "srcset" behavior improved with our smart image quality and auto-format features.
+* Changed plugin responsive images default mechanism to leverage default WordPress "srcset" behavior improved with our smart image quality and auto format features.
 * Returned Uploadcare upload button to a default upload option.
-* Added an option to transfer files to Uploadcare post by post.
-* Created console util to transfer all files at once.
-* Various bug fixes and improvements.
+* Added an option to transfer files to Uploadcare storage post by post.
+* Created console utility to transfer all files at once.
+* Minor bug fixes and improvements.
 
 ## [3.0.6] — 2021-05-26
 
