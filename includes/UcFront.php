@@ -209,7 +209,7 @@ class UcFront
      * @param bool $icon
      * @return array|mixed
      */
-    public function getImageSrc($image, int $attachmentId, $size, bool $icon)
+    public function getImageSrc($image, $attachmentId, $size, $icon)
     {
         if (!\is_array($image)) {
             return $image;
