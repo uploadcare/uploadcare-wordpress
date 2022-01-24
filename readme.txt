@@ -5,7 +5,7 @@ Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, op
 Requires at least: 5.0
 Tested up to: 5.7.2
 Requires PHP: 7.1
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -131,6 +131,10 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.0.8
+
+* Removed types from method (bug fix for https://wordpress.org/support/topic/fatal-error-3-0-7/).
 
 = 3.0.7 =
 

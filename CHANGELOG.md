@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.8] — 2022-01-24
+
+* Removed types from method (bug fix for https://wordpress.org/support/topic/fatal-error-3-0-7/).
+
 ## [3.0.7] — 2021-08-20
 
 * Changed plugin responsive images default mechanism to leverage default WordPress "srcset" behavior improved with our smart image quality and auto format features.
