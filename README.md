@@ -28,7 +28,7 @@ Uploadcare, all-round media upload, storage, management, and delivery solution, 
 ## Requirements
 
 - Wordpress 5+
-- PHP 7.1+
+- PHP 7.4+
 - php-curl
 - php-json
 - php-dom

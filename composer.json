@@ -1,12 +1,12 @@
 {
   "name": "uploadcare/uploadcare-wordpress",
   "require": {
-    "php": "^7.1",
+    "php": ">=7.4 || >=8.0",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-dom": "*",
-    "uploadcare/uploadcare-php": "^3.0",
-    "symfony/dom-crawler": "^3.4",
+    "uploadcare/uploadcare-php": "^3.1",
+    "symfony/dom-crawler": "^5.4",
     "twig/twig": "^2.13|^3.0"
   },
   "autoload": {
@@ -18,7 +18,7 @@
         }
     },
   "require-dev": {
-    "phpunit/phpunit": "^7",
-    "symfony/var-dumper": "^4.4"
+    "phpunit/phpunit": "^7||^9",
+    "symfony/var-dumper": "^4.4||^5"
   }
 }

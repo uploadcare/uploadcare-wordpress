@@ -8,4 +8,4 @@ Elijah <ilya@uploadcare.com>
 Igor Debatur <igor@uploadcare.com>
 Roman Sedykh <https://github.com/rsedykh>
 Siarhei Bautrukevich <s.boltrukevich@gmail.com>
-
+Mikhail Khasaya <https://github.com/dillix>

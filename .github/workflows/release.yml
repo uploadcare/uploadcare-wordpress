@@ -6,14 +6,18 @@ on:
 jobs:
     tag:
         name: Upload Plugin to WP SVN
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-20.04
+        strategy:
+          fail-fast: true
+          matrix:
+            php-versions: [ "7.4", "8.0", "8.1" ]
         steps:
             -   name: Checkout Repo
                 uses: actions/checkout@v2
             -   name: Install dependencies
                 uses: php-actions/composer@v5
                 with:
-                    php_version: 7.1
+                    php_version: "${{ matrix.php-versions }}"
                     dev: no
             -   name: Install npm dependencies
                 run: |
