@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [3.0.9] — 2022-12-10
 
 * Added php 8.1 support
-* Bumped minimal php version to 7.4
+* Bumped minimal PHP version to 7.4.
 
 ## [3.0.8] — 2022-01-24
 
