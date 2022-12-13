@@ -139,7 +139,7 @@ Access all files in your Uploadcare account via Media Library.
 
 * Added support for PHP 8+.
 * Bumped minimal PHP version to 7.4.
-* Masked secret key with dots in plugin settings for security purposes.
+* Masked secret key in plugin settings for additional security.
 
 = 3.0.8
 
