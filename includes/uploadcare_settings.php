@@ -124,7 +124,7 @@ try {
         </p>
         <p>
             <label for="uc_uploadcare_secret"><?= __('Secret Key', 'uploadcare'); ?>:</label>
-            <input id="uc_uploadcare_secret" type="text" name="uploadcare_secret"
+            <input id="uc_uploadcare_secret" type="password" name="uploadcare_secret"
                 value="<?php echo $uploadcare_secret; ?>" size="50">
         </p>
 
