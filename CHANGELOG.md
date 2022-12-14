@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * Added PHP 8.1 support.
 * Bumped minimal PHP version to 7.4.
+* Masked secret key in plugin settings for additional security.
 
 ## [3.0.8] — 2022-01-24
 
