@@ -1,22 +1,22 @@
 {
   "name": "uploadcare-wordpress",
-  "version": "3.0.1",
+  "version": "3.0.9",
   "devDependencies": {
-    "@wordpress/block-editor": "^5.0.2",
-    "@wordpress/components": "^11.0.1",
-    "@wordpress/scripts": "^12.3.0",
-    "react": "^16.14.0",
-    "react-dom": "^16.10.2",
-    "ts-loader": "^8.0.5",
-    "typescript": "^4.0.3",
-    "uploadcare-widget": "^3.10.2"
+    "@wordpress/block-editor": "^10.5.0",
+    "@wordpress/components": "^22.1.0",
+    "@wordpress/scripts": "^24.6.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.2.3",
+    "uploadcare-widget": "^3.17.0"
   },
   "scripts": {
     "watch": "wp-scripts start jsx/blocks.js jsx/admin.js jsx/transfer.js --output-path=compiled-js",
     "build": "wp-scripts build jsx/blocks.js jsx/admin.js jsx/transfer.js --output-path=compiled-js"
   },
   "dependencies": {
-    "@uploadcare/react-widget": "^1.3.2",
-    "uploadcare-widget-tab-effects": "^1.4.7"
+    "@uploadcare/react-widget": "^1.3.10",
+    "uploadcare-widget-tab-effects": "^1.6.0"
   }
 }
