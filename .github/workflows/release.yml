@@ -23,10 +23,11 @@ jobs:
             -   name: Install npm dependencies
                 run: |
                     curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
-                    echo "deb https://deb.nodesource.com/node_16.x focal main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+                    echo "deb https://deb.nodesource.com/node_17.x focal main" | sudo tee /etc/apt/sources.list.d/nodesource.list
                     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
                     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-                    sudo apt update && sudo apt install nodejs node-gyp libssl1.0-dev yarn
+                    sudo apt update && sudo apt install -y nodejs yarn
+                    sudo npm install -g node-gyp
                     yarn --version
                     yarn && yarn run build
                     rm -rf node_modules
@@ -36,7 +37,7 @@ jobs:
                     name: uploadcare-wp
                     path: .
             -   name: WordPress Plugin Deploy
-                uses: 10up/action-wordpress-plugin-deploy@98923950204e68db278a958aa8b71e3b07904140
+                uses: 10up/action-wordpress-plugin-deploy@stable
                 env:
                     SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                     SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
