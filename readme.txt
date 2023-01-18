@@ -20,7 +20,7 @@ This plugin allows WordPress authors to upload images and other files with Uploa
 
 [Read integration guide](https://uploadcare.com/docs/guides/wordpress/).
 
-Note: This version (3.x) of the plugin may necessitate additional work on your part due to potential conflicts with other plugins or themes. Support is available only to customers on the [Custom](https://uploadcare.com/pricing/) pricing plan.
+Note: This version (3.x) of the plugin may require additional work on your part due to potential conflicts with other plugins or themes. Support is available only to customers on the [Custom](https://uploadcare.com/pricing/) pricing plan.
 
 ### Features ###
 
