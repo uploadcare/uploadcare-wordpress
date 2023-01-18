@@ -1,4 +1,4 @@
-=== Uploadcare File Uploader and Adaptive Delivery ===
+=== Uploadcare File Uploader and Adaptive Delivery (beta) ===
 
 Contributors: andrew72ru, rsedykh, mixar
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
@@ -19,6 +19,8 @@ This plugin allows WordPress authors to upload images and other files with Uploa
 [youtube https://www.youtube.com/watch?v=7Nc7GyD6_AE]
 
 [Read integration guide](https://uploadcare.com/docs/guides/wordpress/).
+
+Note: This version (3.x) of the plugin may necessitate additional work on your part due to potential conflicts with other plugins or themes. Support is available only to customers on the [Custom](https://uploadcare.com/pricing/) pricing plan.
 
 ### Features ###
 
