@@ -427,6 +427,7 @@ class UcAdmin
         \wp_enqueue_script('admin-js', null, require \dirname(__DIR__) . '/compiled-js/admin.asset.php');
         $sign = __('Click to upload any file up to 5GB from anywhere', $this->plugin_name);
         $btn = __('Upload via Uploadcare', $this->plugin_name);
+        $btn_logo = __(\plugins_url($this->plugin_name) . '/media/logo_32.png');
         $href = '#';
 
         $scr = \get_current_screen();
@@ -443,7 +444,7 @@ class UcAdmin
     <p class="uploadcare-picker">
         <a id="uploadcare-post-upload-ui-btn"
            class="button button-hero"
-           style="background: url('https://ucarecdn.com/assets/images/logo.png') no-repeat 5px 5px; padding-left: 44px;"
+           style="background: url('$btn_logo') no-repeat 5px 5px; padding-left: 44px;"
            href="$href">
             $btn
         </a>
