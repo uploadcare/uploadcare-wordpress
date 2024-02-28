@@ -27,13 +27,18 @@ $tab_defaults = [
     'gphotos',
 ];
 
-$saved  = false;
-$errors = [];
+$saved       = false;
+$errors      = [];
+$keys_exists = false;
 if ( isset( $_POST['uploadcare_hidden'] ) && $_POST['uploadcare_hidden'] === 'Y' ) {
-    $uploadcare_public = $_POST['uploadcare_public'];
-    update_option( 'uploadcare_public', $uploadcare_public );
-    $uploadcare_secret = $_POST['uploadcare_secret'];
-    update_option( 'uploadcare_secret', $uploadcare_secret );
+    $save_action       = true;
+    $uploadcare_public = sanitize_text_field( wp_unslash( $_POST['uploadcare_public'] ) );
+    $uploadcare_secret = sanitize_text_field( wp_unslash( $_POST['uploadcare_secret'] ) );
+    if ( $uploadcare_public && $uploadcare_secret ) {
+        $keys_exists = true;
+        uc_save_api_keys( $uploadcare_public, $uploadcare_secret );
+    }
+
     $uploadcare_cdn_base = \str_replace( 'https://', '', $_POST['uploadcare_cdn_base'] );
     update_option( 'uploadcare_cdn_base', $uploadcare_cdn_base );
     $uploadcare_upload_lifetime = $_POST['uploadcare_upload_lifetime'];
@@ -55,6 +60,7 @@ if ( isset( $_POST['uploadcare_hidden'] ) && $_POST['uploadcare_hidden'] === 'Y'
     update_option( 'uploadcare_adaptive_delivery', $uploadcare_adaptive_delivery );
     $saved = true;
 } else {
+    $save_action                  = false;
     $uploadcare_public            = \trim( get_option( 'uploadcare_public' ) );
     $uploadcare_secret            = \trim( get_option( 'uploadcare_secret' ) );
     $uploadcare_cdn_base          = \trim( get_option( 'uploadcare_cdn_base', 'ucarecdn.com' ) );
@@ -73,6 +79,55 @@ try {
 } catch ( \Exception $e ) {
     $connectError = $e->getMessage();
 }
+
+/**
+ * Save Uploadcare API keys
+ *
+ * @param string $public_key
+ * @param string $secret_key
+ *
+ * @return void
+ */
+function uc_save_api_keys( string $public_key, string $secret_key ): void {
+
+    update_option( 'uploadcare_public', $public_key );
+    update_option( 'uploadcare_secret', $secret_key );
+
+    $new_keys_hash     = md5( $public_key . $secret_key );
+    $current_timestamp = time();
+    $saved_keys        = uc_get_saved_options();
+    foreach ( $saved_keys as $option_data ) {
+        try {
+            $key_data = unserialize( $option_data['option_value'] );
+            $key_hash = md5( $key_data['public_key'] . $key_data['secret_key'] );
+            if ( $new_keys_hash === $key_hash ) {
+                return;
+            }
+        } catch ( Throwable $tw ) {
+            // TODO: Add error log
+        }
+    }
+
+    $data = array(
+        'public_key' => $public_key,
+        'secret_key' => $secret_key
+    );
+
+    update_option( 'uploadcare_public_' . $current_timestamp, $data );
+}
+
+/**
+ * Returns saved keys
+ *
+ * @return array
+ */
+function uc_get_saved_options(): array {
+    global $wpdb;
+    $query = 'SELECT * FROM ' . $wpdb->prefix . 'options WHERE option_name LIKE "uploadcare_public_%"';
+
+    return $wpdb->get_results( $query, ARRAY_A );
+}
+
 ?>
 
 <?php if ( $saved ): ?>
@@ -85,6 +140,11 @@ try {
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
+<?php if ( $save_action && ! $keys_exists ) { ?>
+    <div class="error">
+        <p><strong><?php _e( 'API keys are not set' ) ?>.</strong></p>
+    </div>
+<?php } ?>
 
 <?php if ( $connectError !== null ): ?>
     <div class="error">
