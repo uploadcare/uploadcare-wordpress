@@ -1,5 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
-import React from 'react/index';
+import React from 'react';
 import UcUploader from './UcUploader';
 import config from './uc-config';
 import { __ } from '@wordpress/i18n';
@@ -108,7 +108,7 @@ registerBlockType('uploadcare/image', {
                 {!mediaID ? <MediaUpload
                     onSelect={onSelectImage}
                     render={({open}) => (
-                        <Button isTertiary onClick={open}>{__('WordPress Media Library')}</Button>
+                        <Button onClick={open}>{__('WordPress Media Library')}</Button>
                     )}
                 /> : null}
             </div>
