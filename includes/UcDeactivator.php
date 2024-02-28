@@ -1,8 +1,6 @@
 <?php
 
-class UcDeactivator
-{
-    public static function deactivate()
-    {
+class UcDeactivator {
+    public static function deactivate() {
     }
 }

@@ -17,73 +17,68 @@
  * Text Domain:       uploadcare
  * Domain Path:       /languages
  */
-class Uploadcare_Wordpress_Plugin
-{
+class Uploadcare_Wordpress_Plugin {
     public const UPLOADCARE_VERSION = '3.0.11';
 
-    public function __construct()
-    {
-        if (!\defined('WPINC')) {
+    public function __construct() {
+        if ( ! \defined( 'WPINC' ) ) {
             exit();
         }
-        if (PHP_VERSION_ID < 70400) {
-            exit("Uploadcare plugin requires PHP version <b>7.4.0+</b>, you've got <b>" . PHP_VERSION . '</b>');
+        if ( PHP_VERSION_ID < 70400 ) {
+            exit( "Uploadcare plugin requires PHP version <b>7.4.0+</b>, you've got <b>" . PHP_VERSION . '</b>' );
         }
-        \defined('UPLOADCARE_VERSION') or \define('UPLOADCARE_VERSION', self::UPLOADCARE_VERSION);
+        \defined( 'UPLOADCARE_VERSION' ) or \define( 'UPLOADCARE_VERSION', self::UPLOADCARE_VERSION );
 
         $this->init();
         $this->run_uploadcare();
     }
 
-    public function activate_uploadcare(): void
-    {
+    public function activate_uploadcare(): void {
         UcActivator::activate();
     }
 
-    public function deactivate_uploadcare(): void
-    {
+    public function deactivate_uploadcare(): void {
         UcDeactivator::deactivate();
     }
 
-    public function run_uploadcare(): void
-    {
+    public function run_uploadcare(): void {
         $plugin = new UploadcareMain();
         $plugin->run();
     }
 
-    public function init(): void
-    {
+    public function init(): void {
         require_once __DIR__ . '/vendor/autoload.php';
 
-        \register_activation_hook(__FILE__, [$this, 'activate_uploadcare']);
-        \register_deactivation_hook(__FILE__, [$this, 'deactivate_uploadcare']);
+        \register_activation_hook( __FILE__, [ $this, 'activate_uploadcare' ] );
+        \register_deactivation_hook( __FILE__, [ $this, 'deactivate_uploadcare' ] );
     }
 }
 
 /** @noinspection ForgottenDebugOutputInspection */
-function ULog(...$args)
-{
-    if (!\is_array($args) || empty($args)) {
+function ULog( ...$args ) {
+    if ( ! \is_array( $args ) || empty( $args ) ) {
         return;
     }
 
-    foreach ($args as $arg) {
+    foreach ( $args as $arg ) {
         $data = [
             "\t[LOG::Ulog]",
             "\n",
-            \var_export($arg, true),
+            \var_export( $arg, true ),
             "\n",
         ];
 
-        \error_log(\implode('', $data));
+        \error_log( \implode( '', $data ) );
     }
 }
 
-function UploadcareUserAgent(): array
-{
+function UploadcareUserAgent(): array {
     global $wp_version;
 
-    return ['Uploadcare-wordpress', \sprintf('%s,%s', $wp_version, Uploadcare_Wordpress_Plugin::UPLOADCARE_VERSION)];
+    return [
+        'Uploadcare-wordpress',
+        \sprintf( '%s,%s', $wp_version, Uploadcare_Wordpress_Plugin::UPLOADCARE_VERSION )
+    ];
 }
 
 new Uploadcare_Wordpress_Plugin();
