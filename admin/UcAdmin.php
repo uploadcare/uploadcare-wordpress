@@ -308,18 +308,17 @@ class UcAdmin {
             \wp_die( $message, '', 400 );
         }
 
-        $filename      = $this->filenameFromPostTitle( $post, $original_file_name );
-        $localFilePath = \rtrim( $uploadDirData['path'], '/' ) . '/' . $filename;
+        $localFilePath = \rtrim( $uploadDirData['path'], '/' ) . '/' . $original_file_name;
         \file_put_contents( $localFilePath, $uc_file_content );
 
         $subdir = \ltrim( ( $uploadDirData['subdir'] ?? '' ), '/' );
-        \update_post_meta( $postId, '_wp_attached_file', sprintf( '%s/%s', $subdir, $filename ) );
+        \update_post_meta( $postId, '_wp_attached_file', sprintf( '%s/%s', $subdir, $original_file_name ) );
         \update_post_meta( $postId, '_wp_attachment_metadata', \wp_read_image_metadata( $localFilePath ) );
         \delete_post_meta( $postId, 'uploadcare_url' );
         \delete_post_meta( $postId, 'uploadcare_uuid' );
         \delete_post_meta( $postId, 'uploadcare_url_modifiers' );
 
-        $post->guid = $uploadDirData['url'] . '/' . $filename;
+        $post->guid = $uploadDirData['url'] . '/' . $original_file_name;
         \wp_update_post( $post );
 
         $this->makeDefaultImageSizes( $post );
@@ -339,36 +338,6 @@ class UcAdmin {
         echo \wp_json_encode( $result );
 
         \wp_die();
-    }
-
-    private function filenameFromPostTitle( WP_Post $post, string $originalName = null ): string {
-        if ( $originalName !== null && ( $originalExt = \pathinfo( $originalName, PATHINFO_EXTENSION ) ) !== null ) {
-            return $post->post_title . '.' . $originalExt;
-        }
-
-        $extensions = [
-            'image/bmp'  => 'bmp',
-            'image/gif'  => 'gif',
-            'image/jpeg' => 'jpeg',
-            'image/png'  => 'png',
-            'image/tiff' => 'tiff',
-        ];
-
-        if ( ! array_key_exists( $post->post_mime_type, $extensions ) ) {
-            return $post->post_title;
-        }
-        foreach ( $extensions as $mimeType => $extension ) {
-            if ( $post->post_mime_type === $mimeType ) {
-                $postExtension = \substr( $post->post_title, ( 0 - \strlen( $extension ) ) );
-                if ( $postExtension !== $extension ) {
-                    $post->post_title = sprintf( '%s.%s', $post->post_title, $extension );
-
-                    \wp_update_post( $post );
-                }
-            }
-        }
-
-        return $post->post_title;
     }
 
     private function makeDefaultImageSizes( WP_Post $post ): void {
