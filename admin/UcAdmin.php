@@ -276,6 +276,7 @@ class UcAdmin {
 
     /**
      * Calls on `wp_ajax_{$action}` (in this case — `wp_ajax_uploadcare_down`).
+     * @throws Exception
      */
     public function transferDown(): void {
         $postId = $_POST['postId'] ?? null;
@@ -289,16 +290,16 @@ class UcAdmin {
             \wp_die( __( 'Post not found', 'uploadcare' ), '', 400 );
         }
 
-        $imageId = \get_post_meta( $postId, 'uploadcare_uuid', true );
-        try {
-            $ucFile = $this->api->file()->fileInfo( $imageId );
-        } catch ( \Exception $e ) {
-            \wp_die( __( 'Unable to get file file info uploadcare', 'uploadcare' ), '', 400 );
+        $image_id = \get_post_meta( $postId, 'uploadcare_uuid', true );
+
+        $uc_file_model = new UCFileModel( $image_id, $post->ID );
+
+        if ( ! $uc_file_model->is_file_valid() ) {
+            wp_die( __( 'Unable to get file from uploadcare', 'uploadcare' ), '', 400 );
         }
-        $originalUrl = $ucFile->getOriginalFileUrl();
-        if ( $originalUrl === null || ( $ucFileContents = \file_get_contents( $originalUrl ) ) === null ) {
-            \wp_die( __( 'Unable to get file from uploadcare', 'uploadcare' ), '', 400 );
-        }
+
+        $original_file_name = $uc_file_model->get_file_name();
+        $uc_file_content    = $uc_file_model->get_file_content();
 
         $uploadDirData = \wp_upload_dir();
 
@@ -307,9 +308,9 @@ class UcAdmin {
             \wp_die( $message, '', 400 );
         }
 
-        $filename      = $this->filenameFromPostTitle( $post, $ucFile->getOriginalFilename() );
+        $filename      = $this->filenameFromPostTitle( $post, $original_file_name );
         $localFilePath = \rtrim( $uploadDirData['path'], '/' ) . '/' . $filename;
-        \file_put_contents( $localFilePath, $ucFileContents );
+        \file_put_contents( $localFilePath, $uc_file_content );
 
         $subdir = \ltrim( ( $uploadDirData['subdir'] ?? '' ), '/' );
         \update_post_meta( $postId, '_wp_attached_file', sprintf( '%s/%s', $subdir, $filename ) );
