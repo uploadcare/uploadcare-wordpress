@@ -176,7 +176,7 @@ class UcFront {
      *
      * @param $dimensions
      * @param string $src
-     * @param array $imageMeta
+     * @param array|false $imageMeta
      * @param int $attachmentId
      *
      * @return int[]|mixed
@@ -184,7 +184,7 @@ class UcFront {
      *
      * @see UploadcareMain::defineFrontHooks()
      */
-    public function imageGetDimensions( $dimensions, string $src, array $imageMeta, int $attachmentId ) {
+    public function imageGetDimensions( $dimensions, string $src, $imageMeta, int $attachmentId ) {
         if ( empty( \get_post_meta( $attachmentId, 'uploadcare_uuid', true ) ) ) {
             return $dimensions;
         }
