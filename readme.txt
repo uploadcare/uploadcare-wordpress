@@ -3,9 +3,9 @@
 Contributors: andrew72ru, rsedykh, mixar
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.4.3
 Requires PHP: 7.4
-Stable tag: 3.0.11
+Stable tag: 3.0.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -114,6 +114,9 @@ Send us your feedback, <help@uploadcare.com>
 
 == Upgrade Notice ==
 
+= 3.0.12 =
+Added downloading images independently of the current project to Uploadcare.
+
 = 3.0.10 =
 Fixed PHP 7.4 support.
 
@@ -139,6 +142,14 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.0.12 =
+
+Fixed:
+* Autotests support.
+
+Compatibility:
+* Tested in WordPress up to version 6.4.3
 
 = 3.0.11 =
 
