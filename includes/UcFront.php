@@ -336,7 +336,7 @@ class UcFront {
         return $content;
     }
 
-    protected function getUuid( int $postId ): string {
+    protected function getUuid( int $postId ) {
         $uuid = \get_post_meta( $postId, 'uploadcare_uuid', true );
         if ( empty( $uuid ) ) {
             $uuid = UploadcareMain::getUuid( \get_post_meta( $postId, 'uploadcare_url', true ) );

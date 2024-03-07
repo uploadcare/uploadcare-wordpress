@@ -113,7 +113,6 @@ class UcAdmin {
             return;
         }
 
-        \wp_enqueue_script( 'uploadcare-main' );
         \wp_enqueue_style( 'uploadcare-style' );
 
         \wp_enqueue_script( 'uploadcare-elements' );
@@ -363,8 +362,8 @@ class UcAdmin {
 
     public function loadPostByUuid( string $uuid ): ?WP_Post {
         global $wpdb;
-        $query  = \sprintf( 'SELECT post_id FROM %s WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'', \sprintf( '%spostmeta', $wpdb->prefix ), $uuid );
-        $query  = $wpdb->prepare( $query );
+        $query = 'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'';
+        $query = $wpdb->prepare( $query, $uuid );
         $result = $wpdb->get_results( $query, ARRAY_A );
 
         if ( ( $postId = ( $result[0]['post_id'] ?? null ) ) === null ) {
@@ -507,7 +506,7 @@ HTML;
             return null;
         }
 
-        $base = \get_option( 'uploadcare_cdn_base' );
+        $base = \get_option( 'uploadcare_cdn_base', 'ucarecdn.com' );
         if ( \strpos( $base, 'http' ) !== 0 ) {
             $base = \sprintf( 'https://%s', $base );
         }
