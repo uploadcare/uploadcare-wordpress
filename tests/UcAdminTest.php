@@ -4,6 +4,7 @@ namespace Tests;
 
 use Uploadcare\Interfaces\Api\FileApiInterface;
 use Uploadcare\Interfaces\File\FileInfoInterface;
+use Uploadcare\Interfaces\RestApiInterface;
 
 class UcAdminTest extends \WP_UnitTestCase {
     public function testClassExists(): void {
@@ -32,7 +33,7 @@ class UcAdminTest extends \WP_UnitTestCase {
 
         $api = $reflection->getProperty( 'api' );
         $api->setAccessible( true );
-        self::assertInstanceOf( \Uploadcare\Api::class, $api->getValue( $admin ) );
+        self::assertInstanceOf( RestApiInterface::class, $api->getValue( $admin ) );
     }
 
     public function testSettingsLink(): void {
@@ -49,7 +50,6 @@ class UcAdminTest extends \WP_UnitTestCase {
             [ 'uploadcare-elements' ],
             [ 'uploadcare-widget' ],
             [ 'uploadcare-config' ],
-            [ 'uploadcare-main' ],
             [ 'image-block' ],
         ];
     }
@@ -68,36 +68,18 @@ class UcAdminTest extends \WP_UnitTestCase {
 
         $admin = new \UcAdmin( 'uploadcare-test', 'TEST_VERSION' );
         $admin->uploadcare_plugin_init();
-
         $registered = $wp_scripts->query( $handle );
-        self::assertIsObject( $registered );
+        self::assertIsObject( $registered,  print_r($handle, true) );
         self::assertEquals( $handle, $registered->handle );
         self::assertFalse( $wp_scripts->query( $handle, 'enqueued' ) );
     }
 
     public function provideInPostScripts(): array {
         return [
-            [ 'uploadcare-main' ],
             [ 'uc-config' ],
             [ 'uploadcare-elements' ],
             [ 'image-block' ],
         ];
-    }
-
-    public function testAddUploadcareJsToAdmin(): void {
-        require_once \dirname( __DIR__ ) . '/uploadcare.php';
-        require_once \dirname( __DIR__ ) . '/admin/UcAdmin.php';
-        $admin = new \UcAdmin( 'uploadcare-test', 'TEST_VERSION' );
-
-        global $wp_scripts;
-        if ( ! $wp_scripts instanceof \WP_Scripts ) {
-            $wp_scripts = new \WP_Scripts();
-        }
-        $admin->uploadcare_plugin_init();
-
-        $admin->add_uploadcare_js_to_admin( 'post.php' );
-
-        self::assertArrayHasKey( 'uploadcare-main', $wp_scripts->registered );
     }
 
     protected function mockFileInfo(): FileInfoInterface {
@@ -114,14 +96,14 @@ class UcAdminTest extends \WP_UnitTestCase {
         require_once \dirname( __DIR__ ) . '/uploadcare.php';
         require_once \dirname( __DIR__ ) . '/admin/UcAdmin.php';
         $admin   = new \UcAdmin( 'uploadcare-test', 'TEST_VERSION' );
-        $fileUrl = 'https://ucarecdn.com/c9f36f67-6f45-4b6d-a876-699f4dc60730/-/preview/2048x2048/-/quality/lightest/-/format/auto/';
+        $fileUrl = 'https://ucarecdn.com/bb88d7fd-7343-45ff-8f6b-880eee7a0500/-/preview/2048x2048/-/quality/lightest/-/format/auto/';
 
         $_POST['file_url'] = $fileUrl;
         $fileApi           = $this->getMockBuilder( FileApiInterface::class )
                                   ->getMock();
         $fileApi->expects( self::once() )->method( 'fileInfo' )->willReturn( $this->mockFileInfo() );
 
-        $api = $this->getMockBuilder( \Uploadcare\Api::class )
+        $api = $this->getMockBuilder( RestApiInterface::class )
                     ->disableOriginalConstructor()
                     ->getMock();
         $api->expects( self::once() )->method( 'file' )->willReturn( $fileApi );

@@ -15,7 +15,7 @@ class LoadByMetaTest extends LoadedPluginTestCase {
             'post_status'    => 'inherit',
             'post_mime_type' => 'image/jpeg',
         ] );
-        self::assertNotInstanceOf( \WP_Error::class, $this->post );
+        self::assertNotInstanceOf( \WP_Error::class, $post );
         \add_post_meta( $post, 'uploadcare_uuid', self::UUID );
 
         self::assertFalse( \get_post_meta( 'uploadcare_url', $post, true ) );

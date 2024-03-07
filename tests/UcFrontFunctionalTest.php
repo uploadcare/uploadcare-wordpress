@@ -40,28 +40,29 @@ class UcFrontFunctionalTest extends LoadedPluginTestCase {
             'blockName'    => 'uploadcare/image',
             'attrs'        => [
                 'mediaID'  => '5',
-                'mediaUid' => 'f132dcd3-098d-4dd6-b372-62cdd7e2759d',
+                'mediaUid' => 'b3669764-2932-4bb1-a1df-c8feda55a959',
             ],
             'innerBlocks'  => [],
-            'innerHTML'    => '<figure class="wp-block-uploadcare-image"><img id="5" src="https://ucarecdn.com/f132dcd3-098d-4dd6-b372-62cdd7e2759d/" class="uploadcare-image"/><figcaption></figcaption></figure>',
+            'innerHTML'    => '<figure class="wp-block-uploadcare-image"><img id="5" src="https://ucarecdn.com/b3669764-2932-4bb1-a1df-c8feda55a959/" class="uploadcare-image"/><figcaption></figcaption></figure>',
             'innerContent' => [
-                '<figure class="wp-block-uploadcare-image"><img id="5" src="https://ucarecdn.com/f132dcd3-098d-4dd6-b372-62cdd7e2759d/" class="uploadcare-image"/><figcaption></figcaption></figure>',
+                '<figure class="wp-block-uploadcare-image"><img id="5" src="https://ucarecdn.com/b3669764-2932-4bb1-a1df-c8feda55a959/" class="uploadcare-image"/><figcaption></figcaption></figure>',
             ],
         ];
     }
 
     public static function getCoreImage(): array {
+        $site_url = get_site_url();
         return [
             'blockName'    => 'core/image',
             'attrs'        => [
-                'id'              => 8,
+                'id'              => 12,
                 'sizeSlug'        => 'large',
                 'linkDestination' => 'none',
             ],
             'innerBlocks'  => [],
-            'innerHTML'    => '<figure class="wp-block-image size-large"><img src="https://wp.localhost/wp-content/uploads/2021/01/photo_2020-08-21-08.42.40-874x1024.jpeg" alt="" class="wp-image-8"/><figcaption>Some</figcaption></figure>',
+            'innerHTML'    => '<figure class="wp-block-image size-large"><img src="'.$site_url.'/wp-content/uploads/2021/01/photo_2020-08-21-08.42.40-874x1024.jpeg" alt="" class="wp-image-8"/><figcaption>Some</figcaption></figure>',
             'innerContent' => [
-                '<figure class="wp-block-image size-large"><img src="https://wp.localhost/wp-content/uploads/2021/01/photo_2020-08-21-08.42.40-874x1024.jpeg" alt="" class="wp-image-8"/><figcaption>Some</figcaption></figure>',
+                '<figure class="wp-block-image size-large"><img src="'.$site_url.'/wp-content/uploads/2021/01/photo_2020-08-21-08.42.40-874x1024.jpeg" alt="" class="wp-image-8"/><figcaption>Some</figcaption></figure>',
             ],
         ];
     }
@@ -102,6 +103,7 @@ class UcFrontFunctionalTest extends LoadedPluginTestCase {
         ] );
         \add_post_meta( $post, '_wp_attached_file', '2021/01/photo_2020-08-21-08.42.40.jpeg' );
 
+
         $content = self::getCoreImage()['innerHTML'];
         $result  = $this->service->renderBlock( $content, self::getCoreImage() );
         self::assertEquals( $content, $result );
@@ -118,11 +120,15 @@ class UcFrontFunctionalTest extends LoadedPluginTestCase {
             'post_date'   => date( 'Y-m-d H:i:s' ),
             'post_type'   => 'attachment',
             'post_status' => 'inherit',
+            'post_mime_type' => 'image/jpeg'
         ] );
-        \add_post_meta( $post, '_wp_attached_file', '2021/01/photo_2020-08-21-08.42.40.jpeg' );
+        \add_post_meta( $post, '_wp_attached_file', '2024/03/photo_2020-08-21-08.42.40.jpeg' );
+
+        $mock_data  = self::getCoreImage();
+        $mock_data['attrs']['id'] = $post;
 
         $content = self::getCoreImage()['innerHTML'];
-        $result  = $this->service->renderBlock( $content, self::getCoreImage() );
+        $result  = $this->service->renderBlock( $content, $mock_data );
 
         self::assertNotEquals( $result, $content );
         self::assertStringContainsString( 'data-blink-src', $result );
@@ -137,11 +143,15 @@ class UcFrontFunctionalTest extends LoadedPluginTestCase {
             'post_date'   => date( 'Y-m-d H:i:s' ),
             'post_type'   => 'attachment',
             'post_status' => 'inherit',
+            'post_mime_type' => 'image/jpeg'
         ] );
-        \add_post_meta( $post, '_wp_attached_file', 'https://ucarecdn.com/f132dcd3-098d-4dd6-b372-62cdd7e2759d/' );
+
+        $mock_data  = self::getUploadcareImage();
+        $mock_data['attrs']['mediaID'] = $post;
+        \add_post_meta( $post, '_wp_attached_file', 'https://ucarecdn.com/b3669764-2932-4bb1-a1df-c8feda55a959/' );
 
         $content = self::getUploadcareImage()['innerHTML'];
-        $result  = $this->service->renderBlock( $content, self::getUploadcareImage() );
+        $result  = $this->service->renderBlock( $content, $mock_data );
 
         self::assertNotEquals( $result, $content );
         self::assertStringContainsString( 'data-blink-src', $result );

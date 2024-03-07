@@ -4,3 +4,4 @@ composer.lock
 vendor
 node_modules
 compiled-js/*
+.phpunit.result.cache

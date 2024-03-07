@@ -8,7 +8,7 @@ class loadPostByUuidTest extends LoadedPluginTestCase {
      */
     private $post;
 
-    protected const UUID = '6c5b97ee-4ce9-490f-92e9-50cba0271917';
+    protected const UUID = '7e9b491a-4a68-43d8-9694-0406faed3ca7';
 
     public function setUp(): void {
         parent::setUp();

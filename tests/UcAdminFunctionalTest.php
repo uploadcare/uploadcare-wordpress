@@ -4,6 +4,7 @@ namespace Tests;
 
 use Uploadcare\Interfaces\Api\FileApiInterface;
 use Uploadcare\Interfaces\File\FileInfoInterface;
+use Uploadcare\Interfaces\RestApiInterface;
 
 class UcAdminFunctionalTest extends LoadedPluginTestCase {
     private $logPath = __DIR__ . '/_output/error.log';
@@ -41,12 +42,12 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase {
 
     public function testAttachmentDeleteAction(): void {
         $id = $this->getPost();
-        \add_post_meta( $id, 'uploadcare_url', 'https://ucarecdn.com/c9f36f67-6f45-4b6d-a876-699f4dc60730/-/preview/2048x2048/-/quality/lightest/-/format/auto/' );
+        \add_post_meta( $id, 'uploadcare_url', 'https://ucarecdn.com/bb88d7fd-7343-45ff-8f6b-880eee7a0500/-/preview/2048x2048/-/quality/lightest/-/format/auto/' );
 
         $fileApi = $this->getMockBuilder( FileApiInterface::class )
                         ->getMock();
         $fileApi->expects( self::once() )->method( 'deleteFile' );
-        $api = $this->getMockBuilder( \Uploadcare\Api::class )
+        $api = $this->getMockBuilder( RestApiInterface::class )
                     ->disableOriginalConstructor()
                     ->getMock();
         $api->expects( self::once() )->method( 'file' )->willReturn( $fileApi );
@@ -59,13 +60,13 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase {
 
     public function testAttachmentDeleteActionError(): void {
         $id = $this->getPost();
-        \add_post_meta( $id, 'uploadcare_url', 'https://ucarecdn.com/c9f36f67-6f45-4b6d-a876-699f4dc60730/-/preview/2048x2048/-/quality/lightest/-/format/auto/' );
+        \add_post_meta( $id, 'uploadcare_url', 'https://ucarecdn.com/bb88d7fd-7343-45ff-8f6b-880eee7a0500/-/preview/2048x2048/-/quality/lightest/-/format/auto/' );
 
         $fileApi = $this->getMockBuilder( FileApiInterface::class )
                         ->getMock();
         $fileApi->expects( self::once() )->method( 'deleteFile' )
                 ->willThrowException( new \Exception() );
-        $api = $this->getMockBuilder( \Uploadcare\Api::class )
+        $api = $this->getMockBuilder( RestApiInterface::class )
                     ->disableOriginalConstructor()
                     ->getMock();
         $api->expects( self::once() )->method( 'file' )->willReturn( $fileApi );
@@ -87,7 +88,7 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase {
     public function testGetUploadcareAttachmentUrl(): void {
         $postId = $this->getPost();
         $url    = 'https://example.com/image';
-        $ucUrl  = 'https://ucarecdn.com/c9f36f67-6f45-4b6d-a876-699f4dc60730/';
+        $ucUrl  = 'https://ucarecdn.com/bb88d7fd-7343-45ff-8f6b-880eee7a0500/';
         \add_post_meta( $postId, 'uploadcare_url', $ucUrl );
 
         self::assertSame( $this->service->uc_get_attachment_url( $url, $postId ), $ucUrl );
@@ -103,7 +104,7 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase {
                         ->getMock();
         $fileApi->expects( self::once() )->method( 'fileInfo' )
                 ->willReturn( $fileInfo );
-        $api = $this->getMockBuilder( \Uploadcare\Api::class )
+        $api = $this->getMockBuilder( RestApiInterface::class )
                     ->disableOriginalConstructor()
                     ->getMock();
         $api->expects( self::once() )->method( 'file' )->willReturn( $fileApi );
@@ -112,7 +113,7 @@ class UcAdminFunctionalTest extends LoadedPluginTestCase {
         $serviceApi->setValue( $this->service, $api );
 
         $postId = $this->getPost();
-        $ucUrl  = 'https://ucarecdn.com/c9f36f67-6f45-4b6d-a876-699f4dc60730/';
+        $ucUrl  = 'https://ucarecdn.com/bb88d7fd-7343-45ff-8f6b-880eee7a0500/';
         \add_post_meta( $postId, 'uploadcare_url', $ucUrl );
 
         $result = $this->service->uc_load( $ucUrl, $postId );
