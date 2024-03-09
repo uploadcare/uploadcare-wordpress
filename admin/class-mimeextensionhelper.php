@@ -1,8 +1,14 @@
 <?php
 
+/**
+ * Class MimeExtensionHelper
+ */
 final class MimeExtensionHelper {
 
-    private static $available_types = array(
+    /**
+     * @var array|string[]
+     */
+    private static array $available_types = array(
         'video/3gpp2'                                                               => '3g2',
         'video/3gp'                                                                 => '3gp',
         'video/3gpp'                                                                => '3gp',

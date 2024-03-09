@@ -1,5 +1,6 @@
 <?php
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
@@ -59,16 +60,27 @@ final class UCFileModel {
     private string $file_content;
 
     /**
-     * @param string $image_id - Uploadcare image ID
+     * @var Client|null
+     */
+    private ?Client $guzzle_http_client = null;
+
+    /**
+     * URL for Uploadcare API
      *
-     * @paran int $attachment_id - WP attachment ID
+     * @var string
+     */
+    private string $upload_API_URL = 'https://upload.uploadcare.com';
+
+    /**
+     * @param string $image_id - Uploadcare image ID.
+     *
+     * @paran int $attachment_id - WP attachment ID.
      * @throws Exception
      */
     public function __construct( string $image_id, int $attachment_id ) {
         if ( ! trim( $image_id ) || $attachment_id <= 0 ) {
             throw new Exception( 'Invalid arguments passed to the constructor' );
         }
-
         $this->image_id      = $image_id;
         $this->attachment_id = $attachment_id;
         $this->set_available_api_keys();
@@ -107,6 +119,19 @@ final class UCFileModel {
     }
 
     /**
+     * Get lazy loaded Guzzle HTTP client instance
+     *
+     * @return Client
+     */
+    private function get_guzzle_http_client(): Client {
+        if ( is_null( $this->guzzle_http_client ) ) {
+            $this->guzzle_http_client = new GuzzleHttp\Client();
+        }
+
+        return $this->guzzle_http_client;
+    }
+
+    /**
      * Set api keys from DB
      *
      * @return void
@@ -123,7 +148,7 @@ final class UCFileModel {
                 );
             }
         } catch ( Throwable $tw ) {
-            // TODO: Add log
+            ULog( $tw->getMessage() );
         }
 
         try {
@@ -141,11 +166,11 @@ final class UCFileModel {
                         );
                     }
                 } catch ( Throwable $tw ) {
-                    // TODO: Add log
+                    ULog( $tw->getMessage() );
                 }
             }
         } catch ( Throwable $tw ) {
-            // TODO: Add log
+            ULog( $tw->getMessage() );
         }
     }
 
@@ -166,13 +191,12 @@ final class UCFileModel {
                 try {
                     $uc_file  = $api->file()->fileInfo( $this->image_id );
                     $file_URL = $uc_file->getOriginalFileUrl();
-                    if ( ! $file_URL ) {
-                        continue;
+                    if ( $file_URL ) {
+                        $this->file_url  = $file_URL;
+                        $this->file_name = $uc_file->getOriginalFilename();
+                        break;
                     }
-                    $this->file_url  = $file_URL;
-                    $this->file_name = $uc_file->getOriginalFilename();
-                    break;
-                } catch ( \Exception $e ) {
+                } catch ( Exception $e ) {
                     continue;
                 }
             }
@@ -181,8 +205,51 @@ final class UCFileModel {
             }
             $this->set_file_content();
         } catch ( Throwable $tw ) {
-            // TODO: Add error log
+            ULog( $tw->getMessage() );
         }
+    }
+
+    /**
+     * Returns file info by "info" API method. @see https://uploadcare.com/api-refs/upload-api/#tag/Upload/operation/fromURLUploadStatus
+     *
+     * @param string $public_key - Uploadcare API public key.
+     * @param string $image_id - Uploadcare file ID.
+     *
+     * @return bool
+     */
+    private function set_file_name_from_info_api_endpoint( string $public_key, string $image_id ): bool {
+        try {
+            $res = $this->get_guzzle_http_client()->request(
+                'GET',
+                $this->upload_API_URL . '/info/',
+                array(
+                    'query' => array(
+                        'pub_key' => $public_key,
+                        'file_id' => $image_id
+                    ),
+                ),
+            );
+
+            if ( $res->getStatusCode() !== 200 ) {
+                throw new Exception( 'Get UC file with Guzzle. Incorrect status code ' . $res->getStatusCode() );
+            }
+
+            $response_body = json_decode( $res->getBody()->getContents(), true );
+            if ( is_array( $response_body ) && array_key_exists( 'original_filename', $response_body ) && $response_body['original_filename'] ) {
+                $this->file_name = sanitize_file_name( $response_body['original_filename'] );
+
+                return true;
+            }
+        } catch ( GuzzleException $tw ) {
+            // Debug point
+            return false;
+        } catch ( Throwable $tw ) {
+            ULog( $tw->getMessage() );
+
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -192,8 +259,7 @@ final class UCFileModel {
      */
     private function set_file_content() {
         try {
-            $client = new GuzzleHttp\Client();
-            $res    = $client->request(
+            $res = $this->get_guzzle_http_client()->request(
                 'GET',
                 $this->file_url,
             );
@@ -204,9 +270,9 @@ final class UCFileModel {
             $this->set_file_name( $res );
             $this->file_content = $res->getBody();
         } catch ( GuzzleException $tw ) {
-            // TODO: Add Guzzle log
+            // Debug point
         } catch ( Throwable $tw ) {
-            // TODO: Add common error log
+            ULog( $tw->getMessage() );
         }
 
     }
@@ -252,6 +318,20 @@ final class UCFileModel {
                 $file_name = basename( $meta_file_URL );
                 if ( $file_name && ! is_bool( strpos( $file_name, '.' ) ) ) {
                     $this->file_name = $file_name;
+                }
+            }
+        }
+
+        // Try to set filename based on '/info' Uploadcare API endpoint
+        // @see https://uploadcare.com/api-refs/upload-api/#tag/Upload/operation/fileUploadInfo
+        if ( ! $this->file_name ) {
+            foreach ( $this->available_api_keys as $keys ) {
+                try {
+                    if ( $this->set_file_name_from_info_api_endpoint( $keys['public_key'], $this->image_id ) ) {
+                        break;
+                    }
+                } catch ( Exception $e ) {
+                    continue;
                 }
             }
         }
