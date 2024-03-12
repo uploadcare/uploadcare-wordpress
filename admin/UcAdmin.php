@@ -97,6 +97,9 @@ class UcAdmin {
             'uploadcare-config',
         ], $this->version );
         \wp_register_style( 'admin-css', $pluginDirUrl . 'compiled-js/admin.css', [], $this->version );
+
+        //Custom CSS
+        wp_register_style( 'uc-custom-css', $pluginDirUrl . 'css/custom.css', [], $this->version );
     }
 
     /**

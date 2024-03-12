@@ -79,6 +79,9 @@ class UcFront {
             \wp_localize_script( 'blink-loader', 'blinkLoaderConfig', $this->getJsConfig() );
             \wp_enqueue_script( 'blink-loader' );
         }
+
+        // Custom CSS
+        wp_enqueue_style( 'uc-custom-css' );
     }
 
     /**
