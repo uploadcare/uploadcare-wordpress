@@ -18,7 +18,7 @@
  * Domain Path:       /languages
  */
 class Uploadcare_Wordpress_Plugin {
-    public const UPLOADCARE_VERSION = '3.0.11';
+    public const UPLOADCARE_VERSION = '3.0.12';
 
     public function __construct() {
         if ( ! \defined( 'WPINC' ) ) {

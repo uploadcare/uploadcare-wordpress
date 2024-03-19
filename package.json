@@ -1,6 +1,6 @@
 {
   "name": "uploadcare-wordpress",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "devDependencies": {
     "@wordpress/block-editor": "^12.20.0",
     "@wordpress/components": "^27.0.0",

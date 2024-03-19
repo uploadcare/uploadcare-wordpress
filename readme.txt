@@ -1,11 +1,11 @@
 === Uploadcare File Uploader and Adaptive Delivery (beta) ===
 
-Contributors: andrew72ru, rsedykh, mixar
+Contributors: andrew72ru, rsedykh, mixar, kkeng
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 6.4.3
+Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 3.0.12
+Stable tag: 3.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
