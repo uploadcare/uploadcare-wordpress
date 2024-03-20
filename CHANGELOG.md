@@ -5,9 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] — 2024-03-20
+
+Fixed:
+* Behaviour when uploading and downloading current images to and from Uploadcare storage.
+* Autotests support.
+
+Compatibility:
+* Tested in WordPress up to version 6.4.3
+
+
+## [3.0.11] — 2023-11-14
+
+Fixed:
+* Corrected the URL to the "upload with Uploadcare" button icon.
+
+Compatibility:
+* Tested in WordPress up to version 6.4.
+
+
 ## [3.0.10] — 2022-12-14
 
 * Fixed PHP 7.4 support.
+
 
 ## [3.0.9] — 2022-12-14
 
@@ -16,9 +36,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Masked secret key in plugin settings for additional security.
 * Updated Uploadcare widget.
 
+
 ## [3.0.8] — 2022-01-24
 
 * Removed types from method (bug fix for https://wordpress.org/support/topic/fatal-error-3-0-7/).
+
 
 ## [3.0.7] — 2021-08-20
 
@@ -28,15 +50,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Created console utility to transfer all files at once.
 * Minor bug fixes and improvements.
 
+
 ## [3.0.6] — 2021-05-26
 
 * Fixed an issue with missing UUIDs for previously uploaded images, which led to an error while rendering images.
 * Various fixes and improvements.
 
+
 ## [3.0.5] — 2021-04-07
 
 * Now you can copy your WordPress Media Library to Uploadcare cloud storage. Files in Media Library don’t get removed.
 * Image source URLs in posts don’t change. However, when a post is rendered, images get delivered with Uploadcare CDN powered by Adaptive Delivery technology.
+
 
 ## [3.0.4] — 2021-03-09
 
@@ -44,11 +69,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Fixed update process from 2.7.x to 3.x.x.
 * Various other fixes.
 
+
 ## [3.0.3] — 2021-02-16
 
 * Fixed upload button position on "Add media" page.
 * Refactored code for better performance and control.
 * Now you can use Uploadcare Image Editor to modify images from Media Library.
+
 
 ## [3.0.2] — 2021-01-13
 
@@ -56,10 +83,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Composer autoload.
 * Unit-tests for most classes and methods.
 
+
 ## [3.0.1] — 2020-12-25
 
 * Fixed issue with plugin activation to prevent malfunction when PHP DOMDocument class is disabled.
 * Various small improvements.
+
 
 ## [3.0.0] — 2020-12-25
 
@@ -69,6 +98,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Transfer your old files to Uploadcare and back.
 * Updated Settings page.
 * Removed "uploadcare" shortcode that allowed your readers to upload files.
+
 
 ## [2.7.2] — 2020-05-13
 
