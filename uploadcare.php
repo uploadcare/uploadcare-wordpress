@@ -9,7 +9,7 @@
  * Plugin Name:       Uploadcare File Uploader and Adaptive Delivery
  * Plugin URI:        https://github.com/uploadcare/uploadcare-wordpress
  * Description:       Upload and store any file of any size from any device or cloud. No more slow downs when serving your images with automatic responsiviness and lazy loading. Improve your WP performance to boost Customer Experience and SEO.
- * Version:           3.0.12
+ * Version:           3.0.11
  * Author:            Uploadcare
  * Author URI:        https://uploadcare.com/
  * License:           GPL-2.0+
@@ -18,7 +18,7 @@
  * Domain Path:       /languages
  */
 class Uploadcare_Wordpress_Plugin {
-    public const UPLOADCARE_VERSION = '3.0.12';
+    public const UPLOADCARE_VERSION = '3.0.11';
 
     public function __construct() {
         if ( ! \defined( 'WPINC' ) ) {

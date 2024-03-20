@@ -149,7 +149,7 @@ Fixed:
 * Autotests support.
 
 Compatibility:
-* Tested in WordPress up to version 6.4.3
+* Tested in WordPress up to version 6.5
 
 = 3.0.11 =
 
