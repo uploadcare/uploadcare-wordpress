@@ -114,8 +114,8 @@ Send us your feedback, <help@uploadcare.com>
 
 == Upgrade Notice ==
 
-= 3.0.12 =
 Added downloading images independently of the current project to Uploadcare.
+= 3.1.0 =
 
 = 3.0.10 =
 Fixed PHP 7.4 support.
@@ -143,7 +143,7 @@ Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
 
-= 3.0.12 =
+= 3.1.0 =
 
 Fixed:
 * Autotests support.
