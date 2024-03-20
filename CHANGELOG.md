@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [3.1.0] — 2024-03-20
 
 Fixed:
-* Behaviour when uploading and downloading current images to and from Uploadcare storage.
+* Fixed behaviour when uploading and downloading current images to and from Uploadcare storage.
 * Autotests support.
 
 Compatibility:
