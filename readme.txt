@@ -1,9 +1,9 @@
 === Uploadcare File Uploader and Adaptive Delivery (beta) ===
 
-Contributors: andrew72ru, rsedykh, mixar
+Contributors: andrew72ru, rsedykh, mixar, kkeng
 Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.4.3
 Requires PHP: 7.4
 Stable tag: 3.0.11
 License: GPLv2 or later
@@ -114,6 +114,9 @@ Send us your feedback, <help@uploadcare.com>
 
 == Upgrade Notice ==
 
+= 3.1.0 =
+Fixed behaviour when uploading and downloading current images to and from Uploadcare storage.
+
 = 3.0.10 =
 Fixed PHP 7.4 support.
 
@@ -139,6 +142,15 @@ Upgrade if you are using Uploadcare for Featured Images.
 Access all files in your Uploadcare account via Media Library.
 
 == Changelog ==
+
+= 3.1.0 =
+
+Fixed:
+* Fixed behaviour when uploading and downloading current images to and from Uploadcare storage.
+* Autotests support.
+
+Compatibility:
+* Tested in WordPress up to version 6.4.3.
 
 = 3.0.11 =
 
