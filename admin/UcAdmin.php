@@ -240,6 +240,32 @@ class UcAdmin {
         \wp_die();
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function transferMultiplyDown(): void {
+        $posts = $_POST['posts'] ?? null;
+        if ( $posts === null ) {
+            \wp_die( __( 'Required parameter is not set', 'uploadcare' ), '', 400 );
+        }
+        // JS sends array as `posts=1,2,3`
+        $posts = \explode( ',', $posts );
+
+        $result = [];
+        foreach ( $posts as $post_id ) {
+            $post_id  = intval( sanitize_text_field( $post_id ) );
+            $image_id = strval( get_post_meta( $post_id, 'uploadcare_uuid', true ) );
+
+            if ( ! $image_id ) {
+                continue;
+            }
+            $result[] = $this->transfer_post_down( $post_id, $image_id );
+        }
+        echo \wp_json_encode( $result );
+        \wp_die();
+    }
+
     private function transferPostUp( int $postId ): array {
         if ( ( $uuid = \get_post_meta( $postId, 'uploadcare_uuid', true ) ) ) {
             try {
@@ -281,18 +307,38 @@ class UcAdmin {
      * @throws Exception
      */
     public function transferDown(): void {
-        $postId = $_POST['postId'] ?? null;
-        $uuid   = $_POST['uuid'] ?? null;
-        if ( $postId === null || $uuid === null ) {
+        $post_id = null;
+
+        if ( isset( $_POST['postId'] ) ) {
+            $post_id = intval( sanitize_text_field( wp_unslash( $_POST['postId'] ) ) );
+        }
+        $image_id = strval( get_post_meta( $post_id, 'uploadcare_uuid', true ) );
+
+        if ( $post_id === null || ! $image_id ) {
             \wp_die( __( 'Required parameter is not set', 'uploadcare' ), '', 400 );
         }
 
-        $post = \get_post( $postId );
+        $result = $this->transfer_post_down( $post_id, $image_id );
+
+        echo \wp_json_encode( $result );
+        \wp_die();
+
+    }
+
+    /**
+     * Download file from UC server
+     *
+     * @param int $post_id
+     * @param string $image_id
+     *
+     * @return array
+     * @throws Exception
+     */
+    private function transfer_post_down( int $post_id, string $image_id ): array {
+        $post = \get_post( $post_id );
         if ( ! $post instanceof \WP_Post ) {
             \wp_die( __( 'Post not found', 'uploadcare' ), '', 400 );
         }
-
-        $image_id = \get_post_meta( $postId, 'uploadcare_uuid', true );
 
         $uc_file_model = new UCFileModel( $image_id, $post->ID );
 
@@ -314,18 +360,18 @@ class UcAdmin {
         \file_put_contents( $localFilePath, $uc_file_content );
 
         $subdir = \ltrim( ( $uploadDirData['subdir'] ?? '' ), '/' );
-        \update_post_meta( $postId, '_wp_attached_file', sprintf( '%s/%s', $subdir, $original_file_name ) );
-        \update_post_meta( $postId, '_wp_attachment_metadata', \wp_read_image_metadata( $localFilePath ) );
-        \delete_post_meta( $postId, 'uploadcare_url' );
-        \delete_post_meta( $postId, 'uploadcare_uuid' );
-        \delete_post_meta( $postId, 'uploadcare_url_modifiers' );
+        \update_post_meta( $post_id, '_wp_attached_file', sprintf( '%s/%s', $subdir, $original_file_name ) );
+        \update_post_meta( $post_id, '_wp_attachment_metadata', \wp_read_image_metadata( $localFilePath ) );
+        \delete_post_meta( $post_id, 'uploadcare_url' );
+        \delete_post_meta( $post_id, 'uploadcare_uuid' );
+        \delete_post_meta( $post_id, 'uploadcare_url_modifiers' );
 
         $post->guid = $uploadDirData['url'] . '/' . $original_file_name;
         \wp_update_post( $post );
 
         $this->makeDefaultImageSizes( $post );
 
-        $fileUrl = \wp_attachment_is_image( $postId ) ? \wp_get_attachment_image_url( $postId ) : \get_attached_file( $postId, true );
+        $fileUrl = \wp_attachment_is_image( $post_id ) ? \wp_get_attachment_image_url( $post_id ) : \get_attached_file( $post_id, true );
         if ( ! \is_string( $fileUrl ) ) {
             \wp_die( __( 'Something wrong with upload to Wordpress', 'uploadcare' ), '', 400 );
         }
@@ -333,13 +379,11 @@ class UcAdmin {
         $result = [
             'fileUrl'                  => $fileUrl,
             'uploadcare_url_modifiers' => '',
-            'postId'                   => $postId,
+            'postId'                   => $post_id,
             'uploadcare_uuid'          => false,
         ];
 
-        echo \wp_json_encode( $result );
-
-        \wp_die();
+        return $result;
     }
 
     private function makeDefaultImageSizes( WP_Post $post ): void {
@@ -365,8 +409,8 @@ class UcAdmin {
 
     public function loadPostByUuid( string $uuid ): ?WP_Post {
         global $wpdb;
-        $query = 'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'';
-        $query = $wpdb->prepare( $query, $uuid );
+        $query  = 'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_value=\'%s\' AND meta_key=\'uploadcare_uuid\'';
+        $query  = $wpdb->prepare( $query, $uuid );
         $result = $wpdb->get_results( $query, ARRAY_A );
 
         if ( ( $postId = ( $result[0]['post_id'] ?? null ) ) === null ) {

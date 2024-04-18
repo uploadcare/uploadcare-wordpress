@@ -6,11 +6,13 @@ export default class TransferImages {
     private uploadButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('button[data-action="uc-upload"]');
     private downloadButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('button[data-action="uc-download"]');
     private readonly uploadAllButton: HTMLElement | null = document.getElementById('uploadAll');
+    private readonly downloadAllButton: HTMLElement | null = document.getElementById('downloadAll');
     private readonly progressBarWrapper: HTMLElement | null = null;
     private readonly progressBar: HTMLElement | null = null;
     private config: UcConfig;
     private readonly uploadBtnSelector: string = 'uc-upload';
     private readonly downloadBtnSelector: string = 'uc-download';
+    private isDoingRequest = false;
 
     private readonly bu = (e) => {
         e.preventDefault();
@@ -44,8 +46,22 @@ export default class TransferImages {
     private checkLocalExists(): boolean {
         const btns = TransferImages.getNodeList(`button[data-action="${this.uploadBtnSelector}"]`);
         const enabled = Array.prototype.slice.call(btns).filter((b: HTMLButtonElement) => {
-                return b.style.display !== 'none';
-            });
+            return b.style.display !== 'none';
+        });
+
+        return enabled.length > 0;
+    }
+
+    /**
+     * Check if available uploaded images to server
+     *
+     * @private
+     */
+    private checkExternalExists(): boolean {
+        const btns = TransferImages.getNodeList(`button[data-action="${this.downloadBtnSelector}"]`);
+        const enabled = Array.prototype.slice.call(btns).filter((b: HTMLButtonElement) => {
+            return b.style.display !== 'none';
+        });
 
         return enabled.length > 0;
     }
@@ -66,6 +82,7 @@ export default class TransferImages {
             })
         })
         this.toggleTransferAllAction();
+        this.toggleDownloadAllAction();
     }
 
     private toggleTransferAllAction(): void {
@@ -102,6 +119,30 @@ export default class TransferImages {
         }
     }
 
+    /**
+     * Uploading all images.
+     *
+     * @private
+     */
+    private toggleDownloadAllAction(): void {
+        if (this.downloadAllButton === null) return;
+        if (!this.checkExternalExists()) {
+            this.downloadAllButton.setAttribute('disabled', '1');
+            return;
+            // TODO: Check how is works "link back" logic
+        }
+
+        this.downloadAllButton.removeAttribute('disabled');
+        this.downloadAllButton.addEventListener('click', ev => {
+            this.downloadAllAction(ev).then(() => {
+                if (this.downloadAllButton instanceof HTMLButtonElement) {
+                    this.toggleDownloadAllAction()
+                }
+            })
+        });
+        this.downloadAllButton.style.display = 'inline-block'
+    }
+
     private makeFormData(arr: Array<any>): FormData {
         const data = new FormData();
         arr.forEach(obj => {
@@ -116,11 +157,7 @@ export default class TransferImages {
         if (!(target instanceof HTMLButtonElement))
             return;
         ev.preventDefault();
-        target.setAttribute('disabled', '1');
 
-        if (this.uploadAllButton instanceof HTMLButtonElement) {
-            this.uploadAllButton.disabled = true;
-        }
         const postsArray: Array<number> = [];
         Array.prototype.slice.call(this.uploadButtons).forEach((b: HTMLButtonElement) => {
             const postId = b.dataset.post || false;
@@ -133,6 +170,36 @@ export default class TransferImages {
         });
         const data = this.makeFormData([
             {property: 'action', value: 'uploadcare_upload_multiply'},
+            {property: 'posts', value: postsArray},
+        ]);
+        await this.fetchAction(data, target);
+
+        return Promise.resolve();
+    }
+
+    /**
+     * Download all
+     *
+     * @param ev
+     * @private
+     */
+    private async downloadAllAction(ev: MouseEvent): Promise<any> {
+        const target = ev.currentTarget;
+        if (!(target instanceof HTMLButtonElement)) return;
+        ev.preventDefault();
+
+        const postsArray: Array<number> = [];
+        Array.prototype.slice.call(this.downloadButtons).forEach((b: HTMLButtonElement) => {
+            const postId = b.dataset.post || false;
+            if (postId === false)
+                return;
+            if ((b.dataset.uuid || '').length === 0) {
+                return;
+            }
+            postsArray.push(parseInt(postId));
+        });
+        const data = this.makeFormData([
+            {property: 'action', value: 'uploadcare_download_multiply'},
             {property: 'posts', value: postsArray},
         ]);
         await this.fetchAction(data, target);
@@ -178,22 +245,29 @@ export default class TransferImages {
     }
 
     private fetchAction(data: FormData, target: HTMLButtonElement): void {
+        if (this.isDoingRequest) {
+            return;
+        }
+        this.isDoingRequest = true;
+
         this.addBeforeUnload();
         this.setProgress(null);
         target.setAttribute('disabled', '1');
         const originalButton = target.innerHTML;
         target.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
+        this.isDoingRequest = true;
+        this.disableActionButtons();
 
         window.fetch(this.config.ajaxurl, {
             method: 'POST',
             redirect: 'follow',
             body: data,
-            headers: { 'Accept': 'application/json' }
+            headers: {'Accept': 'application/json'}
         }).then(r => {
+            this.isDoingRequest = false;
             if (r.status !== 200) {
                 throw r.text();
             }
-
             return r.json();
         }).then(data => {
             if (data.hasOwnProperty('fileUrl')) {
@@ -202,7 +276,7 @@ export default class TransferImages {
             if (data instanceof Array) {
                 data.forEach(obj => this.changeAttributes(obj));
             }
-
+            this.isDoingRequest = false;
         }).catch((e) => {
             if (e instanceof Promise) {
                 e.then(data => {
@@ -211,6 +285,7 @@ export default class TransferImages {
             } else {
                 console.error(e)
             }
+            this.isDoingRequest = false;
             this.setProgress(0)
         }).finally(() => {
             this.removeBeforeUnload();
@@ -219,11 +294,14 @@ export default class TransferImages {
             if (this.uploadAllButton instanceof HTMLButtonElement) {
                 this.toggleTransferAllAction()
             }
+            if (this.downloadAllButton instanceof HTMLButtonElement) {
+                this.toggleDownloadAllAction()
+            }
+            this.isDoingRequest = false;
         })
     }
 
-    private changeAttributes(data: any): void
-    {
+    private changeAttributes(data: any): void {
         if (!data.hasOwnProperty('fileUrl') || !data.hasOwnProperty('postId')) return;
         const remoteUuid = data.hasOwnProperty('uploadcare_uuid') ? data.uploadcare_uuid : '';
         const targetBtn = document.getElementById(`uc-download-${data.postId}`) || document.createElement('button');
@@ -239,6 +317,21 @@ export default class TransferImages {
 
         if (this.uploadAllButton instanceof HTMLButtonElement) {
             this.toggleTransferAllAction()
+        }
+    }
+
+    /**
+     * Disable action button
+     *
+     * @private
+     */
+    private disableActionButtons() {
+        if (this.uploadAllButton instanceof HTMLButtonElement) {
+            this.uploadAllButton.setAttribute('disabled', '1');
+        }
+
+        if (this.downloadAllButton instanceof HTMLButtonElement) {
+            this.downloadAllButton.setAttribute('disabled', '1');
         }
     }
 
