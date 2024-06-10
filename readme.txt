@@ -5,7 +5,7 @@ Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, op
 Requires at least: 5.0
 Tested up to: 6.4.3
 Requires PHP: 7.4
-Stable tag: 3.0.11
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://uploadcare.com/pricing/
@@ -115,6 +115,7 @@ Send us your feedback, <help@uploadcare.com>
 == Upgrade Notice ==
 
 = 3.1.0 =
+Resolved a Cross-Site Request Forgery (CSRF) vulnerability on the settings page.
 Fixed behaviour when uploading and downloading current images to and from Uploadcare storage.
 
 = 3.0.10 =
