@@ -133,6 +133,7 @@ export default class TransferImages {
         });
         const data = this.makeFormData([
             {property: 'action', value: 'uploadcare_upload_multiply'},
+            {property: 'nonce', value: this.config.nonce || ''},
             {property: 'posts', value: postsArray},
         ]);
         await this.fetchAction(data, target);
@@ -148,6 +149,7 @@ export default class TransferImages {
 
         const data = this.makeFormData([
             {property: 'action', value: 'uploadcare_transfer'},
+            {property: 'nonce', value: this.config.nonce || ''},
             {property: 'postId', value: target.dataset.post || ''},
         ])
 
@@ -164,6 +166,7 @@ export default class TransferImages {
             {property: 'action', value: 'uploadcare_down'},
             {property: 'uuid', value: target.dataset.uuid || ''},
             {property: 'postId', value: target.dataset.post || ''},
+            {property: 'nonce', value: this.config.nonce || ''},
         ])
 
         this.fetchAction(data, target);
