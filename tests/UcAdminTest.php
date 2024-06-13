@@ -99,6 +99,7 @@ class UcAdminTest extends \WP_UnitTestCase {
         $fileUrl = 'https://ucarecdn.com/bb88d7fd-7343-45ff-8f6b-880eee7a0500/-/preview/2048x2048/-/quality/lightest/-/format/auto/';
 
         $_POST['file_url'] = $fileUrl;
+        $_REQUEST['nonce'] = wp_create_nonce('media-nonce');
         $fileApi           = $this->getMockBuilder( FileApiInterface::class )
                                   ->getMock();
         $fileApi->expects( self::once() )->method( 'fileInfo' )->willReturn( $this->mockFileInfo() );
