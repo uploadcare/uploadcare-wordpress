@@ -47,7 +47,7 @@ export default class UcUploader {
         const initFile = mediaUrl ? [uploadcare.fileFrom('uploaded', mediaUrl)] : []
         try {
             const data = await uploadcare.openDialog(initFile, null, dialogPreferences).done();
-            data.nonce = this.config.nonce;
+            data.nonce = dialogPreferences.nonce;
             return await this.storeImage(data);
         } catch (err) {
             if (err === 'upload') {
@@ -77,7 +77,7 @@ export default class UcUploader {
         const data = new FormData();
         data.append('action', 'uploadcare_handle');
         data.append('file_url', file.originalUrl as string);
-        data.append('nonce', file.nonce);
+        data.append('nonce', this.config.nonce);
         data.append('uploadcare_url_modifiers', file.cdnUrlModifiers as string);
 
         return window.fetch(this.config.ajaxurl, {
