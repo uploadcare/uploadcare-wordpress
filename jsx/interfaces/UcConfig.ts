@@ -9,5 +9,5 @@ export default interface UcConfig {
     imagesOnly: boolean;
     multiple: boolean;
     effects: Array<string>;
-    nonce: Array<string>;
+    nonce: string;
 }
