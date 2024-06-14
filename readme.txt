@@ -117,6 +117,7 @@ Send us your feedback, <help@uploadcare.com>
 = 3.1.0 =
 Resolved a Cross-Site Request Forgery (CSRF) vulnerability on the settings page.
 Fixed behaviour when uploading and downloading current images to and from Uploadcare storage.
+Added bulk download files from the server.
 
 = 3.0.10 =
 Fixed PHP 7.4 support.

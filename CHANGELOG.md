@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based now on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] — 2024-06-10
+## [3.1.0] — 2024-06-14
 
 Fixed:
 * Resolved a Cross-Site Request Forgery (CSRF) vulnerability on the settings page.
@@ -16,7 +16,7 @@ Added:
 * Bulk download files from the server.
 
 Compatibility:
-* Tested in WordPress up to version 6.4.3
+* Tested in WordPress up to version 6.5.4
 
 
 ## [3.0.11] — 2023-11-14
