@@ -12,6 +12,9 @@ Fixed:
 * Fixed behaviour when uploading and downloading current images to and from Uploadcare storage.
 * Autotests support.
 
+Added:
+* Bulk download files from the server.
+
 Compatibility:
 * Tested in WordPress up to version 6.4.3
 
