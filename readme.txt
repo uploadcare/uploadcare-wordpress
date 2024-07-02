@@ -1,7 +1,7 @@
 === Uploadcare File Uploader and Adaptive Delivery (beta) ===
 
-Contributors: andrew72ru, rsedykh, mixar, kkeng
-Tags: file upload, cdn, storage, adaptive delivery, responsive, lazy loading, optimization, performance
+Contributors: rsedykh, mixar, kkeng
+Tags: file upload, cdn, storage, adaptive delivery
 Requires at least: 5.0
 Tested up to: 6.5.4
 Requires PHP: 7.4
